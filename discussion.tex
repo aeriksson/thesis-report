@@ -1,0 +1,52 @@
+\chapter{Discussion}
+\label{ch:discussion}
+
+We conclude this report with a short post-mortem and a discussion of future work.
+
+\section{Post-mortem}
+
+Overall, the project was successful. The new theory introduced in the form of the tasks and problems and component frameworks has made reasoning about and evaluating problems, as well as proposing novel problems and methods, significantly easier. Additionally, \texttt{ad-eval} has shown that the component framework can be effectively implemented and used to easily compare problems and methods. Furthermore, the evaluation utilities and evaluation scripts in \texttt{ad-eval} have shown that performing objective, reproducible method evaluations that can be reused with different data sets need not be difficult. Finally, as summarized in the next section, the project illuminated several new frontiers for future work.
+
+However, there were some shortcomings. Since the initial focus on the implementation and evaluation of a few specific methods was not recognized as inappropriate until these methods had been partially implemented and large sections of the report had been written, and since the subsequent way forward was initially unclear, much of the work performed for the project was ultimately discarded.
+
+Moreover, a proper evaluation of the methods implemented in \texttt{ad-eval} was beyond the scope of the project. While mitigated by the fact that the qualitative evaluation performed in chapter \ref{ch:evaluation} and the reusable evaluation scripts and utilities added to the repository will greatly facilitate such an evaluation once appropriate data sets are obtained, this rendered the project goal of finding the problem formulations most appropriate for the target domain only partially achievable.
+
+\section{Future work}
+
+As repeated throughout this paper, there remains much work to be done on task \ref{task:main} and related tasks, as well as on \texttt{ad-eval}. A few potential areas in which such work would be useful are now highlighted.
+
+\subsection{Evaluation}
+
+As mentioned several times in this paper, the evaluation performed as part of this project, alone, cannot conclusively answer which methods are appropriate for the target domain. As indicated in section \ref{sect:evaluation_data}, preferably labeled data from the target domain should be used in the evaluation. However, such data could not be obtained, so a qualitative evaluation of how parameter and component choices affect the output anomaly vectors was performed. Once appropriate evaluation data is obtained, several interesting questions could be answered.
+
+First, the tests performed as part of the evaluation in this project should be re-run on a more diverse data set, to see if the conclusions made in chapter \ref{ch:evaluation} hold in general. Second, a larger portion of the parameter space should be evaluated. To mitigate the difficulties caused by the very long evaluation times required for such evaluations, a few modifications should be made to \texttt{ad-eval}. Methods for caching the results obtained in evaluations, along with tools for parallelizing and distributing evaluations, should be implemented. Tools for more effectively searching parameter spaces for minima should also be provided. The relative smoothness with which the output anomaly vectors seem to vary with parameter choices (at least for the kNN evaluator) could be exploited to avoid a search of the entire parameter space; methods such as discrete gradient descent combined with random restarts could significantly reduce the computation time as opposed to a brute-force search, likely without significant loss of accuracy. Finally, optimizations to the $\texttt{anomaly\_detection}$ module could potentially lead to large, constant-factor evaluation speedups.
+
+\subsection{Performance}
+
+Throughout the implementation of \texttt{ad-eval} and the evaluation, performance (in terms of computation time and memory usage) was deemphasized in favor of accuracy. This was done consciously, in order to limit the scope of the paper and to avoid the excessive focus on methods and optimizations found in much of the literature.
+
+Several interesting questions regarding performance warrant investigation. Several types of both pure optimizations and approximations could be applied to the implemented problem formulations. For instance, multi-resolution algorithms, such as the one suggested in section \ref{sect:s}, could potentially lead to methods that are both fast and accurate.
+
+Fortunately, the modular nature of \texttt{ad-eval} facilitates the evaluation of optimized methods. Just as a suite of unit, integration, and performance tests are often run after additions to commercial software projects, running performance and accuracy tests to evaluate how optimizations affect performance would be trivial in \texttt{ad-eval}.
+
+\subsection{Components}
+
+Several tasks and problems within the component framework would be interesting to study in more depth. As shown in chapter \ref{ch:methods}, there is large potential in suggesting and implementing several new methods within the component framework. For instance, there exist several anomaly measures and other components in the literature (including several model-based, artificial neural network-based, and statistical measures, as well as other distance-based methods and classifiers) that have not been implemented in \texttt{ad-eval}, and it is likely that some of these will perform better than the implemented components on certain datasets. Furthermore, several types of transformations should be evaluated (such as the discrete wavelet transform).
+
+And of course, the parameter spaces of the implemented methods should also be studied in more depth. It would be especially interesting to examine how the error functions $E_{S, \delta}(\Theta)$ vary with the evaluation data $S$. If the minima were to be computed for a large number of sequences from the target domain, then which problem formulations best suit which kinds of data could be studied from several angles.
+
+\subsection{Related tasks}
+
+As indicated in section \ref{sect:related_tasks_framework}, the components framework could easily be adapted to cover a large number of related tasks, including the tasks suggested in section \ref{sect:suggested_tasks}. Evaluations like the one in this paper could then be performed on these related tasks. It would be especially interesting to compare how individual components fare on different tasks.
+
+Of course, other tasks would require other types of data, which might be difficult to obtain. However, the amount of development time required to adapt \texttt{ad-eval} should be minimal.
+
+\subsection{Deployment}
+
+As indicated in section \ref{sect:design}, \texttt{ad-eval} was designed for eventual use in real-world applications. Due to its architecture, integration with software such as Splunk would be trivial. Then, the combination of \texttt{ad-eval} with a good user interface could prove an invaluable tool to monitoring and diagnosis through anomaly detection in a wide range of application domains. 
+
+\subsection{Ensembles}
+
+The components framework might also be used to find correlations between the accuracy of problem formulations and the underlying characteristics of the data being analyzed, as mentioned in section \ref{sect:framework}. If such correlations exist, \texttt{ad-eval} could prove instrumental in their discovery due to the ease with which multiple problem formulations can be applied to, and evaluated in relation to, data sets.
+
+Ideally, this could lead to an ensemble-style approach, in which several methods are combined and weighed based on their relative suitability to the characteristics of the data.

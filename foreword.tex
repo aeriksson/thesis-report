@@ -1,0 +1,18 @@
+\chapter*{Foreword}
+
+This report is the result of a master's thesis project at the KTH Royal Institute of Technology performed in cooperation with Splunk Inc., based in San Francisco, California, USA. The goal of the project was to find and implement efficient and general methods of anomaly detection suitable for the types of data typically found in Splunk.
+
+Splunk is essentially a database and tool for indexing and analyzing very large sets of sequential machine-generated data (i.e. machine-generated data consisting of discrete events with associated time stamps). The goal of this project was chosen to be the identification of more powerful anomaly detection tools and their incorporation into Splunk, since it was estimated that a large share of Splunk users could benefit from such tools.
+
+Due to the wide scope of this task, the project was split into three tasks, as follows:
+\begin{enumerate}
+    \item Research into which anomaly detection tasks are the most relevant to the target domain.
+    \item Development of a software framework for evaluation of anomaly detection methods focused on the target domain.
+    \item Evaluation of the performance of several different approaches on data from the given domain.
+\end{enumerate}
+
+Due to a lack of structured evaluations of and comparisons between methods in the anomaly detection literature, the first part proved particularly challenging. To address this task sufficiently, new theory was required. The majority of this report deals with the introduction of this theory and the discussion of anomaly detection tasks relevant to the target domain.
+
+Based on this discussion and theory, a software implementation of a broad class of anomaly detection methods was developed. Called \texttt{ad-eval}, the implementation was designed as a minimalistic and flexible Python framework and released under an open source license at \url{http://github.com/aeriksson/ad-eval}.
+
+Finally, an evaluation of implemented methods was performed using \texttt{ad-eval}. Unfortunately, a proper evaluation could not be performed due to time constraints and a lack of appropriate data. Instead, a simple, qualitative evaluation was performed, in order to give a general impression of how different components and parameter values affect the analysis, as well as demonstrate the capabilities and usage of \texttt{ad-eval}. The source code used in this evaluation was designed to be highly modular and was made available as part of the \texttt{ad-eval} source code repository, to guarantee the reproducibility of the results and to facilitate more thorough evaluations once adequate data becomes available.

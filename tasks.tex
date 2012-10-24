@@ -1,0 +1,332 @@
+\chapter{High-level tasks}
+\label{ch:tasks}
+
+In this chapter, the principal factors outlined in section \ref{sect:tasks_problems} are presented in greater depth, in order to better understand of the ramifications of the potential choices.
+
+Sections \ref{sect:data_format} through \ref{sect:output_format} cover individual principal factors. For each principal factor, tasks corresponding to the different choices are presented to as large an extent as possible.
+
+A few tasks that are typically considered related to, but not necessarily part of, anomaly detection are also presented (in section \ref{sect:related_tasks}).
+
+\section{Data format}
+\label{sect:data_format}
+
+Obviously, the format of the data sets on which anomaly detection is performed varies drastically between applications, and it is not possible to exhaustively cover this factor. Nevertheless, data sets from different applications often share some fundamental characteristics, which can affect the analysis and the selection of other factors. A few such characteristics are now discussed.
+
+To begin with, assuming that input is given as a data set $D = (d_1, d_2, \dots, d_n)$, where the $d_i$ belong to some set $X$, the structure of $X$ is vital to the choice of the other principal factors. A distinction is typically made between \emph{categorical}, \emph{discrete}, and \emph{real-valued} data sets based on the properties of $X$. We now formulate these as tasks, starting with categorical data sets:
+
+\begin{task}[Anomaly detection for categorical data]
+  Detect anomalies in a data set $D$, where $\forall d \in D: d \in A$ for some finite alphabet $A = \{a_1, a_2, \dots, a_k\}$.
+\end{task}
+
+Categorical (or \emph{symbolic}) data arises in many contexts and is comparatively easy to handle. In many cases, methods for handling categorical data have been fully developed.
+
+If the underlying set is infinite but countable, it is referred to as discrete:
+ 
+\begin{task}[Anomaly detection for discrete data]
+  Detect anomalies in a data set $D$, where $\forall d \in D: d \in B$ for some $k$ and some infinite countable set $B = \{b_1, b_2, \dots\}$.
+\end{task}
+
+Usually, the underlying set is either $\mathbb{Z}$ or $\mathbb{N}$ in this task.
+
+Finally, the underlying set might be uncountable. To the author's knowledge, the only uncountable sets encountered in anomaly detection applications is the real numbers. For this reason, other uncountable sets are ignored in the following task.
+
+\begin{task}[Anomaly detection for real-valued data]
+  Detect anomalies in a data set $D$, where $\forall d \in D: d \in \mathbb{R}^n$.
+\end{task}
+
+Many anomaly measures used for discrete or categorical data (such as information-theoretic measures or certain probabilistic models) are not valid for real-valued data. In such cases, a suitable discretization of the data might be useful. Real-valued data sets encountered in applications are often samples of processes that are assumed to be continuous. When the ordering of the samples is reflected in the data set, the data set is referred to as \emph{continuous}.
+
+Of course, data sets consisting of multiple types of data are frequently encountered in applications. Such data sets are usually referred to as \emph{mixed}:
+\begin{task}[Anomaly detection for mixed data]
+  Detect anomalies in a data set $D$, where $\forall (a, b, c) \in D: a \in A, b \in B, c \in C$, where $A = \{a_1, a_2, \dots, a_l\}$ is categorical, $B = \{b_1, b_2, \dots\}$ is discrete and $C = \mathbb{R}^n$ is continuous.\footnote{Of course, any of $A, B$ or $C$ might be empty.}
+\end{task}
+
+Few methods have been proposed for dealing with mixed data. Typically, such data is split into individual series that are analyzed individually.
+
+Another characteristic that has a large impact on the analysis is the dimensionality of the data points. A distinction is typically made between \emph{univariate} and \emph{multivariate} data. We address this with the following two tasks:
+\begin{task}[Univariate anomaly detection]
+  Detect anomalies in a data set $D$, where the $d \in D$ are scalars.
+\end{task}
+\begin{task}[Multivariate anomaly detection]
+  Detect anomalies in a data set $D$, where the $d \in D$ are vectors (of length greater than one).
+\end{task}
+While the distinction between uni- and multivariate data might seem unnecessary, it proves important in applications. Most machine learning methods take significantly longer to learn (both in terms of time and convergence) as the dimensions of the data increase. Furthermore, some are not applicable to multivariate data at all.
+
+Finally, we consider the presence of additional structure in the data set. Utilizing this characteristic, when it is present, is usually vital to successful analysis. For instance, many data sets encountered in applications have a natural ordering, which typically affects the intuitive notion of what should constitute an anomaly. As we will see in sections \ref{sect:anomaly_types} and \ref{sect:anomaly_measures}, it is common to base the choice of other factors---such as the anomaly type or anomaly measure---on the presence of such additional structure. 
+
+Finally, it should be noted that the data is often filtered or otherwise modified to affect how it is presented to the anomaly detection method. The issue of appropriate presentations for temporal machine-generated data is considered in depth in chapter \ref{ch:transformations}.
+
+\clearpage
+ 
+\section{Reference data}
+\label{sect:reference_data}
+
+\begin{wrapfigure}{r}{0.5\textwidth}
+    \vspace{-25pt}
+    \begin{center}
+        \leavevmode
+        \includegraphics[width=0.5\textwidth]{resources/supervision}
+    \end{center}
+    \caption{{\small Euler diagram of the available reference data for the four types of supervision.}}
+    \label{fig:supervision}
+    \vspace{-40pt}
+\end{wrapfigure}
+
+As is customary in most areas of machine learning, anomaly detection problems are classified as either \emph{supervised}, \emph{semi-supervised} or \emph{unsupervised} based on the availability of \emph{reference} (or \emph{training}) data. In contrast to the \emph{evaluation data}, which is the data in which anomalies are to be found, the reference data acts as a baseline, defining what constitutes normal and/or anomalous. The three classes of reference data are now discussed and presented as tasks, starting with supervised anomaly detection:
+
+\begin{task}[Supervised anomaly detection]
+    \label{task:supervised}\ \\
+    Given reference sets $N$ (containing normal reference data) and $A$ (containing anomalous reference data), find anomalies (with regard to $N$ and $A$) in a data set $D$.
+\end{task}
+In essence, supervised anomaly detection constitutes a traditional supervised classification problem. As such, it can be handled by any two-class classifier, such as regular support vector machines. However, characteristics shared by most anomaly detection applications make supervised approaches unsuitable. 
+
+First, anomalous reference data is almost always relatively scarce, potentially leading to skewed classes (described in \cite{phua} and \cite{joshi}). Furthermore, supervised anomaly detection methods are by definition unable to detect types on anomalies that are not represented in $A$, and so can not be used to find \emph{novel} anomalies. This is problematic as it is often not feasible to construct an $A$ containing all possible anomalies.
+
+Semi-supervised anomaly detection, on the other hand, assumes the availability of either only $A$ or only $N$. Divided according to which of the two reference classes is available, the following two tasks can be specified:
+\begin{task}[Semi-supervised anomaly detection with normal reference data]
+  Given a reference set $N$ containing normal reference data, find anomalies (with regard to $N$) in a data set $D$.
+\end{task}
+\begin{task}[Semi-supervised anomaly detection with anomalous reference data]
+  \label{task:semisupervised_anomaly_detection}
+  Given a reference set $A$ containing anomalous reference data, find anomalies (with regard to $A$) in a data set $D$.
+\end{task}
+
+While the latter task has been discussed (for instance in \cite{dasgupta}), the vast majority of methods focus on the former. Considering the difficulties involved in obtaining anomalous reference data, as mentioned above, this should not be surprising.
+
+Semi-supervised methods are often used more frequently than supervised methods due to the relative ease with which they can be configured.
+
+Finally, unsupervised anomaly detection requires no reference data set, and can be defined by the following task:
+\begin{task}[Unsupervised anomaly detection]
+  \label{task:unsupervised_anomaly_detection}
+  Find subsets of some data set $D$ that are anomalous with regard to the rest of $D$.
+\end{task}
+
+For unsupervised anomaly detection, $D$ itself is referred to as the reference data.
+
+Since reference data is not always available, unsupervised methods are typically considered to be of wider applicability than both supervised and semi-supervised methods \cite{chandola}. However, unsupervised methods are unsuitable for certain tasks. Since reference data can not be manually specified, it is more difficult to sift out uncommon but uninteresting items in unsupervised anomaly detection than in semi-supervised anomaly detection. Furthermore, unsupervised methods will not detect anomalies that are common but unexpected (although such items are arguably not anomalies by definition).
+
+It is useful to note that unsupervised anomaly detection tasks can often be reduced to semi-supervised anomaly detection tasks by setting $A = D$ and modifying the underlying anomaly measure such that all elements $a_i \in A$ are judged as dissimilar to themselves.
+
+Of course, it is sometimes not feasible or desirable to compare items with the entirety of the reference data set. This is mainly the case when the data set supports additional structure, such an ordering or metric, which gives rise to a natural concept of locality within the data set. As a concrete example of such an application, consider unsupervised anomaly detection in a long sequence: often how an item compares to those items `closest' to it (in the ordering) is much more relevant to whether or not that item should be considered an anomaly than how it compares to the rest of the sequence.
+
+In such cases, it is reasonable to associate with each individual data item a subset of the reference data, and let this subset constitute the reference data for that item. Throughout this report, such subsets will be referred to as the \emph{contexts} of the individual data items. Formally, this can be represented through a \emph{context function} that maps each subset $D'$ of the data set (or at least those subsets of interest to the analysis) to some set $C(D')$ such that $D' \cap C(D') = \emptyset$. The requirement that $D' \cap C(D') = \emptyset$ is necessary to keep elements from lowering their own anomaly scores when performing unsupervised anomaly detection. For the purposes of this report, contexts are mainly interesting for unsupervised anomaly detection, and can henceforth be assumed to refer to subsets of the evaluation data unless explicitly stated.
+
+\begin{figure}[thb]
+    \vspace{-4pt}
+    \begin{center}
+        \leavevmode
+        \includegraphics[width=1\textwidth]{resources/contextz}
+    \end{center}
+    \vspace{-15pt}
+    \caption{{\small Schematic view of a data set illustrating a few contexts. In each panel, the black dots represent selected items, the dark grey dots represent items in the context of the selected items, and the light grey dots indicate items not in the context of the selected items. The left panel shows the trivial context---all items are part of the context. The middle panel shows a local context of a single item. The right panel shows a local context of a subset of the data set.}}
+    \label{fig:contexts}
+    \vspace{-5pt}
+\end{figure}
+
+Consider again the example of a long sequence. Writing this sequence as $S = (s_1, s_2, \dots, s_n)$, a reasonable context function defined for individual points could be the following:
+\[
+    C(s_i) = \{s_{i-w}, s_{i - w + 1}, \dots, s_{i - 1}, s_{i + 1}, s_{i + 2}, \dots, s_{i + w}\}.
+\]
+When using this context, which is referred to as the \emph{symmetric local context}, the local characteristics of the sequence around $s_i$ are taken into account, while the rest of the sequence is ignored.
+
+Context functions $C(d)$ defined on individual elements $d \in D$ (such as the one above) can be naturally extended to subsets $D' \subseteq D$ of the data by defining
+\[
+    C(D') = \bigcup_{d \in D'} C(d) \setminus D'.
+\]
+The context functions encountered in this report are all on this form. For this reason, there is little need to make a distinction between contexts defined for single elements and contexts defined for subsets.
+
+Note that contexts can be seen as a generalization of the concept of reference data. For instance, the \emph{trivial context}, given by, for $d \in D$; $C(d) = D \setminus d$, corresponds to unsupervised anomaly detection. It is obtained when the scope of any local context grows large enough.
+
+Figure \ref{fig:contexts} shows a schematic view of a data set, along with three contexts. The leftmost panel illustrates the trivial context of a single element, the middle panel illustrates a local context of a single element, and the rightmost panel illustrates the natural extension of this local context to subsets.
+
+\section{Anomaly types}
+\label{sect:anomaly_types}
+
+\begin{figure}[htb]
+    \begin{center}
+        \includegraphics[width=1\textwidth]{resources/filters}
+    \end{center}
+    \caption{{\small Schematic illustration of filters and contexts acting on an evaluation sequence $S = (s_1, s_2, \dots, s_{40})$. The top panel shows the evaluation set $E = \mathcal{F}(S) = \{e_1, e_2, \dots, e_{19}\}$ extracted by a sliding window filter with width $4$ and step $2$. The bottom panel shows the local symmetric context of $e_{10}$ with width $w = 12$: $C(e_{10}) = \{c_1, c_2, \dots, c_{24}\}$ , as well as the reference data set $R_{e_{10}} = \mathcal{F}_R(e_{10}) = \{r_1, r_2, \dots, r_{10}\}$ extracted by an analogous sliding window reference filter.}}
+    \label{fig:filters}
+\end{figure}
+
+An important aspect of any problem is which subsets of the data set $D$ to consider when looking for anomalies; i.e. which subsets of $D$ should constitute the \emph{evaluation set} $E$. If all subsets are considered, the size $|E|$ of $E$ is $2^{|D|}$. This number is obviously too large to handle effectively, and the evaluation set must somehow be limited.
+
+Fortunately, only a small fraction of all possible subsets is typically of interest in any given application. Precisely which subsets are interesting depends on the structure of $D = \{d_1, d_2, \dots, d_n\}$. If $D$ lacks additional structure (such as an ordering or metric) inducing a concept of locality, then it is reasonable to consider only the singleton sets, i.e. $E = \{\{d_i\} | d_i \in D\}$. When such additional structure exists (and is pertinent to the analysis), it is reasonable to let $E$ consist of subsets in which all elements are `close' (with regards to this additional structure).
+
+As an example, consider a sequence $S = (s_1, s_2, \dots, s_n)$. As mentioned in the previous section, a locality concept is naturally induced by the sequence ordering, and it reasonable to let $E$ consist of contiguous subsequences of $S$:
+\[
+    E = \{(s_{a_1}, s_{a_1 + 1}, \dots , s_{b_1}) , (s_{a_2}, s_{a_2 +1}, \dots, s_{b_2}), \dots, (s_{a_k}, s_{a_k+1}, \dots, s_{b_k})\}.
+\]
+For such $E$, it is the case that $|E| \in O(|D|^2)$. Furthermore, it is often the case that not all contiguous subsequences must be evaluated---for instance it may suffice to treat only subsequences of some specific length, leading to $|E| \in O(|D|)$. Finally, if the ordering is not relevant to the analysis, then $E$ should be the singleton sets of $S$, and $|E| = |D|$. Thus, placing reasonable restrictions (based on the structure of the data set) on $E$ can render the analysis much more manageable. 
+
+To facilitate the construction of $E$, the concept of $\emph{filters}$ can be used. An \emph{evaluation filter} is a function $\mathcal{F}_E(D): D \mapsto E \subset 2^D$ that constructs the evaluation set. One evaluation filter for sequences used extensively in this report is the \emph{sliding window filter}:
+\[
+    \mathcal{F}_E(S) = \{(s_1, s_2, \dots, s_w), (s_{s+1}, s_{s+2}, \dots, s_{s+w}), \dots, (s_{n-w}, s_{n-w+1}, \dots, c_{n})\}\footnote{It is here assumed that $(s+w) | n$. If this is not the case, the last element extracted might be a bit different.}
+\]
+with width $w$ and step $s$. This filter is the most reasonable choice for sequences when all items in $E$ must be of the same length (as is typically the case).
+
+Of course, it is often reasonable to, in addition to the evaluation set $E$, also construct a reference set, with regards to which to compare the elements in $E$. Naturally, with each element $e_i \in E$ should be associated one such set $R_{e_i}$, consisting of subsets of the context $C(e_i)$. Analogously with evaluation filters, \emph{reference filters} can be introduced, which simplify the construction of such $R_{e_i}$. Since the context is a set of sets, these should have the form $\mathcal{F}(e_i): C(e_i) \mapsto R_{e_i} \subset 2^D$. As an example of a reference filter, consider the sliding window reference filter for sequences with length $w$ and step $s$:
+\[
+    \mathcal{F}_R(e_i) = \bigcup_{(c_1, c_2, \dots, c_n) \in C(e_i)}\{(c_1, c_2, \dots, c_w), (c_{s+1}, c_{s+2}, \dots, c_{s+w}), \dots, (c_{n-w}, c_{n-w+1}, \dots, c_{n})\}.
+\]
+
+A schematic illustration of the operation on a sequence of sliding window filters and a local context is shown in figure \ref{fig:filters}. Here, an evaluation set consisting of $19$ subsequences of a sequence of length $40$ is constructed. With each element $e_i \in E$ is associated a reference set $R_{e_i}$ (as is seen in the figure, $R_{e_{10}} = 10$). An anomaly detection algorithm could compare each of the $e_i$ to the corresponding $R_{e_i}$ in turn in order to detect contextual collective anomalies (defined below).
+
+\begin{figure}[htb]
+    \begin{center}
+        \includegraphics[width=1\textwidth]{resources/types_of_anomalies}
+    \end{center}
+    \caption{{\small Different types of anomalies in a real-valued continuous sequence. In the middle of each series is an aberration---shaded black---corresponding to a specific type of anomaly. Appropriate contexts for these anomalies are shaded dark grey, while items not part of the contexts are shaded light grey. The top panel contains a point anomaly - a point anomalous with regard to all other points in the series. The second panel contains a contextual anomaly - a point anomalous with regard to its context (in this case, the few points preceding and succeeding it), but not necessarily to the entire series. The third panel contains a collective anomaly---a subsequence anomalous with regard to the rest of the time series. The fourth contains a contextual collective anomaly---a subsequence anomalous with regard to its context.}}
+    \label{fig:anomaly_types}
+\end{figure}
+
+To simplify the discussion of contexts and evaluation/reference sets, it is helpful to introduce a few different \emph{anomaly types}, based on which appropriate choices of evaluation and reference filters can be inferred. For the purposes of the discussion in this report, an introduction of four anomaly types will suffice. In order of increasing generality, these are \emph{point anomalies}, \emph{contextual point anomalies}, \emph{collective anomalies}, and \emph{contextual collective anomalies}. An illustration of these anomaly types in the context of real-valued sequences is shown in figure \ref{fig:anomaly_types}.
+
+\emph{Point anomalies} are arguably the simplest out of these anomaly types. They correspond to single points in the data set (i.e. $E$ consists of the singleton sets of $D$) that are considered anomalous with regard to the entire reference set (i.e. a trivial context is appropriate). Finding them can be formulated as the following task:
+
+\begin{task}[Point anomaly detection]
+  \label{task:point}
+  Given a data set $D$, detect individual $d_i \in D$ that are anomalous with regard to the entire reference set.
+\end{task}
+
+Point anomalies are often referred to as \emph{outliers} and arise in many domains \cite{eskin}. Their detection is often relatively straightforward. Statistical methods have been shown to be well suited for handling point anomalies, and are usually sufficient.
+
+Of course, point anomalies are not often not sufficient to describe all anomalies when $D$ admits a concept of locality. In this case, \emph{contextual point anomalies} can capture a more general class of anomalies. Contextual anomalies are individual items that are anomalous with regards to their context (as given by some non-trivial context function); i.e. while they might seem normal when compared with all elements in the reference data, they are anomalous when compared to the other items in their context. Detecting contextual point anomalies can be formulated as the following task:
+
+\begin{task}[Contextual anomaly detection]
+  \label{task:contextual}
+  Given a set $D$ and a non-trivial context function $C(d)$, detect elements $d \in D$ anomalous with regards to $C(d)$.
+\end{task}
+
+Furthermore, detecting individual anomalous points $d \in D$ might not always suffice (specifically, when the anomalies are continuous), and \emph{collective anomalies} might be required to capture relevant phenomena. These correspond to contiguous sets of non-anomalous points that, when taken as a whole, are anomalous with regards to the entire reference set (i.e. a trivial context is appropriate). The task of detecting such anomalies can be formulated using filters:
+
+\begin{task}[Collective anomaly detection]
+  \label{task:collective}
+  Given a set $D$ and a (non-singleton) filter $\mathcal{F}$, detect point anomalies in the evaluation set $\mathcal{F}(D)$.
+\end{task}
+
+Finally, \emph{contextual collective anomalies} are the most general class of anomalies, and correspond to contiguous sets of non-anomalous points that are anomalous with regard to a specific context but not to the entire reference set.  
+
+\begin{task}[Contextual collective anomaly detection]
+  \label{task:contextual_power}
+  Given a data set $D$, a (non-singular) filter $\mathcal{F}$ and a non-trivial context function $C$, detect elements $e_i$ in the evaluation set $\mathcal{F}(D)$ that are anomalous with regards to the context $C(e_i)$.
+\end{task}
+
+An illustration of the above concepts in real-valued sequences is shown in figure \ref{fig:anomaly_types}. Assuming that unsupervised anomaly detection is used, task \ref{task:point} amounts to disregarding the information provided by the ordering and detecting only `rare' items. While the task can capture the aberration in the first sequence in figure \ref{fig:anomaly_types}, none of the aberrations in the other sequences would be considered point anomalies.
+
+While the value at the aberrant point at the center of the second sequence occurs elsewhere in that sequence, it is anomalous with regards to its local context, and as such, should be considered a contextual point anomaly and can be captured by task \ref{task:contextual}.
+
+Since the third time series is continuous, the aberration present at its center can not be captured by tasks \ref{task:point} or \ref{task:contextual}. It is, however, a collective anomaly, and can be accurately captured by task \ref{task:collective}.
+
+Finally, neither of the tasks \ref{task:point}, \ref{task:contextual} or \ref{task:collective} captures the aberration in the fourth sequence, as it is both continuous and occurs elsewhere in the sequence. However, with an appropriate choice of (local) context, it can be deemed a contextual collective anomaly, and can be captured by task \ref{task:contextual_power}.
+
+It should be noted that while all of the above tasks are special cases of contextual collective anomaly detection, it is often possible to reduce each of the tasks to detection of point anomalies, as well. Task \ref{task:collective} reduces to detection of point anomalies by its definition (i.e. it corresponds to detecting point anomalies in a higher-dimensional space), while data normalization can sometimes be utilized to perform this reduction for contextual anomaly detection (see \cite{meckesheimer} for instance).
+
+\section{Anomaly measures}
+\label{sect:anomaly_measures}
+
+Arguably the most significant aspect of an anomaly detection method is what heuristic is used to decide if items are anomalous or not. This choice defines (often in unpredictable ways) what types of features will be considered anomalous, so it is vital to make an appropriate choice. 
+
+Many heuristics have been proposed in the literature, with varying degrees of justification and success. No exhaustive presentation of these is given here; instead a selection of some of the more common approaches is presented. We begin by describing statistical and information theoretic approaches---two areas which provide theoretic justifications for what should be considered anomalous. We then present a few other approaches taken from traditional machine learning.
+
+Statistical measures usually address the following task:
+\begin{task}[Statistical anomaly detection]
+  \label{task:statistical}
+  Given a data set $D$, find items $d \in D$ that are unlikely to have been generated by the same distribution as the rest of $D$ (or some reference set $R$).
+\end{task}
+In general, statistical measures work by estimating a statistical distribution underlying the data, and then labeling data points based on how likely they are to have been generated by this distribution. They have been applied to a wide range of domains, often with good results. Several books and surveys have been published on statistical anomaly detection, including \cite{barnett}, \cite{bakar}, \cite{leroy} and \cite{hawkins}.
+
+Statistical measures are usually classified based on whether the distribution is known in advance (with unknown parameters) or not. We formulate these two cases as the following two tasks:
+\begin{task}[Parametric statistical anomaly detection]
+  Given a data set $D$, generated from the distribution $\mathcal{D}(\theta)$ with the unknown parameter $\theta$, estimate $\theta$ based on $D$ (or some reference data set $R$), and find items $d \in D$ that are unlikely to have been generated by $\mathcal{D}(\theta)$.
+\end{task}
+\begin{task}[Non-parametric statistical anomaly detection]
+  Given a data set $D$, estimate the distribution $\mathcal{D}$ of $D$ (or some reference data set) from a set of basis functions and find items $d \in D$ that are unlikely to have been generated by $\mathcal{D}$.
+\end{task}
+While non-parametric approaches are more widely applicable (the distribution of data is usually not known), the extra information provided to parametric methods mean that they converge faster and are more accurate. Both these statistical tasks suffer from scalability issues. Furthermore, it can be difficult to modify statistical methods to take context into account.
+
+A relatively novel and interesting approach to anomaly measures is \emph{information theoretic measures}. Mainly used for symbolic data sets, these measures judge similarity by estimating how much information is shared between items or subsets of items (i.e. by computing measures of shared information between elements). Like statistics, information theory can be used to give a theoretical justification for what is considered anomalous.
+
+Several different measures of shared information have been implemented, such as the compressive-based dissimilarity measure (CDM) \cite{keogh2} and (relative) conditional entropy \cite{xiang}. While information theoretic approaches are mainly useful for discrete data, they have shown promise for describing anomalies in continuous data when combined with a discretization transformation \cite{keogh2}. Information theoretical anomaly detection can be summarized as the following task:
+
+\begin{task}[Information theoretic anomaly detection]
+  Given a data set $D$, find items in $D$ that share little information with the rest of $D$ (or some reference data set).
+\end{task}
+
+Anomaly measures inspired by traditional machine learning are also common and have been extensively researched in various contexts. We here present two tasks, using classifier-based and point-based measures, which together cover a majority of the methods proposed in the literature. We begin by introducing classifier-based measures:
+
+\begin{task}[Classifier-based anomaly detection]
+  Given a data set $D$, train a two-class classifier and use this classifier to determine whether or not the elements in $D$ are anomalous.
+\end{task}
+ 
+While classifiers are commonly used with task \ref{task:anomalous_set}, weighing schemes can be utilized to produce other forms of output. Depending on the type of training data, different types of classifiers must be used. Semi-supervised problems require one-class classifiers, while unsupervised methods require unsupervised classifiers. Furthermore, classifiers that do not support iterative addition and removal of elements can not be used for unsupervised anomaly detection.
+
+Another common approach is distance-based heuristics:
+\begin{task}[Distance-based anomaly detection]
+  Given a data set $D \subset X$ for some set $X$ and a distance measure $\delta(d_i, d_j): X \times X \rightarrow \mathbb{R}$, determine if the $d_i \in D$ are anomalous or not based on $\delta(d_i, d_j)$ for $d_j \in D, i \neq j$.
+\end{task}
+Obviously, such measures are not always applicable, since they require $X$ to allow some form of useful distance function. Derived problem formulations often base their anomaly measures on the local point density of or the distances to the few nearest points in the training set around evaluated points. Such methods include \emph{k-nearest neighbors} (kNN) and, more generally, \emph{variable kernel density estimation}.
+
+This task is very flexible, since any distance measure be used, and the distance values so obtained can be utilized in many ways. It is also well suited for both semi-supervised and unsupervised anomaly detection.
+
+In some situations, it is useful to build a predictive model:
+\begin{task}[Detecting anomalies based on a predictive model]
+  \label{task:predictive_model}
+  Given a sequence $S$, build a model that predicts the next state based on the previous states. Determine if each $s_i \in S$ is an anomaly or not based on how much it diverges from the value predicted by the model.
+\end{task}
+Models that have been studied include Markov chains, hidden Markov models, autoregressive models, as well as several others. 
+
+While the above tasks cover a majority of methods in the literature, several heuristics not covered by them have been proposed. Furthermore, there is often overlap between these tasks. For instance, most predictive models used in task \ref{task:predictive_model} are based on statistical measures, and problems using such models could just as well be said to target task \ref{task:statistical}
+
+\section{Output format}
+\label{sect:output_format}
+
+Finally, the format of output generated by methods must be specified. The choice of this factor depends on the target presentation format and performance requirements. We here briefly present three common output formats.
+
+\begin{task}[Presenting anomaly scores]
+  \label{task:anomaly_scores}
+  Given a data set $D$, associate with each $d_i \in D$ a score $a_i \in \mathbb{R}$ based on how anomalous it is.
+\end{task}
+This is the most general of the commonly used output formats. While the anomaly scores for non-anomalies are usually not interesting, this task is still useful, especially for visualization purposes.
+
+In many applications, relative anomaly rankings are not essential, and a list of anomalous elements might suffice. In such cases, the following task can be useful:
+\begin{task}[Producing a set of anomalous elements]
+  \label{task:anomalous_set}
+  Given a data set $D$, construct a set $D' \subset D$ containing the anomalous elements of $D$.
+\end{task}
+
+One task that has received a lot of attention in recent years is \emph{discord detection}:
+\begin{task}[Discord detection]
+  \label{task:discord}
+  Given a data set $D$, detect and present the $k$ most anomalous items $d \in D$.
+\end{task}
+First introduced in \cite{keogh1}, discord detection is especially interesting, since discords are less computationally intensive to produce than other forms of output. Despite its limitation of only producing a few anomalous elements, the task usually provides sufficient output, since analysts are often only interested in finding the few most anomalous items. Discord detection has received a lot of attention in recent years (see \cite{keogh1}, \cite{bu}, \cite{yankov}, \cite{fu}, \cite{lin}).
+
+Note that tasks \ref{task:anomalous_set} and \ref{task:discord} can be reduced to task \ref{task:anomaly_scores} by selecting only items with scores above some threshold $t \in \mathbb{R}$ (assuming unique anomaly scores).
+
+\section{Related high-level tasks}
+\label{sect:related_tasks}
+
+Anomaly detection is closely related to several other problems in data mining, machine learning and signal processing. We here briefly present a few high-level tasks, analogous to task \ref{task:anomaly_detection}, for a few such problems.
+
+There are multiple related problems in signal processing that involve the detection and removal of anomalies in data. Typically referred to as \emph{noise removal}, \emph{data cleaning} \cite{meckesheimer}, or \emph{signal recovery}, these problems are summarized in the following task:
+\begin{task}[Signal detection]
+  Given a data set $D$ consisting of a relevant signal with added noise, remove all anomalies caused by the noise.
+\end{task}
+
+\emph{Novelty detection} \cite{chandola} refers to the detection of novel, or previously unseen, items or subsequences in a sequence \footnote{It should be noted that the term `novelty detection' is occasionally used in the literature to refer to semi-supervised anomaly detection.}, as formalized by the following task:
+\begin{task}[Novelty detection]
+  \label{task:novelty_detection}
+  Given a sequence $S$, detect subsequences $(s_i, s_{i+1}, \dots, s_j) \subset S$ that are anomalous with regards to earlier subsequences (i.e. $(s_i, s_{i+1}, \dots, s_j) \subset S$ for $k < i$ and $l < j$).
+\end{task}
+Most of the high-level tasks presented in this chapter can be combined with novelty detection, which is reasonable considering that it can be reduced to task \ref{task:contextual_power} through the choice of an appropriate context function. It is especially interesting when used in monitoring applications and in the context of long sequences.
+
+\emph{Change detection} (or \emph{event detection}) is the problem of detecting points at which sequences change in some way.
+\begin{task}[Change detection]
+      Given a sequence $S$, detect points at which the underlying distribution or model generating the $s_i$ changes.
+\end{task}
+Change detection is almost exclusively associated with time series, and has been used mainly in the study of climate data \cite{gopala} and image analysis \cite{radke}.
+
+Other tasks that are often interesting in the same contexts as anomaly detection include \emph{clustering} \cite{clustering} and \emph{motif discovery} \cite{motif} \cite{motif2}.
+

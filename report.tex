@@ -1,0 +1,152 @@
+\documentclass[a4paper,9pt,twoside]{report}
+%\special{papersize=210mm,297mm}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{wrapfig}
+%\usepackage{algorithm}
+%\usepackage{algorithmic}
+\usepackage{algpseudocode}
+\usepackage[a4paper,inner=2.5cm,outer=2.5cm,top=2.5cm,bottom=2.5cm,pdftex]{geometry}
+\usepackage[pdftex]{graphicx}
+\usepackage{epsfig}
+\usepackage{epstopdf}
+\usepackage{psfrag}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{natbib}
+\usepackage{babelbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{placeins}
+\usepackage{float}
+%\usepackage[all]{hypcap}
+%\usepackage{epstopdf} 
+\usepackage{graphicx}
+
+\date{}
+
+%Section number in equation numbering
+\numberwithin{equation}{section}
+
+
+% Line spacing
+\makeatletter
+\let\std@footnotetext\@footnotetext
+\usepackage{setspace}
+\setstretch{1.4}
+\let\@footnotetext\std@footnotetext
+\makeatother
+
+
+%Section and subsection styling
+\makeatletter
+\renewcommand{\chapter}{%
+\@startsection
+        {chapter}{1}{-20pt}{-4ex \@plus -1ex \@minus -.2ex}%
+        {3.4ex \@plus.2ex}{\centering\Huge\scshape}%
+}
+
+\renewcommand{\section}{%
+\@startsection
+	{section}{1}{-20pt}{-4ex \@plus -1ex \@minus -.2ex}%
+	{2.3ex \@plus.2ex}{\centering\Large\scshape}%
+}
+\renewcommand{\subsection}{%
+\@startsection
+	{subsection}{1}{-20pt}{-2.5ex \@plus -1ex \@minus -.2ex}%
+	{1.8ex \@plus.2ex}{\centering\large\scshape}%
+}
+\makeatother
+
+%No section numbering. References become empty.
+%\renewcommand{\thesection}{}
+
+%Margins
+%\setlength{\topmargin}{0.4in}
+%\setlength{\textheight}{9in}
+%\setlength{\oddsidemargin}{.125in}
+%\setlength{\textwidth}{6.25in}
+\setlength{\headheight}{15pt}
+
+%Settings for references
+\bibpunct{[}{]}{;}{n}{,}{,}
+
+%Theorems, Lemmas, Definitionos and Formulations
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{task}{Task}[chapter]
+\newtheorem{problem}{Problem}[chapter]
+
+\newcommand{\vect}[1]{\boldsymbol{#1}}
+\newcommand{\argmin}{\operatornamewithlimits{argmin}}
+\newcommand{\argmax}{\operatornamewithlimits{argmax}}
+
+\setcounter{tocdepth}{1}
+
+%Begin Document
+\begin{document}
+
+\title{Anomaly detection in machine-generated data:\\a structured approach}
+\author{André Eriksson\\
+Master's Thesis \\
+KTH Royal Institute of Technology \\
+Stockholm, Sweden 2013\\
+}
+\maketitle
+
+
+%Headers and footers
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RE,LO]{\leftmark}
+%\newcommand{\hdrsection}{\markright}
+\renewcommand{\headrulewidth}{0pt}
+%\fancyhead[L]{}
+%\fancyhead[R]{\thesection \hdrsection}
+
+\setcounter{page}{0}
+%\thispagestyle{empty}
+
+\begin{abstract}
+
+Anomaly detection is an important issue in data mining and analysis, with applications in almost every area in science, technology and business that involves data collection. The development of general anomaly detection techniques can therefore have a large impact on data analysis across many domains. In spite of this, little work has been done to consolidate the different approaches to the subject.
+
+In this report, this deficiency is addressed in the target domain of temporal machine-generated data. To this end, new theory for comparing and reasoning about anomaly detection tasks and methods is introduced, which facilitates a problem-oriented rather than a method-oriented approach to the subject. Using this theory as a basis, the possible approaches to anomaly detection in the target domain are discussed, and a set of interesting anomaly detection tasks is highlighted.
+
+One of these tasks is selected for further study: \emph{the detection of subsequences that are anomalous with regards to their context within long univariate real-valued sequences}. A framework for relating methods derived from this task is developed, and is used to derive new methods and an algorithm for solving a large class of derived problems. Finally, a software implementation of this framework along with a set of evaluation utilities is discussed and demonstrated.
+ 
+\end{abstract}
+
+\tableofcontents
+\clearpage
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2ex plus 0.5ex minus 0.2ex}
+
+%\newtheorem{definition}{Definition}
+%\newtheorem{theorem}{Theorem}
+
+\include{foreword}
+\include{introduction}
+\include{background}
+\include{tasks}
+\include{transformations}
+\include{problems}
+\include{methods}
+\include{evaluation}
+\include{implementation}
+\include{results}
+\include{discussion}
+\include{conclusions}
+
+%-----------------------------------------------------------
+\addcontentsline{toc}{chapter}{\numberline{}Bibliography}
+\include{bibliography}
+\bibliography{mybib1}
+\bibliographystyle{acm}
+
+%-----------------------------------------------------------
+%\appendix
+%-----------------------------------------------------------
+\end{document}

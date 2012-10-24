@@ -1,0 +1,196 @@
+\chapter{Presentation}
+\label{ch:transformations}
+
+The \emph{presentation} of data is an important aspect of any anomaly detection problem. When talking about presentation, we refer to the structure of the data set presented to the anomaly detection algorithm. Real-world data sets can typically be presented in a myriad of different ways, and the choice of presentation has a great impact both on the difficulty of the analysis and on the set of applicable tasks.
+
+For large data sets, only selected subsets are typically used for analysis. Furthermore, data sets are often aggregated, compressed or otherwise subjected to \emph{transformations} to convert them into a more manageable form before analysis. Transformations are typically applied to simplify or speed up the analysis, but they also have an impact on what types of anomalies can be detected.
+
+In this chapter, a thorough overview is given of various aspects of the presentation of temporal machine data and how they affect the analysis thereof.
+
+As previously, we adhere to the framework of tasks and problems and present tasks where appropriate. However, we do not try to be as exhaustive as in the previous chapter; instead we briefly introduce various presentations and transformations, and avoid presenting tasks for presentations and transformations not used in the remainder of the report.
+
+We begin in section \ref{sect:splunk_techniques} by discussing the typical structure of data in the target domain (large databases of temporal machine data). A focus is placed on sequences, and two high-level tasks that cover anomaly detection in the target domain are presented.
+
+In section \ref{sect:terminology}, some terminology regarding time series and sequences is presented.
+
+In sections \ref{sect:unimultivariate}, \ref{sect:aggregation} and \ref{sect:compression}, we discuss various transformations and aspects of the presentation and how they impact the analysis.
+
+Finally, in section \ref{sect:series_mining} we discuss the automated extraction of interesting univariate sequences in data sets consisting of long sequences. 
+
+\section{Presentation of temporal machine data}
+\label{sect:splunk_techniques}
+
+Unlike those found in most application domains, the data sets encountered in temporal machine data applications are typically very large, unstructured, and contain large amounts of non-pertinent information. For this reason, culling and aggregating the data before analysis is essential, and selecting a presentation is an important part of constructing problem formulations.
+
+Machine data is almost exclusively recorded and stored as strings (corresponding to events) of plain-text data (especially in Splunk). Each of these strings (or events), in turn, encodes a data point of one- or multidimensional, usually mixed, data. Obviously, letting anomaly detection methods handle large amounts of such strings directly is not optimal, and the data must given an alternative presentation before it can be analyzed.
+
+Fortunately, Splunk and other databases targeted at machine data can parse such events automatically and extract the interesting \emph{fields} (i.e. individual data dimensions). In a sense, a data set of temporal machine data that has gone through such a field-extraction process can be seen as a long sequence $S$ of multi-dimensional data with associated time stamps
+\[
+  S = (s_1, s_2, \dots, s_n), \quad \text{ where } \quad \forall i: s_i = (s_i, t_i) \in X \times T \quad \text{ and } \quad \forall i,j: i > j \Rightarrow t_i > t_j
+\]
+where $X$ is the Cartesian product of all fields present in any data item and $T$ is a set of associated time stamps.
+
+Of course, analysing such databases in their entirety is often costly and unnecessary: a majority of events are likely to be unrelated or non-pertinent. Instead, databases are typically split into multiple \emph{indexes} containing related events. While limiting the analysis to an individual index will typically simplify the analysis, we can not assume that the items in an index are sufficiently homogeneous to warrant analysing the index as a whole. Instead, we need to complement the analysis with methods for extracting interesting series, something we discuss in section \ref{sect:series_mining}. Nevertheless, we can discern the following major anomaly detection tasks for temporal data:
+
+\begin{task}[Detecting anomalous subsequences]
+  \label{task:ad_splunk}
+  Given a sequence $S = (s_1, s_2, \dots)$ where $\forall s \in S: s \in X \times T$ (for some mixed-data set $X$ and the set of time stamps $T \subset \mathbb{R}$) and $\forall (s_i, t_i), (s_j, t_j) \in S: i > j \Rightarrow t_i \geq t_j$, detect subsequences $S' \subset S$ that are anomalous. 
+\end{task}
+\begin{task}[Detecting anomalous sequences in a set of sequences]
+  \label{task:ad_splunk2}
+  Given a set of sequences\\ $\{S_1, S_2, \dots, S_n\}$ where $S_i = (s_{i,1}, s_{i,2}, \dots, s_{i, n_i})$ and $\forall s_j \in S_i: s_j \in X \times T$ (for some mixed-data set $X$ and the set of time stamps $T \subset \mathbb{R}$) and $\forall (s_i, t_i), (s_j, t_j) \in S: i > j \Rightarrow t_i \geq t_j$, detect sequences $S_i$ that are anomalous.
+\end{task}
+
+These are the most general tasks we can specify, in the sense that any task specifying additional factors must exclude at least some problems that could be relevant. Thus, before more interesting tasks and problems can be formulated, the relative values of the specific principal factor choices must be estimated. This is done in chapter \ref{ch:problems}.
+
+Note that task \ref{task:ad_splunk2} is mainly interesting when the data set consists of large amounts of similar sequences, for instance when analyzing user command records (as in figure \ref{fig:calls}). While this task is relevant in many applications, it is not as generally applicable as \ref{task:ad_splunk} to large databases of temporal machine data. While such databases will always contain plenty of long sequences that are interesting to study individually, there is no guarantee that they contain enough similar short sequences to warrant the application of \ref{task:ad_splunk2}. We here simply note that many papers have been published on task \ref{task:ad_splunk2} (\cite{blender}, \cite{chan}, \cite{ye}, \cite{forrest}, \cite{sekar1}, \cite{sekar2}), and refer to \cite{chandola2} and \cite{chandola3} for more thorough reviews.
+
+Finally, it should be noted that the tasks \ref{task:ad_splunk} and \ref{task:ad_splunk2} are related, in the sense that a problem of finding anomalous subsequences of some long sequence $S$ can be reduced to the problem of finding anomalous sequences in a set of sequences by extracting and comparing all subsequences (or all subsequences of some specific length) of $S$.
+
+\section{Terminology}
+\label{sect:terminology}
+
+Since we have assumed that the data sets we are dealing with consist of discrete events with associated time stamps, we now turn our focus to sequences and time series, and their relation to anomaly detection. Since various incompatible definitions of sequences and time series are used in the literature, we begin by defining these concepts.
+
+From here on, we take a \emph{sequence} to mean a progression (finite, or in the case of monitoring applications, infinite) $S = (s_1, s_2, \dots)$, where $\forall i: s_i \in X$ for some set $X$. Furthermore, we will take a \emph{time series} to be any sequence $T = ((s_1, t_1), (s_2, t_2), \dots)$, where $\forall i: (s_i, t_i) \in X \times \mathbb{R}^+$ for some set $X$ and $\forall i, j: i > j \rightarrow t_i \geq t_j$. In other words, a time series is any sequence in which each item is associated with a point in time. We refer to sequences and time series as symbolic/categorical, discrete, real-valued, vector-valued et cetera based on the characteristics of $X$.
+
+When the time series is sampled at regular intervals in time (i.e. $\forall i, j: t_{i+1} - t_i = t_{j+1} - t_j$), we say that the time series is \emph{regular}. We will treat regular time series as sequences, suppressing the $t_i$ and writing $T = (s_1, s_2, \dots)$. Henceforth we will take all time series to be equidistant unless explicitly stated\footnote{As mentioned above, there is some confusion surrounding these terms in the literature. Specifically, what we would refer to as `symbolic sequences' and `regular time series' are often simply referred to as `sequences' or `time series'. In such contexts, other types of sequences (and time series) are usually ignored}.
+
+\section{Aggregation}
+\label{sect:aggregation}
+
+\begin{figure}[htb]
+    \begin{center}
+        %\leavevmode
+        \begin{tabular}{| l | l l l l l l l l |}
+            \hline
+            $\mathbf{S_1}$ & login & passwd & mail & ssh & \dots & mail & web & logout \\ \hline
+            $\mathbf{S_2}$ & login & passwd & mail & web & \dots & web & web & logout \\ \hline
+            $\mathbf{S_3}$ & login & passwd & mail & ssh & \dots & web & web & logout \\ \hline
+            $\mathbf{S_4}$ & login & passwd & web & mail & \dots & web & mail & logout \\ \hline
+            $\mathbf{S_5}$ & login & passwd & login & passwd & login & passwd & \dots & logout \\\hline
+        \end{tabular}
+    \end{center}
+    \caption{{\small Multiple symbolic sequences consisting of user commands. In this context, anomaly detection tasks involving finding individual anomalous sequences are interesting. Arguably, problems based on such tasks should capture $\mathbf{S_5}$ as an anomaly due to its divergence from the other sequences. Based on a figure in \cite{chandola2}.}}
+    \label{fig:calls}
+\end{figure}
+
+In general, sequences are much easier to deal with algorithmically than irregular time series. For this reason, irregular time series are commonly aggregated to form regular time series, which can be treated as sequences. Different aggregations are used depending on the nature of the underlying data. We now present a few aggregations useful in the context of Splunk.
+
+As indicated in task \ref{task:ad_splunk}, we assume that the data we are interested consists of mixed-data time series. Depending on the context in which the data is generated, three main potentially interesting tasks can be discern, involving different transformations of the series. Firstly, we might be interested only in the relative ordering of elements. Secondly, we might be interested in the frequency of elements. Finally, we might want to approximate some (continuous) function we assume the series samples. We begin by formalizing the first and simplest case:
+
+\begin{task}[Sequential anomaly detection]
+  \label{task:sequential_anomaly_detection}
+  Given a sequence or collection of sequences $S$, detect elements or collections of elements in $S$ that are anomalous by considering their order.
+\end{task}
+
+This task is well suited for symbolic data, since such data can generally not be aggregated (due to its lack of structure). This task is relatively well understood - an in-depth review is given in \cite{chandola2}. An example of the task is shown in figure \ref{fig:calls}. It is not suited for the second case (since it ignores frequency information) or the third case (since it will give a bad approximation if the series is irregular) above. For the second case, the following task is more appropriate:
+
+\begin{task}[Frequential anomaly detection]
+  \label{task:frequential_anomaly_detection}
+  Given a sequence or collection of sequences $S$, detect elements or collections of elements in $S$ that are anomalous by considering how often they occur.
+\end{task}
+
+As an example of this task, consider a series corresponding to the times at which a certain error or warning message appears on some system. In such cases, how the relative frequency of the message evolves over time is the main point of interest---not the structure of each message (which might be always identical).
+
+Several methods can be used to generate sequences appropriate for this task from time series, such as histograms, sliding averages, etc. We can generalize these as the following transformation:
+
+Given a time series $T = ((s_1, t_1), (s_2, t_2), \dots)$ where $\forall i: s_i \in X$, with associated weights $w_i$ and some envelope function $e(s, t): X \times \mathbb{R} \rightarrow X$ as well as a spacing and offset $\Delta, t_0 \in \mathbb{R}^+$, a sequence $S' = ((s_{1}^{'}, \tau_1), (s_{2}^{'}, \tau_2), \dots)$ is constructed, where $\tau_i = t_0 + \Delta \cdot i$ and $s_{i}^{'} = \sum_{(s_j, t_j) \in S} s_i w_i e(t_j - \tau_i)$.
+
+The $\tau_i$ can then be discarded and the regular time series treated as a sequence. Histograms are recovered if $e(s, t) = 1$ when $|t| < \Delta/2$ and $e(x, t) = 0$ otherwise. Note that this method requires multiplication and addition to be defined for $X$, and is thus not applicable to most symbolic/categorical data. Also note that $S'$ is really just a sequence of samples of the convolution $f_S \ast e$ where $f_S = \sum_i \delta(t_i) s_i w_i$.
+
+How this aggregation is performed has a large and often poorly understood impact on the resulting sequence. As an example, when constructing histograms, the bin width and offset have implications for the speed and accuracy of the analysis. A small bin width leads to both small features and noise being more pronounced, while a large bin width might obscure smaller features. Similarly, the offset can greatly affect the appearance of the histograms, especially if the bin width is large. There is no `optimal' way to select these parameters, and various rules of thumb are typically used \cite{density_estimation}.
+
+Finally, the third case outlined at the start of this section can be summarized by the following task: 
+
+\begin{task}[Continuous anomaly detection]
+  \label{task:continuous_anomaly_detection}
+  Given a sequence or collection of sequences $S$, detect elements or collections of elements in $S$ that indicate anomalies in the process the elements in $S$ are sampled from.
+\end{task}
+
+This task can be treated in essentially the same way as the previous task. The convolution operation must be combined with a normalization step to account for the point density. It can also be beneficial to replace $f_S$ with an interpolation of the points in $S$. Moving average techniques are a common special case of this method.
+
+Note that all of the above transformations involve a loss of data. They are used because they simplify the analysis without (hopefully) losing information pertinent to the anomaly detector.
+
+\section{Uni- and multivariate data}
+\label{sect:unimultivariate}
+
+\begin{wrapfigure}{r}{0.5\textwidth}
+    \vspace{-25pt}
+    \begin{center}
+        \leavevmode
+        \includegraphics[trim = 20mm 3mm 20mm 5mm, clip, width=0.5\textwidth]{resources/multi_vs_univariate}
+    \end{center}
+    \vspace{-15pt}
+    \caption{{\small Two sine curves regarded as two separate univariate time series (dotted lines) and as one multivariate time series (solid lines).}}
+    \label{fig:multi_vs_univariate}
+    \vspace{-25pt}
+\end{wrapfigure}
+
+The dimensionality of the individual elements in a sequence has a profound impact on the difficulty and efficiency of the analysis. Representing a sequence by $S = (s_1, s_2, \dots)$, where $s_i \in X$ for some set $X$, we say that $S$ is \emph{multivariate} if $X$ is the Cartesian product of some collection of non-empty sets $X_i$, and that $S$ is \emph{univariate} otherwise. The difference between uni- and multivariate time series is illustrated in figure \ref{fig:multi_vs_univariate}.
+
+In a sense, univariate and multivariate sequences are two sides of the same coin. Obviously, any multivariate sequence $S = (s_1, s_2, \dots)$, where $s_i = (s_{i,1}, s_{i,2}, \dots, s_{i,n})$ may be split into multiple univariate time sequences $S_1, S_2, \dots, S_n$, where $S_i = (s_{1,i}, s_{2, i}, \dots ).$ Conversely, any $S_1, S_2, \dots, S_n$ can be aggregated into a multivariate time series (although this is meaningless unless the $S_i$ were all sampled at the same times).
+
+Multivariate time series are arguably more powerful, in the sense that a data point $(\vect{s_i}, t_i)$ where $\vect{s_i} = (s_{i,1}, s_{i,2}, \dots, s_{i,n})$ may be anomalous with regard to the rest of the data, while its individual components $s_{i,j}$ are not, as illustrated in figure \ref{fig:dimensionality_reduction}.
+
+On the other hand, analyzing higher-dimensional data is often difficult (in terms of both analysis time and accuracy), making multivariate analysis both computationally and conceptually more difficult. For this reason, it might be beneficial to (when safe) split multivariate sequences or otherwise reduce their dimensionality before performing the analysis. 
+
+A majority of the literature on anomaly detection in sequences, and especially in real-valued time series, focuses on univariate data, and while some algorithms can be extended to handle multivariate time series, this is not always possible. Keeping this in mind, it makes more sense to focus on univariate sequences, at least initially.
+
+\section{Compression}
+\label{sect:compression}
+
+\begin{figure}[htb]
+\begin{center}
+\leavevmode
+\includegraphics[width=\textwidth]{resources/multivariate}
+\end{center}
+\caption{\small{An example of dimensionality reduction in a point anomaly detection problem in $R^2$. The left figure shows a set of $500$ data points $(x_i, y_i)$ containing one anomaly. The top right figure shows a histogram of the $x_i$, while the bottom right figure shows a histogram of the distance from the center point. In each figure, the location of the anomalous point is marked by an arrow. While the anomaly is easy to detect in the left and bottom right figures, it can not be seen in the top right figure. This is due to the linear inseparability of the data, and illustrates how dimensionality reduction can lead to information losses if not performed properly.}}
+\label{fig:dimensionality_reduction}
+\end{figure}
+
+Analyzing high-dimensional data can be difficult, both due to increased computational time and due to topological properties of high-dimensional spaces (a phenomenon commonly referred to as the \emph{curse of dimensionality}). In many analysis tasks, it is therefore desirable to (if possible) reduce the dimensionality of data in such a way that only the aspects of the data most pertinent to the analysis remain.
+
+Many techniques have been designed with this goal in mind. A distinction is typically made between \emph{feature selection} and \emph{feature extraction} approaches. Feature selection approaches try to select a subset of the dimensions present in the original data. Feature extraction approaches, in contrast, transform the data into some new space, in which the relevant features are hopefully more apparent. Feature extraction methods are commonly employed as a pre-processing step in anomaly detection algorithms, while feature selection methods are not commonly used. We will here focus on feature extraction methods.
+
+Common feature extraction methods for data in $\mathbb{R}^n$ include \emph{principle component analysis} (PCA), \emph{semidefinite embedding}, \emph{partial least-squares regression}, and \emph{independent component analysis}. Which methods are appropriate to use depends heavily on the problem domain. In order to illustrate the concept of feature extraction, we will now briefly present a typical example of $\mathbb{R}^n$ feature extraction, before moving on to methods designed specifically for sequences (and time series in particular).
+
+%Consider the two-dimensional data set in the left panel of figure \ref{fig:multi_vs_univariate}. Here, all data points are generated from the same distribution except for a single anomalous point at the center of the panel. While the anomaly is readily identified in the left panel, due the radial symmetry of the distribution, it can not be seen when projected linearly onto any direction, as illustrated in the upper right panel. The task in dimensionality reduction is to present a projection onto a lower dimensional space (in this case $\mathbb{R}$) in which the classes (anomalous/non-anomalous) are separated, something that is surprisingly difficult even for this relatively simple data set. Indeed, most dimensionality reduction methods, including all feature selection methods and some feature extraction methods (such as linear PCA) can not accomplish this on the given data - non-linear feature extraction methods are required. This illustrates the difficulty inherent to dimensionality reduction.
+
+\begin{figure}[htb]
+  \begin{center}
+    \leavevmode
+    \includegraphics[width=\textwidth]{resources/types_of_data}
+  \end{center}
+  \caption{\small{Illustration of numerosity and dimensionality reduction in a conversion of a real-valued sequence to a symbolic sequence. The top frame shows a real-valued time series sampled from a random walk. The second frame shows the resulting series after a (piecewise constant) dimensionality reduction has been performed. In the third frame, the series from the second frame has been numerosity-reduced through rounding. The bottom frame shows how a conversion to a symbolic sequence might work; the elements from the third series is mapped to the set $(a,b,c,d,e,f)$.}}
+  \label{fig:types_of_data}
+\end{figure}
+
+When it comes to sequences, each individual component of a sequence is treated as an independent dimension, complicating the problem of dimensionality reduction significantly and rendering most ordinary methods intractable. Luckily, the temporal ordering of time series can often be used to efficiently perform feature extraction despite the high-dimensional data of the series. The literature on dimensionality reduction in sequences has mainly focused on real-valued sequences. In this context, the task of feature extraction can be rephrased as follows: \emph{Given a sequence $S = s_1, s_2, \dots, s_n$ where $s_i \in \mathbb{R}$, find a set of basis functions $\phi_1, \phi_2, \dots, \phi_n$ where $m < n$ that $T$ can be projected onto, such that the analysis is simplified and $T$ can be recovered with little error.} Many different methods for obtaining such bases have been proposed, including the discrete Fourier transform \cite{faloutsos1}, discrete wavelet transforms \cite{pong}, various piecewise linear and piecewise constant functions \cite{keogh3} \cite{geurts}, and singular value decomposition \cite{keogh3}. An overview of different representations is provided in \cite{fabian}.
+
+Arguably the simplest time series representation involves using a basis of piecewise constant functions $(\phi_1, \phi_2, \dots, \phi_n)$:
+\[
+  \phi_i(t) = \left\{
+    \begin{array}{l l}
+      1 & \quad \text{ if } \tau_i < t < \tau_{i+1} \\
+      0 & \quad \text{ otherwise.} \\
+    \end{array} \right.
+\]
+where $(\tau_1, \tau_2, \dots \tau_n)$ is a partition of $[t_1, t_n]$. The $s_i$ are then aggregated over the $\phi_i$ as in section \ref{sect:aggregation}. 
+
+Different piecewise constant representations have been proposed, corresponding to different partitions. The simplest of these, corresponding to a partition with constant $\tau_{i+1} - \tau_i$ is proposed in \cite{keogh4} and \cite{faloutsos2} and is usually referred to as \emph{piecewise aggregate approximation (PAA)}. As shown in \cite{keogh5}, \cite{keogh3} and \cite{faloutsos2}, PAA rivals the more sophisticated representations listed above. 
+
+Additionally, reducing the cardinality of the underlying set can be useful. This is often referred to as \emph{numerosity reduction} and corresponds to discretizing real-valued data or reducing the resolution of discrete data. This is primarily done to give real-valued time series symbolic representations, which allows for symbolic sequence analysis methods to be applied to them. The most widely used symbolic representation is \emph{symbolic aggregate approximation} (SAX) \cite{sax}.
+
+\section{Sequence extraction}
+\label{sect:series_mining}
+
+In light of the discussion of uni- and multivariate data above, it seems reasonable to emphasize extracting univariate series from the long multivariate sequences encountered in temporal machine data sets (i.e. task \ref{task:ad_splunk}). Indeed, the provision of tools for manually or automatically extracting interesting time series is likely necessary for the uptake of large-scale anomaly detection (and indeed several other related tasks) in databases such as Splunk. Ideally, methods should be available that automatically examine all potentially pertinent time series and report on those in which anomalies are found. However, the total number of such time series is likely to grow quickly with the number of fields and distinct values of categorical variables in the data data sets, possibly rendering such methods intractable.
+
+In order to estimate the feasibility of these methods, it can be helpful to consider the size of the search space---i.e., the number of possible interesting time series that can be constructed from a typical Splunk index. For example, consider an index consisting of web logs for a single web server. Assume that a log message is generated for every new HTTP request, containing the following fields: time stamp; host name and ident of the user; HTTP request type, URL, status and request/response size/time/latency; and the user agent and referrer. All of these factors are categorical, apart from the HTTP request/response size/time/latency, which ought to be considered real-valued. Let us denote the number of categories encountered in each categorical factor as $n_1, n_2, \dots, n_k$. For most websites, each of the $n_i$ ought to lie between a few hundred and a few million per day.
+
+We first consider the size of the set of potentially interesting univariate sequences. Interesting univariate sequences could be constructed from at least the frequencies of every value of every categorical factor; the continuous factors over time; or any factor conditioned by any single value of any categorical factor (such as the sequence of URLs or the latency over time for any single user). These combinations alone lead to a number of $N = \sum_i n_i (1 + k + \sum_{j \neq i} n_j)$ potentially interesting time series. If the $n_i$ are sufficiently small, the quadratic nature of this expression is workable. However, if the $n_i$ are large (as is the case in our example, and is likely to be the case in most Splunk applications), a very large number of time series would have to be extracted and analyzed. Of course, detecting anomalies in series conditioned by two or more variables could also be interesting - causing the addition of higher-degree terms to the expression of $N$. While linearity could be achieved by disregarding conditioned series, this would lead to a significant reduction in analysis power.
+
+Considering this, and the fact that anomaly detection is typically a computationally expensive task (especially when performed on the large data sets), completely automated series extraction is not likely to be feasible except on small indexes. However, if combined with manual pruning of the search space, automated extraction might be feasible. For instance, if in our example we were only interested in detecting anomalous user patterns, the analysis could be limited to a number of $n_u (k + \sum_{i \neq u} n_i)$ sequences (where $n_u$ is the number of distinct users), or perhaps as few as $n_u \cdot k$.
+
+Developing the tools to perform this type of extraction and analysis in Splunk should prove relatively straightforward, and this would be the logical next step once appropriate anomaly detection methods have been implemented.
