@@ -1,6 +1,5 @@
 To do:
 1 Finish project plan
-2 Change name: Anomaly Detection in Machine-Generated Data: A Structured Approach -> A Framework for Anomaly Detection with Applications to Machine-Generated Data
 3 Reshape chapters to:
    1. Introduction
    2. Background
@@ -24,4 +23,4 @@ To do:
 17 Add new, more formal section on sequence extraction
 
 Done:
--
+2 Change name: Anomaly Detection in Machine-Generated Data: A Structured Approach -> A Framework for Anomaly Detection with Applications to Machine-Generated Data
