@@ -1,18 +1,16 @@
-\documentclass[a4paper,9pt,twoside]{report}
-%\special{papersize=210mm,297mm}
+\documentclass[a4paper,twoside]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 \usepackage[english]{babel}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{wrapfig}
-%\usepackage{algorithm}
-%\usepackage{algorithmic}
 \usepackage{algpseudocode}
 \usepackage[a4paper,inner=2.5cm,outer=2.5cm,top=2.5cm,bottom=2.5cm,pdftex]{geometry}
 \usepackage[pdftex]{graphicx}
 \usepackage{epsfig}
 \usepackage{epstopdf}
 \usepackage{psfrag}
-\usepackage[utf8]{inputenc}
 \usepackage{fancyhdr}
 \usepackage{natbib}
 \usepackage{babelbib}
@@ -21,9 +19,8 @@
 \usepackage{subcaption}
 \usepackage{placeins}
 \usepackage{float}
-%\usepackage[all]{hypcap}
-%\usepackage{epstopdf} 
 \usepackage{graphicx}
+\usepackage{color,soul}
 
 \date{}
 
@@ -82,6 +79,8 @@
 \newcommand{\argmin}{\operatornamewithlimits{argmin}}
 \newcommand{\argmax}{\operatornamewithlimits{argmax}}
 
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
 \setcounter{tocdepth}{1}
 
 %Begin Document
@@ -116,9 +115,6 @@ One of these tasks is selected for further study: \emph{the detection of subsequ
 
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{2ex plus 0.5ex minus 0.2ex}
-
-%\newtheorem{definition}{Definition}
-%\newtheorem{theorem}{Theorem}
 
 \include{foreword}
 \include{introduction}

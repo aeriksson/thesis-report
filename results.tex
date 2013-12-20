@@ -291,7 +291,7 @@ Finally, while the evaluation time ought to be roughly independent of $w$ (or pr
 \label{sect:s}
 
 \begin{figure}[h]
-    \vspace{-20pt}
+    \vspace{-15pt}
     \begin{center}
         \includegraphics[width=\textwidth]{resources/s_heat_map}
     \end{center}
@@ -301,31 +301,40 @@ Finally, while the evaluation time ought to be roughly independent of $w$ (or pr
     \label{fig:s_heat_map}
 \end{figure}
 
-\begin{wrapfigure}{l}{0.49\textwidth}
-    \vspace{-30pt}
-    \begin{center}
-        \includegraphics[width=0.5\textwidth]{resources/s_error}
-    \end{center}
-    \vspace{-20pt}
-    \caption{\small{Errors of the anomaly vectors $A_s$.}}
-    \vspace{-20pt}
+%\begin{wrapfigure}[20]{rh}{0.45\textwidth}
+%    \begin{center}
+%        \includegraphics[width=0.5\textwidth]{resources/s_time}
+%    \end{center}
+%    \caption{\small{Evaluation times for $A_s$. As expected, the graph indicates that the times are $O(1/s^2)$.}}
+%    \label{fig:s_time}
+%\end{wrapfigure}
+
+\begin{figure}[h]
+    \begin{minipage}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{resources/s_error}
+        \caption{\small{Errors of the anomaly vectors $A_s$.\\ \quad}}
     \label{fig:s_error}
-\end{wrapfigure}
+    \end{minipage}%
+    \begin{minipage}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth,clip=true,trim=0mm 3mm 0mm 3mm]{resources/s_time}
+        \caption{\small{Evaluation times for the $A_s$. As expected, the graph indicates that the times are $O(1/s^2)$.}}
+        \label{fig:s_time}
+    \end{minipage}%
+\end{figure}%
+
+%\begin{figure}[h]
+%    \begin{center}
+%        \includegraphics[width=0.5\textwidth]{resources/s_error}
+%    \end{center}
+%    \caption{\small{Errors of the anomaly vectors $A_s$.}}
+%    \label{fig:s_error}
+%\end{figure}
 
 The sliding window step, $s$, is interesting mainly for the large effect it has on the execution time. For a brute-force kNN evaluator with the trivial context and sliding window filters, the number of comparisons performed on a sequence of length $L$ is $\Theta((L/s)^2)$. It is therefor desirable to choose a value of $s$ that is as large as possible. However, it is likely that all three errors increase with $s$ for all sequences, and large $s$ values might lead to poor results.
 
 To gain some insight into the performance of kNN methods for higher $s$, the anomaly vectors $A_s$ were computed for $s = 1$ to $10$ (the value of $w$ is $10$ in the default configuration). The results are shown in figures \ref{fig:s_heat_map}, \ref{fig:s_error}, and \ref{fig:s_time}.
-
-\begin{wrapfigure}{r}{0.49\textwidth}
-    \vspace{-40pt}
-    \begin{center}
-\includegraphics[width=0.5\textwidth]{resources/s_time}
-    \end{center}
-    \vspace{-20pt}
-\caption{\small{Evaluation times for $A_s$. As expected, the graph indicates that the times are $O(1/s^2)$.}}
-    \vspace{-10pt}
-    \label{fig:s_time}
-\end{wrapfigure}
 
 As seen in figure \ref{fig:s_heat_map}, the anomaly vectors are fairly accurate for all $s$. No major false anomalies are exhibited for $s < 8$, and the actual anomaly is still clearly detected over all $s$. This is reflected in the errors in figure \ref{fig:s_time}: all errors are low until $s \geq 8$. Additionally, the evaluation time plot follows the expected $O(1/s^2)$ trend.
 
@@ -336,7 +345,7 @@ In light of these results, perhaps a multi-resolution scheme should be considere
 \label{sect:m}
 
 \begin{figure}[H]
-    \vspace{-20pt}
+    \vspace{-15pt}
     \begin{center}
         \includegraphics[width=\textwidth]{resources/m_heat_map}
     \end{center}
@@ -400,7 +409,7 @@ As seen in figures \ref{fig:aggregator_error} and \ref{fig:aggregator_vectors}, 
 As could be expected, the minimum aggregator consistently led to the highest values of $\epsilon_{FS}$. It is likely to give a low score to a point if a single element containing that point has a low anomaly score, which effectively means that parts of anomalies will tend to be undervalued---something the full support error is sensitive to. In contrast, the maximum aggregator consistently led to the lowest support error values. This is also as expected, since max will assign high values to any point contained in an anomalous subsequence. The median and mean aggregators performed roughly equally well---while the mean performed better for higher $k$, this is not relevant; both aggregators were very far off for higher $k$.
 
 \begin{figure}[!ht]
-    \vspace{-15pt}
+    \vspace{-5pt}
     \begin{center}
         \includegraphics[width=\textwidth]{resources/aggregator_error}
     \end{center}
@@ -418,7 +427,7 @@ Similar, but less clear, results were obtained for the equal support errors. The
         \includegraphics[width=0.5\textwidth]{resources/aggregator_vectors}
     \end{center}
     \vspace{-20pt}
-    \caption{\small{Plot of the anomaly vectors $A_{k, \mathcal{A}}$ for $k=1$.}}
+    \caption{\small{Plot of the $A_{k, \mathcal{A}}$ for $k=1$.}}
     \vspace{-0pt}
     \label{fig:aggregator_vectors}
 \end{wrapfigure}
