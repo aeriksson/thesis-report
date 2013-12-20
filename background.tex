@@ -6,14 +6,14 @@ This chapter gives a brief introduction to the subject of anomaly detection. The
 \section{Anomaly detection}
 \label{sect:adb}
 
-In essence, anomaly detection is the task of automatically detecting items (\emph{anomalies}) in data sets that in some sense do not fit in with the rest of those data sets (i.e. are \emph{anomalous}). The nature of both the data sets and anomalies are entirely defined by the context in which anomaly detection is applied, and vary drastically between application domains. As an illustration of this, consider the two data sets shown in Figures \ref{fig:example2} and \ref{fig:example1}. While these are similar in the sense that they both involve sequences, they differ in the type of data points (real-valued vs. symbolic), the structure of the data set (one long sequence vs. several sequences), as well as the nature of the anomalies (a subseqeuence vs. one sequence out of many).
+In essence, anomaly detection is the task of automatically detecting items (\emph{anomalies}) in data sets that in some sense do not fit in with the rest of those data sets (i.e.\ are \emph{anomalous}). The nature of both the data sets and anomalies are entirely defined by the context in which anomaly detection is applied, and vary drastically between application domains. As an illustration of this, consider the two data sets shown in Figures~\ref{fig:example2} and~\ref{fig:example1}. While these are similar in the sense that they both involve sequences, they differ in the type of data points (real-valued vs.\ symbolic), the structure of the data set (one long sequence vs.\ several sequences), as well as the nature of the anomalies (a subseqeuence vs.\ one sequence out of many).
 
 \begin{figure}[htb]
     \centering
     \includegraphics[width=\textwidth]{resources/anomaly_example}
     \caption{\small Long real-valued sequence with an anomaly at the center.}
     \vspace{-0pt}
-    \label{fig:example2}
+\label{fig:example2}
 \end{figure}
 
 Like many other concepts in machine learning and data science, the term `anomaly detection' does not refer to any single well-defined problem. Rather, it is an umbrella term encompassing a collection of loosely related techniques and problems. Anomaly detection problems are encountered in nearly every domain in business and science in which data is collected for analysis. Naturally, this leads to a great diversity in the applications and implications of anomaly detection techniques. Due to its wide scope, anomaly detection is continuously being applied to new domains, despite having been an active research topic for decades.
@@ -29,10 +29,10 @@ Like many other concepts in machine learning and data science, the term `anomaly
         $\mathbf{S_5}$ & login & passwd & login & passwd & login & passwd & \dots & logout \\\hline
     \end{tabular}
     \caption{Several sequences of user commands. The bottom sequence is anomalous compared to the others.}
-    \label{fig:example1}
+\label{fig:example1}
 \end{figure}
 
-For this reason, anomaly detection as a subject encompasses a diverse set of problems, methods, and applications. Different problems and methods often have few similarities, and no unifying theory exists. Indeed, the eventual discovery of such a theory seems highly unlikely; the subject is too diverse and the concept of an anomaly too subjective. Even the term `anomaly detection' itself has evaded any widely accepted definition \cite{hodge} in spite of multiple attempts. 
+For this reason, anomaly detection as a subject encompasses a diverse set of problems, methods, and applications. Different problems and methods often have few similarities, and no unifying theory exists. Indeed, the eventual discovery of such a theory seems highly unlikely; the subject is too diverse and the concept of an anomaly too subjective. Even the term `anomaly detection' itself has evaded any widely accepted definition~\cite{hodge} in spite of multiple attempts.
 
 Despite this lack of unifying theory, anomaly detection is a very important task, and it is crucial that a thorough understanding of the subject is developed. Anomaly detection methods are vital analysis tools in a wide variety of domains, and the set of scientific and commercial domains which could benefit from automated anomaly detection is huge. Indeed, due to increasing data volumes, exhaustive manual analysis is (or will soon be) prohibitively expensive in many domains, rendering effective automated anomaly detection methods critical to future development.
 
@@ -40,9 +40,9 @@ As previously stated, the main goal of the project was to investigate anomaly de
 
 The first problem is that there is a lack of a unified methods for examining and comparing different anomaly detection methods. Typically, papers consist of a presentation of one or more methods targeted targeted on some application, including a comparison  with previous methods proposed for similar applications. However, these methods are typically targeted towards subtly different problems, rendering direct comparisons problematic. Such an approach makes it difficult to compare methods objectively, and thus hinders broad-focus investigations such as the one performed in this project. In order to deal with this issue, some system of studying and comparing methods must be adopted.
 
-The second problem is that the evaluations of proposed methods are often deficient. New proposals are often evaluated only on highly heterogeneous or cherry-picked data sets. Furthermore, the behaviour of anomaly detection methods is often highly dependent on parameter choices, and only the results for the best parameter values (which often vary among different data sets in unpredictable ways) are typically presented \cite{keogh5}. These issues, along with the fact that source code and data used are typically not publicly available, hinder objectivity and reproducibility. 
+The second problem is that the evaluations of proposed methods are often deficient. New proposals are often evaluated only on highly heterogeneous or cherry-picked data sets. Furthermore, the behaviour of anomaly detection methods is often highly dependent on parameter choices, and only the results for the best parameter values (which often vary among different data sets in unpredictable ways) are typically presented~\cite{keogh5}. These issues, along with the fact that source code and data used are typically not publicly available, hinder objectivity and reproducibility.
 
-Consequently, it is very difficult to compare methods and decide which are the most suitable for a given domain. In the initial stages of this project, it was hoped that some paper or article mitigating the two problems would be uncovered, allowing the project to be focused solely on finding and optimizing methods for anomaly detection in Splunk. However, when after a thorough literary review no such articles had been found, it was decided that these issues would have to be tackled as part of the project. To address the first problem, the tasks and problems framework (described in the following section) for relating and comparing anomaly detection methods was developed. To address the second problem, \texttt{ad-eval} (described in Chapter \ref{ch:implementation}) was developed and released as open source.
+Consequently, it is very difficult to compare methods and decide which are the most suitable for a given domain. In the initial stages of this project, it was hoped that some paper or article mitigating the two problems would be uncovered, allowing the project to be focused solely on finding and optimizing methods for anomaly detection in Splunk. However, when after a thorough literary review no such articles had been found, it was decided that these issues would have to be tackled as part of the project. To address the first problem, the tasks and problems framework (described in the following section) for relating and comparing anomaly detection methods was developed. To address the second problem, \texttt{ad-eval} (described in Chapter~\ref{ch:implementation}) was developed and released as open source.
 
 \section{Tasks and problems framework}
 \label{sect:tasks_problems}
@@ -53,22 +53,22 @@ In order to facilitate the comparison of different approaches, we introduce the 
 
 Due to the inexact nature of anomaly detection, it is usually not clear how to precisely specify problems that can accurately capture specific types of anomalies in specific data sets, so the problem formulations themselves must be evaluated empirically. Trying to find optimal methods before a specific problem formulation has been settled upon constitutes premature optimization and is consequently inadvisable.
 
-Since tasks and problems are only derived from other tasks through the specification of additional details, they form a hierarchy of derivations. This hierarchy can be envisioned as a directed acyclic graph, where problems and tasks constitute sinks and non-sinks respectively. If one task could be found from which the entire graph of anomaly detection tasks and problems can be reached, then this task could be used as a definition for anomaly detection (i.e. it would be general enough to cover all methods and problems). We propose that the following task be used for this purpose:
+Since tasks and problems are only derived from other tasks through the specification of additional details, they form a hierarchy of derivations. This hierarchy can be envisioned as a directed acyclic graph, where problems and tasks constitute sinks and non-sinks respectively. If one task could be found from which the entire graph of anomaly detection tasks and problems can be reached, then this task could be used as a definition for anomaly detection (i.e.\ it would be general enough to cover all methods and problems). We propose that the following task be used for this purpose:
 
 \begin{task}[Anomaly detection]
-  \label{task:anomaly_detection}
+\label{task:anomaly_detection}
   Given a data set\footnote{Throughout this paper, a `data set' is taken to mean a (countable) set in the mathematical sense, where each item is associated with a unique index (so that multiple items can take on the same value). Tasks to which the structure of data is not relevant are formulated using data sets even though they might apply to sequences or other types of data as well.} $D$ of data, find subsets $s \subseteq D$ that are anomalous.
 \end{task}
 
-Throughout this report, this task is used as a basis from which all other tasks and problems are derived. To facilitate the derivation of new tasks and problems, it is necessary to emphasize exactly which \emph{factors} must specified in order to derive a problem from Task \ref{task:anomaly_detection}. Enumeration of these factors, and the possible choices for each, can provide insight into the structure of the anomaly detection hierarchy (and, consequently, into the subject itself). We note that in order to derive a problem from Task \ref{task:anomaly_detection}, at least the following five factors must be specified:
+Throughout this report, this task is used as a basis from which all other tasks and problems are derived. To facilitate the derivation of new tasks and problems, it is necessary to emphasize exactly which \emph{factors} must specified in order to derive a problem from Task~\ref{task:anomaly_detection}. Enumeration of these factors, and the possible choices for each, can provide insight into the structure of the anomaly detection hierarchy (and, consequently, into the subject itself). We note that in order to derive a problem from Task~\ref{task:anomaly_detection}, at least the following five factors must be specified:
 \begin{description}
   \item[Data format] The structure of the data set on which the analysis is performed.
   \item[Reference data] The data set on which the anomaly classification should be based.
   \item[Output format] What data should be produced by methods.
   \item[Anomaly measure] The heuristic used to assess how anomalous items are.
-  \item[Anomaly type] Which structural properties of the data should be considered. 
+  \item[Anomaly type] Which structural properties of the data should be considered.
 \end{description}
-These factors, which are emphasized throughout the report, will be referred to as \emph{principal factors}. While individual problems might specify factors (such as restrictions) other than the principal factors, \emph{any} anomaly detection problem must be derived from at least five high-level tasks, each of which corresponds to a principal factor choice. This makes the principal factors uniquely interesting. The bulk of Chapter \ref{ch:tasks} is dedicated to the examination of these factors, the discussion of possible choices for each, and the formulation of corresponding tasks.
+These factors, which are emphasized throughout the report, will be referred to as \emph{principal factors}. While individual problems might specify factors (such as restrictions) other than the principal factors, \emph{any} anomaly detection problem must be derived from at least five high-level tasks, each of which corresponds to a principal factor choice. This makes the principal factors uniquely interesting. The bulk of Chapter~\ref{ch:tasks} is dedicated to the examination of these factors, the discussion of possible choices for each, and the formulation of corresponding tasks.
 
 One major advantage of this framework is that different problems can be related through the tasks from which they inherit. Studying the `most specific common task' of two problems can be useful in estimating differences and similarities between the two problems. Furthermore, as we will see, high level tasks can often be reduced to one another. Thus, the framework can be utilized to recognize when different problems are similar or can be related through reductions. For these reasons, we believe that a theory designed to relate and contrast the tasks induced by the principal factor choices can be useful in advancing the subject of anomaly detection.
 
@@ -79,19 +79,19 @@ The framework can profitably be applied to perform systematic analyses of anomal
   \item Consider what information is known about the domain, the type of anomalies that are interesting, et cetera. Derive the most specific possible task based on this information.
   \item Based on the specified task, derive as many problems as possible by experimenting with different choices of factors.
   \item Evaluate these problems with regard to the target domain. Select one or a few problems that seem to accurately reflect the demands of the domain.
-  \item Derive and implement efficient methods for solving the selected problem(s).
+  \item Derive and implement efficient methods for solving the selected problem (or problems).
 \end{enumerate}
 
-This process was used in the project to discuss and compare approaches to anomaly detection on machine-generated data in a systematic way. This report addresses the use of the three first steps in this project; Chapter \ref{ch:problems} treats the first step; Chapter \ref{ch:methods}, the second step; and Chapter \ref{ch:results} briefly covers the third step.
+This process was used in the project to discuss and compare approaches to anomaly detection on machine-generated data in a systematic way. This report addresses the use of the three first steps in this project; Chapter~\ref{ch:problems} treats the first step; Chapter~\ref{ch:methods}, the second step; and Chapter~\ref{ch:results} briefly covers the third step.
 
 \section{Analysis in Splunk}
 \label{sect:splunk}
 
-As was mentioned in the introduction, the main goal of this thesis was to investigate anomaly detection problems and techniques suitable for use in Splunk (\url{http://www.splunk.com/}). Splunk is a database and data analysis tool optimized for indexing and analyzing large data sets of machine-generated data (typically many terabytes in size), and is used by over 4800 companies including over half of the Fortune 100 \cite{splunk}. Splunk is used either through its web or command line interfaces, or through its extensive REST API. Users typically perform searches and analyses using a custom, UNIX-inspired search language, either manually or using automated scripts.
+As was mentioned in the introduction, the main goal of this thesis was to investigate anomaly detection problems and techniques suitable for use in Splunk (\url{http://www.splunk.com/}). Splunk is a database and data analysis tool optimized for indexing and analyzing large data sets of machine-generated data (typically many terabytes in size), and is used by over 4800 companies including over half of the Fortune 100~\cite{splunk}. Splunk is used either through its web or command line interfaces, or through its extensive REST API\@. Users typically perform searches and analyses using a custom, UNIX-inspired search language, either manually or using automated scripts.
 
 Most users interact with the web interface to perform searches or analyses, or to view statistics or metrics. While rather limited by default, the web interface is highly customizable and is typically expanded with custom views (packaged as \emph{dashboards} or \emph{apps}) tailored to the users' needs.
 
-This customizability, combined with the flexibility of the search language, makes Splunk a versatile tool. As a consequence, it  used in a multitude of technology and business domains. Many more common use cases involve monitoring or diagnosis; Splunk is often used to monitor the state of critical systems, or to diagnose the cause of errors or inefficiencies. 
+This customizability, combined with the flexibility of the search language, makes Splunk a versatile tool. As a consequence, it  used in a multitude of technology and business domains. Many more common use cases involve monitoring or diagnosis; Splunk is often used to monitor the state of critical systems, or to diagnose the cause of errors or inefficiencies.
 
 In such scenarios, anomaly detection can be very useful in guiding the analysis. Therefore, if effective anomaly detection methods specifically designed for these uses were added to Splunk, they could have a large impact on automated analysis in a large number of domains.
 
