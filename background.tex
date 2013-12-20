@@ -1,7 +1,7 @@
 \chapter{Background}
 \label{ch:background}
 
-This chapter gives a brief introduction to the subject of anomaly detection. The framework of tasks and problems used throughout the paper is presented and justified. Finally, a anomaly detection in the context of Splunk is presented.
+This chapter gives a brief introduction to the subject of anomaly detection. The framework of tasks and problems used throughout the paper is presented and justified.
 
 \section{Anomaly detection}
 \label{sect:adb}
@@ -36,7 +36,7 @@ For this reason, anomaly detection as a subject encompasses a diverse set of pro
 
 Despite this lack of unifying theory, anomaly detection is a very important task, and it is crucial that a thorough understanding of the subject is developed. Anomaly detection methods are vital analysis tools in a wide variety of domains, and the set of scientific and commercial domains which could benefit from automated anomaly detection is huge. Indeed, due to increasing data volumes, exhaustive manual analysis is (or will soon be) prohibitively expensive in many domains, rendering effective automated anomaly detection methods critical to future development.
 
-As previously stated, the main goal of the project was to investigate anomaly detection methods that would be valuable for use in large databases for machine-generated data such as Splunk. The literature on anomaly detection suffers from two problems hindering the realization of this goal.
+As previously stated, the main goal of the project was to investigate anomaly detection methods that would be valuable for use on large databases for machine-generated data. The literature on anomaly detection suffers from two problems hindering the realization of this goal.
 
 The first problem is that there is a lack of a unified methods for examining and comparing different anomaly detection methods. Typically, papers consist of a presentation of one or more methods targeted targeted on some application, including a comparison  with previous methods proposed for similar applications. However, these methods are typically targeted towards subtly different problems, rendering direct comparisons problematic. Such an approach makes it difficult to compare methods objectively, and thus hinders broad-focus investigations such as the one performed in this project. In order to deal with this issue, some system of studying and comparing methods must be adopted.
 
@@ -83,16 +83,3 @@ The framework can profitably be applied to perform systematic analyses of anomal
 \end{enumerate}
 
 This process was used in the project to discuss and compare approaches to anomaly detection on machine-generated data in a systematic way. This report addresses the use of the three first steps in this project; Chapter~\ref{ch:problems} treats the first step; Chapter~\ref{ch:methods}, the second step; and Chapter~\ref{ch:results} briefly covers the third step.
-
-\section{Analysis in Splunk}
-\label{sect:splunk}
-
-As was mentioned in the introduction, the main goal of this thesis was to investigate anomaly detection problems and techniques suitable for use in Splunk (\url{http://www.splunk.com/}). Splunk is a database and data analysis tool optimized for indexing and analyzing large data sets of machine-generated data (typically many terabytes in size), and is used by over 4800 companies including over half of the Fortune 100~\cite{splunk}. Splunk is used either through its web or command line interfaces, or through its extensive REST API\@. Users typically perform searches and analyses using a custom, UNIX-inspired search language, either manually or using automated scripts.
-
-Most users interact with the web interface to perform searches or analyses, or to view statistics or metrics. While rather limited by default, the web interface is highly customizable and is typically expanded with custom views (packaged as \emph{dashboards} or \emph{apps}) tailored to the users' needs.
-
-This customizability, combined with the flexibility of the search language, makes Splunk a versatile tool. As a consequence, it  used in a multitude of technology and business domains. Many more common use cases involve monitoring or diagnosis; Splunk is often used to monitor the state of critical systems, or to diagnose the cause of errors or inefficiencies.
-
-In such scenarios, anomaly detection can be very useful in guiding the analysis. Therefore, if effective anomaly detection methods specifically designed for these uses were added to Splunk, they could have a large impact on automated analysis in a large number of domains.
-
-To that end, problem formulations that can be useful for automated monitoring and diagnosis in large sets of machine data were chosen as a main goal. While the focus of the paper is on applications in Splunk, the results obtained should be generally applicable to large sets of temporal machine data.
