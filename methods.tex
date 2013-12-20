@@ -1,16 +1,16 @@
 \chapter{Component framework}
 \label{ch:methods}
 
-Before task \ref{task:main} can be evaluated, an understanding of the set of problems that can be derived from it must be acquired. In this chapter, the \emph{component framework} is proposed, which facilitates a structured approach to this problem.
+Before Task \ref{task:main} can be evaluated, an understanding of the set of problems that can be derived from it must be acquired. In this chapter, the \emph{component framework} is proposed, which facilitates a structured approach to this problem.
 
-First, section \ref{sect:framework} introduces the component framework. In section \ref{sect:related_tasks_framework}, modifying the component framework to handle various related tasks is discussed. Finally, the component framework is used in section \ref{sect:deriving_problems} to discuss and derive interesting problems from task \ref{task:main}.
+First, Section \ref{sect:framework} introduces the component framework. In Section \ref{sect:related_tasks_framework}, modifying the component framework to handle various related tasks is discussed. Finally, the component framework is used in Section \ref{sect:deriving_problems} to discuss and derive interesting problems from Task \ref{task:main}.
 
 \section{The framework}
 \label{sect:framework}
 
-While task \ref{task:main} has not been previously studied, several papers exist covering special cases of it (typically corresponding to certain combinations of context functions, filters and anomaly measures). A key realization in the development of the component framework was that almost all these methods could be specified using a set of independent components, used by a common algorithm to find anomalies. If the components could be formalized and abstracted to pertain to task \ref{task:main}, then an understanding of the set of problems derived from that task could be obtained through the study of the individual components.
+While Task \ref{task:main} has not been previously studied, several papers exist covering special cases of it (typically corresponding to certain combinations of context functions, filters and anomaly measures). A key realization in the development of the component framework was that almost all these methods could be specified using a set of independent components, used by a common algorithm to find anomalies. If the components could be formalized and abstracted to pertain to Task \ref{task:main}, then an understanding of the set of problems derived from that task could be obtained through the study of the individual components.
 
-The first step towards this goal was to consider which factors are needed to specify a problem from task \ref{task:main}. We note that, at minimum, the following factors must be specified:
+The first step towards this goal was to consider which factors are needed to specify a problem from Task \ref{task:main}. We note that, at minimum, the following factors must be specified:
 
 \begin{description}
   \item[The context function.] Since we are dealing with contextual collective anomalies, the context must be defined.
@@ -45,12 +45,12 @@ Restating existing problems within this framework provides several advantages. F
 
 The fact that a single algorithm can be used for all problems suggests the possibility of automated, accurate handling of diverse data sets. Typically, the extent to which problems can capture anomalies varies drastically between series from different sources. If this ability could be related to underlying characteristics of the series, a preliminary analysis could guide the choice of components. Since the proposed framework simplifies automated analysis and allows for problems to be applied interchangeably on the same data, it could help both in finding these underlying characteristics and in applying them to anomaly detection.
 
-As an example of such a characteristic, in \cite{chandola3}, various anomaly measures are compared on a task derived from \ref{task:ad_splunk2} (finding anomalous real-valued sequences in a set of similar sequences) and a correlation is noted for some problems between the share of anomalies captured and the periodicity of the sequences. Based on this, investigating links between problem accuracy and characteristics of series in the frequency domain may prove fruitful.
+As an example of such a characteristic, in \cite{chandola3}, various anomaly measures are compared on a task derived From \ref{task:ad_splunk2} (finding anomalous real-valued sequences in a set of similar sequences) and a correlation is noted for some problems between the share of anomalies captured and the periodicity of the sequences. Based on this, investigating links between problem accuracy and characteristics of series in the frequency domain may prove fruitful.
 
 \section{Related tasks}
 \label{sect:related_tasks_framework}
 
-It is important to note that the component framework is not limited to task \ref{task:main}, but can be modified to handle several related tasks as well. For instance:
+It is important to note that the component framework is not limited to Task \ref{task:main}, but can be modified to handle several related tasks as well. For instance:
 \begin{description}
     \item[Semi-supervised] tasks are retrieved by specifying a reference sequence $R$ in addition to the evaluation sequence $T$, and letting $\mathcal{C}(T_i) \equiv R$.
     \item[Collective anomaly] detection tasks are retrieved by specifying $\mathcal{C}(T_i) = T \setminus T_i$.
@@ -67,7 +67,7 @@ Based on this, the component framework could help elucidate how different sequen
 
 We now discuss possible choices of the components $\mathcal{F}_E$, $\mathcal{C}$, $\mathcal{F}_R$, $\mathcal{M}$ and $\mathcal{A}$ and the implications of these choices.
 
-While task \ref{task:main} has not been previously studied, components based on existing methods for other tasks can be used with it. In the following discussion, several such component choices, as well as a few new components, are mentioned.
+While Task \ref{task:main} has not been previously studied, components based on existing methods for other tasks can be used with it. In the following discussion, several such component choices, as well as a few new components, are mentioned.
 
 \subsection{The evaluation filter}
 
@@ -102,15 +102,15 @@ The reference filter works like the evaluation filter, but extracts subsequences
 
 \subsection{The anomaly measure}
 
-As is typically the case, the anomaly measure is the central part of any problem derived from task \ref{task:main}. Formally, any anomaly measure that takes an evaluation vector and a set of reference vectors as inputs and returns a real value is a candidate for $\mathcal{M}$. We now discuss a few such anomaly measures, following the classification in section \ref{sect:anomaly_measures}.
+As is typically the case, the anomaly measure is the central part of any problem derived from Task \ref{task:main}. Formally, any anomaly measure that takes an evaluation vector and a set of reference vectors as inputs and returns a real value is a candidate for $\mathcal{M}$. We now discuss a few such anomaly measures, following the classification in Section \ref{sect:anomaly_measures}.
 
-As previously mentioned, \emph{statistical measures} are attractive due to the theoretical justification they provide for anomaly detection. However, there are certain factors which render their use problematic for the task at hand. Firstly, as discussed in section \ref{sect:goals} we can not assume that the data belongs to any particular distribution, so parametric problem formulations are not appropriate. 
+As previously mentioned, \emph{statistical measures} are attractive due to the theoretical justification they provide for anomaly detection. However, there are certain factors which render their use problematic for the task at hand. Firstly, as discussed in Section \ref{sect:goals} we can not assume that the data belongs to any particular distribution, so parametric problem formulations are not appropriate. 
 
-Since few non-parametric methods for anomaly detection in sequential data take into account either collective anomalies or context, and since naive approaches are likely to suffer from convergence issues, \footnote{For instance, the expectation maximization algorithm for Gaussian mixture models has convergence issues in high dimensions with low sample sizes.} suggesting appropriate non-parametric methods for task \ref{task:main} is difficult. However, in the case of task \ref{task:frequency}, point anomalies (for which statistical methods have been extensively researched) are more interesting than collective anomalies, and statistical methods are likely to be applicable.
+Since few non-parametric methods for anomaly detection in sequential data take into account either collective anomalies or context, and since naive approaches are likely to suffer from convergence issues, \footnote{For instance, the expectation maximization algorithm for Gaussian mixture models has convergence issues in high dimensions with low sample sizes.} suggesting appropriate non-parametric methods for Task \ref{task:main} is difficult. However, in the case of Task \ref{task:frequency}, point anomalies (for which statistical methods have been extensively researched) are more interesting than collective anomalies, and statistical methods are likely to be applicable.
 
 \emph{Information theoretical measures} are potentially interesting for the chosen task. However, most such methods are essentially distance-based anomaly measures equipped with information theoretical distance measures. For this reason, we do not cover information theoretical anomaly measures separately from distance-based measures.
 
-Instead, we emphasize \emph{distance-based measures}. Since they encompass a wide variety of methods, which have been shown to be successful for related problems \cite{chandola3}, we dedicate section \ref{sect:distance_mezurez} to discussing them.
+Instead, we emphasize \emph{distance-based measures}. Since they encompass a wide variety of methods, which have been shown to be successful for related problems \cite{chandola3}, we dedicate Section \ref{sect:distance_mezurez} to discussing them.
 
 \emph{Classifier-based measures} have also shown promise for related problems \cite{chandola3}. Generally, any \emph{one}-class classifier is potentially suitable for the task; see \cite{classification} for an exhaustive discussion on this topic. While one-class classifiers produce binary output, appropriate anomaly vectors can still be produced through a suitable choice of $\mathcal{A}$.
 

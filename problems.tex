@@ -3,11 +3,11 @@
 
 Having discussed principal factors and transformations in depth, we are finally in a position to reason about which tasks might be the most relevant to anomaly detection in the target domain.
 
-This chapter begins in section \ref{sect:goals} with a presentation and discussion of objectives in designing anomaly detection methods for machine data.
+This chapter begins in Section \ref{sect:goals} with a presentation and discussion of objectives in designing anomaly detection methods for machine data.
 
-In section \ref{sect:relevant_tasks}, the principal factors and high level tasks presented in chapter \ref{ch:tasks} are considered, from the perspective of their applicability to temporal machine data and how well they match the chosen objectives.
+In Section \ref{sect:relevant_tasks}, the principal factors and high level tasks presented in Chapter \ref{ch:tasks} are considered, from the perspective of their applicability to temporal machine data and how well they match the chosen objectives.
 
-Finally, the chapter is concluded in section \ref{sect:suggested_tasks} with a summary of the anomaly detection tasks most relevant to the target domain.
+Finally, the chapter is concluded in Section \ref{sect:suggested_tasks} with a summary of the anomaly detection tasks most relevant to the target domain.
 
 \section{Objectives}
 \label{sect:goals}
@@ -33,26 +33,26 @@ Finally, it is vital that methods be \emph{scalable}. Since the hope is to provi
 \section{High-level tasks}
 \label{sect:relevant_tasks}
 
-Which high level tasks are relevant for temporal machine data is now discussed. The principal factors are treated sequentially, according to the order they were encountered in chapter \ref{ch:tasks}.
+Which high level tasks are relevant for temporal machine data is now discussed. The principal factors are treated sequentially, according to the order they were encountered in Chapter \ref{ch:tasks}.
 
-This section is also based in large part on the discussions in the previous section and those of chapter \ref{ch:transformations}. 
+This Section is also based in large part on the discussions in the previous Section and those of Chapter \ref{ch:transformations}. 
 
 \subsection{Data format}
 \label{sect:relevant_data_format}
 
-As per the discussion in sections \ref{sect:splunk_techniques} and \ref{sect:series_mining}, it is appropriate to focus on extracting sequences from indexes for use with tasks \ref{task:ad_splunk} or \ref{task:ad_splunk2}.
+As per the discussion in Sections \ref{sect:splunk_techniques} and \ref{sect:series_mining}, it is appropriate to focus on extracting sequences from indexes for use with Tasks \ref{task:ad_splunk} or \ref{task:ad_splunk2}.
 
-What remains is to settle on a specific presentation of these sequences. While all three aggregation tasks presented in section \ref{sect:aggregation} are potentially useful for temporal machine data, their relative utility to the stated objectives can still be judged. We will now discuss each of the three tasks in turn, and estimate their utility.
+What remains is to settle on a specific presentation of these sequences. While all three aggregation tasks presented in Section \ref{sect:aggregation} are potentially useful for temporal machine data, their relative utility to the stated objectives can still be judged. We will now discuss each of the three tasks in turn, and estimate their utility.
 
-First, consider task \ref{task:sequential_anomaly_detection} (sequential anomaly detection). While interesting in certain contexts (such as system call or web session traces), it is not likely to be able to capture a majority of interesting sequences in temporal machine data sets, since it is not appropriate for non-categorical sequences. While there are certainly interesting categorical sequences that can be analyzed in many temporal machine data sets, it can be expected that these constitute a low share of the total number of interesting sequences in Splunk applications. For this reason, it ought to be argued that this task, while interesting in some cases, should have lower priority than the other two aggregation tasks.
+First, consider Task \ref{task:sequential_anomaly_detection} (sequential anomaly detection). While interesting in certain contexts (such as system call or web session traces), it is not likely to be able to capture a majority of interesting sequences in temporal machine data sets, since it is not appropriate for non-categorical sequences. While there are certainly interesting categorical sequences that can be analyzed in many temporal machine data sets, it can be expected that these constitute a low share of the total number of interesting sequences in Splunk applications. For this reason, it ought to be argued that this task, while interesting in some cases, should have lower priority than the other two aggregation tasks.
 
 Task \ref{task:frequential_anomaly_detection} (frequential anomaly detection) is more interesting. Since it enables anomaly detection to be applied to the frequency of any recurring event or value, it should be applicable to a wider range of data sets. However, it is limited in the sense that it can not accurately capture continuous quantities or other types of quantities that vary over time. This limits its applicability to temporal machine data sets, since a large share of the interesting quantities in such data (at least in Splunk applications) vary over time.
 
-In such cases, task \ref{task:continuous_anomaly_detection} is more appropriate, as it allows for correct estimates of evolving quantities. As pointed out in section \ref{sect:aggregation}, the aggregation transformations involved in the tasks \ref{task:frequential_anomaly_detection} and \ref{task:continuous_anomaly_detection} are very similar, and implementing them both should not be difficult. However, they are likely to require different anomaly measures; to limit the scope of the project, it was decided that the focus would be placed on the latter.
+In such cases, Task \ref{task:continuous_anomaly_detection} is more appropriate, as it allows for correct estimates of evolving quantities. As pointed out in Section \ref{sect:aggregation}, the aggregation transformations involved in the Tasks \ref{task:frequential_anomaly_detection} and \ref{task:continuous_anomaly_detection} are very similar, and implementing them both should not be difficult. However, they are likely to require different anomaly measures; to limit the scope of the project, it was decided that the focus would be placed on the latter.
 
-The next issue to settle is whether uni- or multivariate sequences should be the focus. As discussed in section \ref{sect:unimultivariate} multivariate sequences are more difficult to analyze than univariate sequences, and can often be broken down into univariate sequences without significant losses in analysis power. Therefore, it is reasonable to (at least initially) focus solely on univariate sequences.
+The next issue to settle is whether uni- or multivariate sequences should be the focus. As discussed in Section \ref{sect:unimultivariate} multivariate sequences are more difficult to analyze than univariate sequences, and can often be broken down into univariate sequences without significant losses in analysis power. Therefore, it is reasonable to (at least initially) focus solely on univariate sequences.
 
-Finally, it must be decided which of the tasks \ref{task:ad_splunk} (detecting anomalous subsequences) and \ref{task:ad_splunk} (detecting anomalous sequences in a set of sequences) to focus on. While the latter task is interesting and occurs naturally in many contexts, e.g. system call traces (figure \ref{fig:calls}), it is more reasonable to focus on the former since temporal machine data sets typically feature long and largely dissimilar sequences.
+Finally, it must be decided which of the Tasks \ref{task:ad_splunk} (detecting anomalous subsequences) and \ref{task:ad_splunk} (detecting anomalous sequences in a set of sequences) to focus on. While the latter task is interesting and occurs naturally in many contexts, e.g. system call traces (figure \ref{fig:calls}), it is more reasonable to focus on the former since temporal machine data sets typically feature long and largely dissimilar sequences.
 
 Based on the above, the following two tasks ought to be promoted as important, with the latter being preferential as a first step:
 \begin{task}
@@ -66,7 +66,7 @@ Based on the above, the following two tasks ought to be promoted as important, w
 
 \subsection{Reference data}
 
-One of the four objectives stated in section \ref{sect:goals} is that methods should be as generally applicable and require as little configuration as possible. Obviously, the reference data tasks presented in section \ref{sect:reference_data} meet these demands to varying degrees. Since unsupervised anomaly detection (task \ref{task:unsupervised_anomaly_detection}) does not require the user to provide reference data, it is superior to supervised and semi-supervised anomaly detection in this regard.
+One of the four objectives stated in Section \ref{sect:goals} is that methods should be as generally applicable and require as little configuration as possible. Obviously, the reference data tasks presented in Section \ref{sect:reference_data} meet these demands to varying degrees. Since unsupervised anomaly detection (task \ref{task:unsupervised_anomaly_detection}) does not require the user to provide reference data, it is superior to supervised and semi-supervised anomaly detection in this regard.
 
 However, it is not clear whether unsupervised methods can scale adequately; there seems to be a trade-off between the amount of required supervision and the scalability of algorithms. Most naive methods scale as $O(f(R \cdot N))$, where $f(n) \in \Omega(n)$, $R$ is the number of reference items, and $N$ is the number of items to be evaluated. When performing semi-supervised anomaly detection, it is usually the case that $R < N$. In unsupervised anomaly detection, however, $N = R$, and so methods scale as $O(f(N^2))$. This is problematic, and some form of pruning is required to allow large-scale analysis. One form of pruning that should perform relatively well is the use of some form of constant-size context (e.g., the local context). Nevertheless, it was decided that unsupervised methods should be the focus of this project.
 
@@ -74,11 +74,11 @@ However, it is not clear whether unsupervised methods can scale adequately; ther
 
 The choice of both anomaly types and anomaly measure together define which anomalies will be captured by problem formulations.
 
-Reviewing section \ref{sect:anomaly_types}, and especially figure \ref{fig:anomaly_types}, can help when reasoning about anomaly types. \emph{Point anomalies} are obviously not appropriate, as they can not capture most anomalies in continuous sequences (to see this, consider that none of the aberrations in the second, third, or fourth panels of figure \ref{fig:anomaly_types} are point anomalies).
+Reviewing Section \ref{sect:anomaly_types}, and especially Figure \ref{fig:anomaly_types}, can help when reasoning about anomaly types. \emph{Point anomalies} are obviously not appropriate, as they can not capture most anomalies in continuous sequences (to see this, consider that none of the aberrations in the second, third, or fourth panels of Figure \ref{fig:anomaly_types} are point anomalies).
 
-\emph{Contextual point anomalies} are more relevant, especially in the context of task \ref{task:frequency}. Here, each individual data point in the resulting data series encodes the frequency of some event at some specific time. Assuming that these frequencies among points sharing context are independent, contextual anomaly methods should be sufficient to find temporary anomalous frequencies.
+\emph{Contextual point anomalies} are more relevant, especially in the context of Task \ref{task:frequency}. Here, each individual data point in the resulting data series encodes the frequency of some event at some specific time. Assuming that these frequencies among points sharing context are independent, contextual anomaly methods should be sufficient to find temporary anomalous frequencies.
 
-However, contextual point anomalies do not occur in continuous sequences, such as those encountered in task \ref{task:continuous} or in the third and fourth panels of figure \ref{fig:anomaly_types}.
+However, contextual point anomalies do not occur in continuous sequences, such as those encountered in Task \ref{task:continuous} or in the third and fourth panels of Figure \ref{fig:anomaly_types}.
 
 \emph{Collective anomalies}, on the other hand, are very interesting in continuous time series, since they can cover all anomalies that arise in such series, as long as the anomalies are global (i.e., they do not constitute normal behaviour elsewhere in the series).
 
@@ -90,13 +90,13 @@ Since which context functions are appropriate depends heavily on the data set, c
 
 \subsection{Anomaly measures}
 
-As stressed in section \ref{sect:anomaly_measures}, the anomaly measure is probably the most important part of any anomaly detection problem. However, due to the unpredictability of how they affect results, there is not much that can said about which anomaly measures are the most appropriate for the target domain. For this reason, we will leave this factor unspecified, and instead focus on evaluating as many different choices of it as possible.
+As stressed in Section \ref{sect:anomaly_measures}, the anomaly measure is probably the most important part of any anomaly detection problem. However, due to the unpredictability of how they affect results, there is not much that can said about which anomaly measures are the most appropriate for the target domain. For this reason, we will leave this factor unspecified, and instead focus on evaluating as many different choices of it as possible.
 
 \subsection{Output format}
 
 In one sense, the choice of output format is cosmetic, as it depends entirely on the context in which the results should be presented. 
 
-However, as noted in section \ref{sect:output_format}, most other output format tasks can be reduced to task \ref{task:anomaly_scores} (anomaly scores). In order to reduce the risk of focusing on an inappropriate output format, this task was chosen as a focus.
+However, as noted in Section \ref{sect:output_format}, most other output format tasks can be reduced to Task \ref{task:anomaly_scores} (anomaly scores). In order to reduce the risk of focusing on an inappropriate output format, this task was chosen as a focus.
 
 \subsection{High-level tasks related to anomaly detection}
 
@@ -104,14 +104,14 @@ Most of these tasks are not immediately useful for anomaly detection in Splunk. 
 
 The task of \emph{novelty detection} (task \ref{task:novelty_detection}), however, has potential in both monitoring and diagnosis applications. In the former case, anomalies that occur periodically will be diagnosed every time they occur, possibly leading to an unnecessarily large number of discovered anomalies. In the latter application, anomalies that occur periodically will be completely ignored (i.e. treated as normal if they occur many times), which can be problematic. Novelty detection methods avoid these problems.
 
-Note that (as stated in section \ref{sect:related_tasks}) novelty detection is really just contextual (or contextual collective) anomaly detection with a specific context function. For this reason, we do not treat novelty detection on sequences as a task separate from anomaly detection, but as a specific choice of context, which we refer to as the \emph{novelty context}. Finally, the problems in monitoring and diagnosis applications described above can also be mitigated by other context functions. 
+Note that (as stated in Section \ref{sect:related_tasks}) novelty detection is really just contextual (or contextual collective) anomaly detection with a specific context function. For this reason, we do not treat novelty detection on sequences as a task separate from anomaly detection, but as a specific choice of context, which we refer to as the \emph{novelty context}. Finally, the problems in monitoring and diagnosis applications described above can also be mitigated by other context functions. 
 
 \section{Suggested tasks}
 \label{sect:suggested_tasks}
 
-The tasks selected in the previous section into complete tasks in which all principal factors are fixed.
+The tasks selected in the previous Section into complete tasks in which all principal factors are fixed.
 
-Based on the discussion in section \ref{sect:relevant_data_format}, the following task ought to be given the highest priority:
+Based on the discussion in Section \ref{sect:relevant_data_format}, the following task ought to be given the highest priority:
 \begin{task}
   \label{task:main}
   Detect contextual collective anomalies in, and assign anomaly scores to, the elements of a single univariate real-valued sequence sampled from a continuous process.
@@ -119,9 +119,9 @@ Based on the discussion in section \ref{sect:relevant_data_format}, the followin
 
 The remainder of this report will focus on this task. In the next chapter, the component framework, which simplifies the specification of remaining factors for this task, is proposed. Both ad-eval and the evaluation performed as part of this project focus on this task as well.
 
-Of course, there are other, similar tasks that could also be very important to machine data anomaly detection. A set of tasks which naturally complement task \ref{task:main} in monitoring and diagnosing of sets of machine data are now presented.:
+Of course, there are other, similar tasks that could also be very important to machine data anomaly detection. A set of tasks which naturally complement Task \ref{task:main} in monitoring and diagnosing of sets of machine data are now presented.:
 
-To begin with, as discussed in section \ref{sect:relevant_data_format}, frequential anomaly detection is very similar to continuous anomaly detection and is likely to be relevant to Splunk applications. We present this as the following task:
+To begin with, as discussed in Section \ref{sect:relevant_data_format}, frequential anomaly detection is very similar to continuous anomaly detection and is likely to be relevant to Splunk applications. We present this as the following task:
 
 \begin{task}
   Detect contextual collective anomalies in, and assign anomaly scores to the elements of, a single univariate real-valued sequence containing the frequency of some event over time.
@@ -133,7 +133,7 @@ Furthermore, symbolic time series are potentially interesting in several applica
   Detect anomalous subsequences in long symbolic sequences.
 \end{task}
 
-Of course, applying task \ref{task:ad_splunk2} (detecting anomalous sequences in a set of sequences) to the above tasks can also be interesting. The resulting tasks can be briefly stated as follows:
+Of course, applying Task \ref{task:ad_splunk2} (detecting anomalous sequences in a set of sequences) to the above tasks can also be interesting. The resulting tasks can be briefly stated as follows:
 
 \begin{task}
   Detect anomalous sequences in a set of univariate real-valued time series sampled from continuous processes.

@@ -9,13 +9,13 @@ In this chapter, a thorough overview is given of various aspects of the presenta
 
 As previously, we adhere to the framework of tasks and problems and present tasks where appropriate. However, we do not try to be as exhaustive as in the previous chapter; instead we briefly introduce various presentations and transformations, and avoid presenting tasks for presentations and transformations not used in the remainder of the report.
 
-We begin in section \ref{sect:splunk_techniques} by discussing the typical structure of data in the target domain (large databases of temporal machine data). A focus is placed on sequences, and two high-level tasks that cover anomaly detection in the target domain are presented.
+We begin in Section \ref{sect:splunk_techniques} by discussing the typical structure of data in the target domain (large databases of temporal machine data). A focus is placed on sequences, and two high-level tasks that cover anomaly detection in the target domain are presented.
 
-In section \ref{sect:terminology}, some terminology regarding time series and sequences is presented.
+In Section \ref{sect:terminology}, some terminology regarding time series and sequences is presented.
 
-In sections \ref{sect:unimultivariate}, \ref{sect:aggregation} and \ref{sect:compression}, we discuss various transformations and aspects of the presentation and how they impact the analysis.
+In Sections \ref{sect:unimultivariate}, \ref{sect:aggregation} and \ref{sect:compression}, we discuss various transformations and aspects of the presentation and how they impact the analysis.
 
-Finally, in section \ref{sect:series_mining} we discuss the automated extraction of interesting univariate sequences in data sets consisting of long sequences. 
+Finally, in Section \ref{sect:series_mining} we discuss the automated extraction of interesting univariate sequences in data sets consisting of long sequences. 
 
 \section{Presentation of temporal machine data}
 \label{sect:splunk_techniques}
@@ -30,7 +30,7 @@ Fortunately, Splunk and other databases targeted at machine data can parse such 
 \]
 where $X$ is the Cartesian product of all fields present in any data item and $T$ is a set of associated time stamps.
 
-Of course, analysing such databases in their entirety is often costly and unnecessary: a majority of events are likely to be unrelated or non-pertinent. Instead, databases are typically split into multiple \emph{indexes} containing related events. While limiting the analysis to an individual index will typically simplify the analysis, we can not assume that the items in an index are sufficiently homogeneous to warrant analysing the index as a whole. Instead, we need to complement the analysis with methods for extracting interesting series, something we discuss in section \ref{sect:series_mining}. Nevertheless, we can discern the following major anomaly detection tasks for temporal data:
+Of course, analysing such databases in their entirety is often costly and unnecessary: a majority of events are likely to be unrelated or non-pertinent. Instead, databases are typically split into multiple \emph{indexes} containing related events. While limiting the analysis to an individual index will typically simplify the analysis, we can not assume that the items in an index are sufficiently homogeneous to warrant analysing the index as a whole. Instead, we need to complement the analysis with methods for extracting interesting series, something we discuss in Section \ref{sect:series_mining}. Nevertheless, we can discern the following major anomaly detection tasks for temporal data:
 
 \begin{task}[Detecting anomalous subsequences]
   \label{task:ad_splunk}
@@ -41,11 +41,11 @@ Of course, analysing such databases in their entirety is often costly and unnece
   Given a set of sequences\\ $\{S_1, S_2, \dots, S_n\}$ where $S_i = (s_{i,1}, s_{i,2}, \dots, s_{i, n_i})$ and $\forall s_j \in S_i: s_j \in X \times T$ (for some mixed-data set $X$ and the set of time stamps $T \subset \mathbb{R}$) and $\forall (s_i, t_i), (s_j, t_j) \in S: i > j \Rightarrow t_i \geq t_j$, detect sequences $S_i$ that are anomalous.
 \end{task}
 
-These are the most general tasks we can specify, in the sense that any task specifying additional factors must exclude at least some problems that could be relevant. Thus, before more interesting tasks and problems can be formulated, the relative values of the specific principal factor choices must be estimated. This is done in chapter \ref{ch:problems}.
+These are the most general tasks we can specify, in the sense that any task specifying additional factors must exclude at least some problems that could be relevant. Thus, before more interesting tasks and problems can be formulated, the relative values of the specific principal factor choices must be estimated. This is done in Chapter \ref{ch:problems}.
 
-Note that task \ref{task:ad_splunk2} is mainly interesting when the data set consists of large amounts of similar sequences, for instance when analyzing user command records (as in figure \ref{fig:calls}). While this task is relevant in many applications, it is not as generally applicable as \ref{task:ad_splunk} to large databases of temporal machine data. While such databases will always contain plenty of long sequences that are interesting to study individually, there is no guarantee that they contain enough similar short sequences to warrant the application of \ref{task:ad_splunk2}. We here simply note that many papers have been published on task \ref{task:ad_splunk2} (\cite{blender}, \cite{chan}, \cite{ye}, \cite{forrest}, \cite{sekar1}, \cite{sekar2}), and refer to \cite{chandola2} and \cite{chandola3} for more thorough reviews.
+Note that Task \ref{task:ad_splunk2} is mainly interesting when the data set consists of large amounts of similar sequences, for instance when analyzing user command records (as in Figure \ref{fig:calls}). While this task is relevant in many applications, it is not as generally applicable as \ref{task:ad_splunk} to large databases of temporal machine data. While such databases will always contain plenty of long sequences that are interesting to study individually, there is no guarantee that they contain enough similar short sequences to warrant the application of \ref{task:ad_splunk2}. We here simply note that many papers have been published on Task \ref{task:ad_splunk2} (\cite{blender}, \cite{chan}, \cite{ye}, \cite{forrest}, \cite{sekar1}, \cite{sekar2}), and refer to \cite{chandola2} and \cite{chandola3} for more thorough reviews.
 
-Finally, it should be noted that the tasks \ref{task:ad_splunk} and \ref{task:ad_splunk2} are related, in the sense that a problem of finding anomalous subsequences of some long sequence $S$ can be reduced to the problem of finding anomalous sequences in a set of sequences by extracting and comparing all subsequences (or all subsequences of some specific length) of $S$.
+Finally, it should be noted that the Tasks \ref{task:ad_splunk} and \ref{task:ad_splunk2} are related, in the sense that a problem of finding anomalous subsequences of some long sequence $S$ can be reduced to the problem of finding anomalous sequences in a set of sequences by extracting and comparing all subsequences (or all subsequences of some specific length) of $S$.
 
 \section{Terminology}
 \label{sect:terminology}
@@ -77,14 +77,14 @@ When the time series is sampled at regular intervals in time (i.e. $\forall i, j
 
 In general, sequences are much easier to deal with algorithmically than irregular time series. For this reason, irregular time series are commonly aggregated to form regular time series, which can be treated as sequences. Different aggregations are used depending on the nature of the underlying data. We now present a few aggregations useful in the context of Splunk.
 
-As indicated in task \ref{task:ad_splunk}, we assume that the data we are interested consists of mixed-data time series. Depending on the context in which the data is generated, three main potentially interesting tasks can be discern, involving different transformations of the series. Firstly, we might be interested only in the relative ordering of elements. Secondly, we might be interested in the frequency of elements. Finally, we might want to approximate some (continuous) function we assume the series samples. We begin by formalizing the first and simplest case:
+As indicated in Task \ref{task:ad_splunk}, we assume that the data we are interested consists of mixed-data time series. Depending on the context in which the data is generated, three main potentially interesting tasks can be discern, involving different transformations of the series. Firstly, we might be interested only in the relative ordering of elements. Secondly, we might be interested in the frequency of elements. Finally, we might want to approximate some (continuous) function we assume the series samples. We begin by formalizing the first and simplest case:
 
 \begin{task}[Sequential anomaly detection]
   \label{task:sequential_anomaly_detection}
   Given a sequence or collection of sequences $S$, detect elements or collections of elements in $S$ that are anomalous by considering their order.
 \end{task}
 
-This task is well suited for symbolic data, since such data can generally not be aggregated (due to its lack of structure). This task is relatively well understood - an in-depth review is given in \cite{chandola2}. An example of the task is shown in figure \ref{fig:calls}. It is not suited for the second case (since it ignores frequency information) or the third case (since it will give a bad approximation if the series is irregular) above. For the second case, the following task is more appropriate:
+This task is well suited for symbolic data, since such data can generally not be aggregated (due to its lack of structure). This task is relatively well understood - an in-depth review is given in \cite{chandola2}. An example of the task is shown in Figure \ref{fig:calls}. It is not suited for the second case (since it ignores frequency information) or the third case (since it will give a bad approximation if the series is irregular) above. For the second case, the following task is more appropriate:
 
 \begin{task}[Frequential anomaly detection]
   \label{task:frequential_anomaly_detection}
@@ -127,11 +127,11 @@ Note that all of the above transformations involve a loss of data. They are used
     \vspace{-25pt}
 \end{wrapfigure}
 
-The dimensionality of the individual elements in a sequence has a profound impact on the difficulty and efficiency of the analysis. Representing a sequence by $S = (s_1, s_2, \dots)$, where $s_i \in X$ for some set $X$, we say that $S$ is \emph{multivariate} if $X$ is the Cartesian product of some collection of non-empty sets $X_i$, and that $S$ is \emph{univariate} otherwise. The difference between uni- and multivariate time series is illustrated in figure \ref{fig:multi_vs_univariate}.
+The dimensionality of the individual elements in a sequence has a profound impact on the difficulty and efficiency of the analysis. Representing a sequence by $S = (s_1, s_2, \dots)$, where $s_i \in X$ for some set $X$, we say that $S$ is \emph{multivariate} if $X$ is the Cartesian product of some collection of non-empty sets $X_i$, and that $S$ is \emph{univariate} otherwise. The difference between uni- and multivariate time series is illustrated in Figure \ref{fig:multi_vs_univariate}.
 
 In a sense, univariate and multivariate sequences are two sides of the same coin. Obviously, any multivariate sequence $S = (s_1, s_2, \dots)$, where $s_i = (s_{i,1}, s_{i,2}, \dots, s_{i,n})$ may be split into multiple univariate time sequences $S_1, S_2, \dots, S_n$, where $S_i = (s_{1,i}, s_{2, i}, \dots ).$ Conversely, any $S_1, S_2, \dots, S_n$ can be aggregated into a multivariate time series (although this is meaningless unless the $S_i$ were all sampled at the same times).
 
-Multivariate time series are arguably more powerful, in the sense that a data point $(\vect{s_i}, t_i)$ where $\vect{s_i} = (s_{i,1}, s_{i,2}, \dots, s_{i,n})$ may be anomalous with regard to the rest of the data, while its individual components $s_{i,j}$ are not, as illustrated in figure \ref{fig:dimensionality_reduction}.
+Multivariate time series are arguably more powerful, in the sense that a data point $(\vect{s_i}, t_i)$ where $\vect{s_i} = (s_{i,1}, s_{i,2}, \dots, s_{i,n})$ may be anomalous with regard to the rest of the data, while its individual components $s_{i,j}$ are not, as illustrated in Figure \ref{fig:dimensionality_reduction}.
 
 On the other hand, analyzing higher-dimensional data is often difficult (in terms of both analysis time and accuracy), making multivariate analysis both computationally and conceptually more difficult. For this reason, it might be beneficial to (when safe) split multivariate sequences or otherwise reduce their dimensionality before performing the analysis. 
 
@@ -176,7 +176,7 @@ Arguably the simplest time series representation involves using a basis of piece
       0 & \quad \text{ otherwise.} \\
     \end{array} \right.
 \]
-where $(\tau_1, \tau_2, \dots \tau_n)$ is a partition of $[t_1, t_n]$. The $s_i$ are then aggregated over the $\phi_i$ as in section \ref{sect:aggregation}. 
+where $(\tau_1, \tau_2, \dots \tau_n)$ is a partition of $[t_1, t_n]$. The $s_i$ are then aggregated over the $\phi_i$ as in Section \ref{sect:aggregation}. 
 
 Different piecewise constant representations have been proposed, corresponding to different partitions. The simplest of these, corresponding to a partition with constant $\tau_{i+1} - \tau_i$ is proposed in \cite{keogh4} and \cite{faloutsos2} and is usually referred to as \emph{piecewise aggregate approximation (PAA)}. As shown in \cite{keogh5}, \cite{keogh3} and \cite{faloutsos2}, PAA rivals the more sophisticated representations listed above. 
 
@@ -185,7 +185,7 @@ Additionally, reducing the cardinality of the underlying set can be useful. This
 \section{Sequence extraction}
 \label{sect:series_mining}
 
-In light of the discussion of uni- and multivariate data above, it seems reasonable to emphasize extracting univariate series from the long multivariate sequences encountered in temporal machine data sets (i.e. task \ref{task:ad_splunk}). Indeed, the provision of tools for manually or automatically extracting interesting time series is likely necessary for the uptake of large-scale anomaly detection (and indeed several other related tasks) in databases such as Splunk. Ideally, methods should be available that automatically examine all potentially pertinent time series and report on those in which anomalies are found. However, the total number of such time series is likely to grow quickly with the number of fields and distinct values of categorical variables in the data data sets, possibly rendering such methods intractable.
+In light of the discussion of uni- and multivariate data above, it seems reasonable to emphasize extracting univariate series from the long multivariate sequences encountered in temporal machine data sets (i.e. Task \ref{task:ad_splunk}). Indeed, the provision of tools for manually or automatically extracting interesting time series is likely necessary for the uptake of large-scale anomaly detection (and indeed several other related tasks) in databases such as Splunk. Ideally, methods should be available that automatically examine all potentially pertinent time series and report on those in which anomalies are found. However, the total number of such time series is likely to grow quickly with the number of fields and distinct values of categorical variables in the data data sets, possibly rendering such methods intractable.
 
 In order to estimate the feasibility of these methods, it can be helpful to consider the size of the search space---i.e., the number of possible interesting time series that can be constructed from a typical Splunk index. For example, consider an index consisting of web logs for a single web server. Assume that a log message is generated for every new HTTP request, containing the following fields: time stamp; host name and ident of the user; HTTP request type, URL, status and request/response size/time/latency; and the user agent and referrer. All of these factors are categorical, apart from the HTTP request/response size/time/latency, which ought to be considered real-valued. Let us denote the number of categories encountered in each categorical factor as $n_1, n_2, \dots, n_k$. For most websites, each of the $n_i$ ought to lie between a few hundred and a few million per day.
 
