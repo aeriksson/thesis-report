@@ -30,10 +30,10 @@
 \newblock A survey of outlier detection methodologies.
 \newblock \emph{Artificial Intelligence Review} 22.2 (2004): 85-126.
 
-%\bibitem{agyemang}
-%\sc{Agyemang, Malik, Ken Barker, and Rada Alhajj.}
-%\newblock "A comprehensive survey of numeric and symbolic outlier mining techniques."
-%\newblock \emph{Intelligent Data Analysis} 10.6 (2006): 521-538.
+\bibitem{agyemang}
+\sc{Agyemang, Malik, Ken Barker, and Rada Alhajj.}
+\newblock "A comprehensive survey of numeric and symbolic outlier mining techniques."
+\newblock \emph{Intelligent Data Analysis} 10.6 (2006): 521-538.
 
 \bibitem{barnett}
 \sc{Barnett, Vic, and Toby Lewis.}
