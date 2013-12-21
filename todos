@@ -9,7 +9,6 @@ To do:
    8. Discussion
 4 Incorporate foreword into introduction
 6 Move method presentation from Background to Framework
-7 Remove information on project progression on Background
 8 Add formal problem definition to Background
 10 Move section 1.2 -> 2.1
 11 Add more references to chapter 2
@@ -23,5 +22,7 @@ To do:
 Done:
 2 Change name: Anomaly Detection in Machine-Generated Data: A Structured Approach -> A Framework for Anomaly Detection with Applications to Machine-Generated Data
 5 Capitalize chapter, section, figure, and table
+7 Remove information on project progression on Background
 9 Remove Splunk-specific discussion from Background
 18 Fix lint errors
+19 Rewrite the first half of Background to more clearly explain and motivate the work
