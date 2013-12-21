@@ -19,6 +19,8 @@ TODO:
 - 15. Rename reference data -> (labeled) training data
 - 16. Remove old sequence extraction chapter
 - 17. Add new, more formal section on sequence extraction
+- 21. Add survey references to the Anomaly Detection section
+- 22. Provide example of papers which appear to target the same problem but don't
 
 DONE:
 =====
