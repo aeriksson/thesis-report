@@ -19,6 +19,9 @@ TODO:
 - 16. Remove old sequence extraction chapter
 - 17. Add new, more formal section on sequence extraction
 - 22. Provide example of papers which appear to target the same problem but don't
+- 24. Update introduction to reflect new chapter structure
+- 25. Come up with a more interesting name than ad-eval. Anomaly detection researcher?
+- 26. Update chapter references in Introduction
 
 DONE:
 =====
