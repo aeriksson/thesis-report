@@ -8,9 +8,7 @@ TODO:
      4. An application to machine-generated time series
      5. Results
      6. Discussion
-- 6. Move method presentation from Background to Framework
 - 8. Add formal problem definition to Background
-- 10. Move section 1.2 -> 2.1
 - 11. Add more references to chapter 2
 - 12. Be more clear when introducing novel concepts in chapter 2
 - 13. Reformalize the framework with the search problem in mind
@@ -28,8 +26,10 @@ DONE:
 - 2. Change name to "A Framework for Anomaly Detection with Applications to Machine-Generated Data"
 - 4. Incorporate Foreword into Introduction
 - 5. Capitalize chapter, section, figure, and table
+- 6. Move method presentation from Background to Framework
 - 7. Remove information on project progression on Background
 - 9. Remove Splunk-specific discussion from Background
+- 10. Move section 1.2 -> 2.1
 - 18. Fix lint errors
 - 19. Rewrite the first half of Background to more clearly explain and motivate the work
 - 21. Add survey references to the Anomaly Detection section

@@ -7,6 +7,47 @@ Sections~\ref{sect:data_format} through~\ref{sect:output_format} cover individua
 
 A few tasks that are typically considered related to, but not necessarily part of, anomaly detection are also presented (in Section~\ref{sect:related_tasks}).
 
+\section{Tasks and problems framework}
+\label{sect:tasks_problems}
+
+We now present the tasks and problems framework, which is used throughout this report to reason about anomaly detection problems and discuss tasks pertinent to the target domain. A major feature of this framework is that it provides a perspective where methods and optimizations are de-emphasized in favour of problem formulations. Most of the literature is method-centric, tending to shift the focus away from nuances of the anomaly detection problems these methods address and towards small and often insignificant details, thereby inhibiting the development of a high-level perspective of the subject.
+
+In order to facilitate the comparison of different approaches, we introduce the concepts of tasks and problems. In this context, a \emph{problem} means an exact, unambiguous problem specification with a well-defined answer. In contrast, a \emph{task} is a partial specification; it leaves out one or more factors necessary to formulate a problem. Problems can be regarded as derived from one or more tasks through the specification of additional details. Similarly, tasks can themselves be seen as derived from other, more general tasks. Tasks with a high degree of generality will be referred to as \emph{high level tasks}. Finally, \emph{methods} are defined as specific algorithms for obtaining the answer to some problem.
+
+Due to the inexact nature of anomaly detection, it is usually not clear how to precisely specify problems that can accurately capture specific types of anomalies in specific data sets, so the problem formulations themselves must be evaluated empirically. Trying to find optimal methods before a specific problem formulation has been settled upon constitutes premature optimization and is consequently inadvisable.
+
+Since tasks and problems are only derived from other tasks through the specification of additional details, they form a hierarchy of derivations. This hierarchy can be envisioned as a directed acyclic graph, where problems and tasks constitute sinks and non-sinks respectively. If one task could be found from which the entire graph of anomaly detection tasks and problems can be reached, then this task could be used as a definition for anomaly detection (i.e.\ it would be general enough to cover all methods and problems). We propose that the following task be used for this purpose:
+
+\begin{task}[Anomaly detection]
+\label{task:anomaly_detection}
+  Given a data set\footnote{Throughout this paper, a `data set' is taken to mean a (countable) set in the mathematical sense, where each item is associated with a unique index (so that multiple items can take on the same value). Tasks to which the structure of data is not relevant are formulated using data sets even though they might apply to sequences or other types of data as well.} $D$ of data, find subsets $s \subseteq D$ that are anomalous.
+\end{task}
+
+Throughout this report, this task is used as a basis from which all other tasks and problems are derived. To facilitate the derivation of new tasks and problems, it is necessary to emphasize exactly which \emph{factors} must specified in order to derive a problem from Task~\ref{task:anomaly_detection}. Enumeration of these factors, and the possible choices for each, can provide insight into the structure of the anomaly detection hierarchy (and, consequently, into the subject itself). We note that in order to derive a problem from Task~\ref{task:anomaly_detection}, at least the following five factors must be specified:
+\begin{description}
+  \item[Data format] The structure of the data set on which the analysis is performed.
+  \item[Reference data] The data set on which the anomaly classification should be based.
+  \item[Output format] What data should be produced by methods.
+  \item[Anomaly measure] The heuristic used to assess how anomalous items are.
+  \item[Anomaly type] Which structural properties of the data should be considered.
+\end{description}
+These factors, which are emphasized throughout the report, will be referred to as \emph{principal factors}. While individual problems might specify factors (such as restrictions) other than the principal factors, \emph{any} anomaly detection problem must be derived from at least five high-level tasks, each of which corresponds to a principal factor choice. This makes the principal factors uniquely interesting. The bulk of Chapter~\ref{ch:tasks} is dedicated to the examination of these factors, the discussion of possible choices for each, and the formulation of corresponding tasks.
+
+One major advantage of this framework is that different problems can be related through the tasks from which they inherit. Studying the `most specific common task' of two problems can be useful in estimating differences and similarities between the two problems. Furthermore, as we will see, high level tasks can often be reduced to one another. Thus, the framework can be utilized to recognize when different problems are similar or can be related through reductions. For these reasons, we believe that a theory designed to relate and contrast the tasks induced by the principal factor choices can be useful in advancing the subject of anomaly detection.
+
+Due to the inexact and subjective nature of many anomaly detection applications---the notion of an `anomaly' is typically vague and can not be given a precise definition---it is often not possible to fully specify all factors necessary to define problems. Anomaly detection often deals with the detection of unforeseen phenomena; in this case, the nature of interesting anomalies can not be known until they are detected. Therefore, tasks are often more relevant than problems when developing approaches to new domains.
+
+The framework can profitably be applied to perform systematic analyses of anomaly detection in new domains, or to develop new anomaly detection methods. Based on the discussion above, we suggest that anomaly detection methods for new domains are best performed through the following four-stage process:
+\begin{enumerate}
+  \item Consider what information is known about the domain, the type of anomalies that are interesting, et cetera. Derive the most specific possible task based on this information.
+  \item Based on the specified task, derive as many problems as possible by experimenting with different choices of factors.
+  \item Evaluate these problems with regard to the target domain. Select one or a few problems that seem to accurately reflect the demands of the domain.
+  \item Derive and implement efficient methods for solving the selected problem (or problems).
+\end{enumerate}
+
+This process was used in the project to discuss and compare approaches to anomaly detection on machine-generated data in a systematic way. This report addresses the use of the three first steps in this project; Chapter~\ref{ch:problems} treats the first step; Chapter~\ref{ch:methods}, the second step; and Chapter~\ref{ch:results} briefly covers the third step.
+
+
 \section{Data format}
 \label{sect:data_format}
 
