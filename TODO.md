@@ -35,3 +35,4 @@ DONE:
 - 21. Add survey references to the Anomaly Detection section
 - 23. Remove rough edges resulting from the incorporation of Foreword into Introduction
 - 27. Rename "The Component Framework" to "A Framework for Anomaly Detection".
+- 28. Change "tasks" chapter name to "framework".

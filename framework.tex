@@ -1,5 +1,5 @@
 \chapter{A Framework for Anomaly Detection}
-\label{ch:tasks}
+\label{ch:framework}
 
 In this chapter, the principal factors outlined in Section~\ref{sect:tasks_problems} are presented in greater depth, in order to better understand of the ramifications of the potential choices.
 
@@ -31,7 +31,7 @@ Throughout this report, this task is used as a basis from which all other tasks 
   \item[Anomaly measure] The heuristic used to assess how anomalous items are.
   \item[Anomaly type] Which structural properties of the data should be considered.
 \end{description}
-These factors, which are emphasized throughout the report, will be referred to as \emph{principal factors}. While individual problems might specify factors (such as restrictions) other than the principal factors, \emph{any} anomaly detection problem must be derived from at least five high-level tasks, each of which corresponds to a principal factor choice. This makes the principal factors uniquely interesting. The bulk of Chapter~\ref{ch:tasks} is dedicated to the examination of these factors, the discussion of possible choices for each, and the formulation of corresponding tasks.
+These factors, which are emphasized throughout the report, will be referred to as \emph{principal factors}. While individual problems might specify factors (such as restrictions) other than the principal factors, \emph{any} anomaly detection problem must be derived from at least five high-level tasks, each of which corresponds to a principal factor choice. This makes the principal factors uniquely interesting. The bulk of Chapter~\ref{ch:framework} is dedicated to the examination of these factors, the discussion of possible choices for each, and the formulation of corresponding tasks.
 
 One major advantage of this framework is that different problems can be related through the tasks from which they inherit. Studying the `most specific common task' of two problems can be useful in estimating differences and similarities between the two problems. Furthermore, as we will see, high level tasks can often be reduced to one another. Thus, the framework can be utilized to recognize when different problems are similar or can be related through reductions. For these reasons, we believe that a theory designed to relate and contrast the tasks induced by the principal factor choices can be useful in advancing the subject of anomaly detection.
 
