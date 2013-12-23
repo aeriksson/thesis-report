@@ -34,3 +34,4 @@ DONE:
 - 19. Rewrite the first half of Background to more clearly explain and motivate the work
 - 21. Add survey references to the Anomaly Detection section
 - 23. Remove rough edges resulting from the incorporation of Foreword into Introduction
+- 27. Rename "The Component Framework" to "A Framework for Anomaly Detection".
