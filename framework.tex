@@ -1,14 +1,14 @@
 \chapter{A Framework for Anomaly Detection}
 \label{ch:framework}
 
-In this chapter, the principal factors outlined in Section~\ref{sect:tasks_problems} are presented in greater depth, in order to better understand of the ramifications of the potential choices.
+In this chapter, a framework for reasoning about anomaly detection problems is presented. In this report, the framework is mainly utilised as a means of limiting the scope of the optimisation problem outlined in the previous chapter, but it is also useful as a means of relating different anomaly detection methods and finding new methods for specific applications.
 
-Sections~\ref{sect:data_format} through~\ref{sect:output_format} cover individual principal factors. For each principal factor, tasks corresponding to the different choices are presented to as large an extent as possible.
+A core idea of the framework is to classify and interrelate anomaly detection methods based on a few key factors. In Section~\ref{sect:the_framework}, the basic principles and motivations behind the framework are presented. In sections~\ref{sect:data_format} through~\ref{sect:output_format}, the individual factors, as well as common choices for them, are presented.
 
-A few tasks that are typically considered related to, but not necessarily part of, anomaly detection are also presented (in Section~\ref{sect:related_tasks}).
+Finally, in Section~\ref{sect:related_tasks}, a few problems that are typically considered related to anomaly detection are presented in relation to the framework.
 
-\section{Tasks and problems framework}
-\label{sect:tasks_problems}
+\section{The framework}
+\label{sect:the_framework}
 
 We now present the tasks and problems framework, which is used throughout this report to reason about anomaly detection problems and discuss tasks pertinent to the target domain. A major feature of this framework is that it provides a perspective where methods and optimizations are de-emphasized in favour of problem formulations. Most of the literature is method-centric, tending to shift the focus away from nuances of the anomaly detection problems these methods address and towards small and often insignificant details, thereby inhibiting the development of a high-level perspective of the subject.
 

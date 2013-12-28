@@ -38,3 +38,4 @@ DONE:
 - 27. Rename "The Component Framework" to "A Framework for Anomaly Detection".
 - 28. Change "tasks" chapter name to "framework".
 - 30. Talk about distinction between problems and methods in Background.
+- 31. Rewrite the Framework introduction.
