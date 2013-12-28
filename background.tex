@@ -49,3 +49,36 @@ This work attempts to simplify anomaly detection research by addressing the abov
 This framework is then used to formalize the subject of anomaly detection in the domain of real-valued time series, and to reformulate the activity of finding appropriate methods for specific data sets in this domain as an optimization problem over the set of possible algorithms. It is then shown that solutions to this optimization problem can be algorithmically approximated for a large class of algorithms (including most previously published methods).
 
 Finally, a software implementation of this optimization problem is presented, along with some preliminary performance results. This mitigates the second problem above for anomaly detection in real-valued time series, by providing an environment in which previous methods can be easily replicated and compared on arbitrary datasets.
+
+\section{Problem formulation}
+As a first step towards automating anomaly detection research, the problem of finding anomaly detection methods for some application must be formalised. In this section, the first step of the anomaly detection research process---finding an appropriate problem---is formulated as an optimization problem. The remainder of this report deals with this problem.
+
+Informally, the idea is to search the set of possible problem formulations for the specific problem formulation with solutions (i.e.\ anomaly scores) that come the closest to the solutions which would be produced by a domain expert.
+
+To begin with, the sets of valid problem inputs (datasets) and outputs (solutions) must be defined. Here, we simply assume that some set $D$ has been defined consisting of all the valid datasets for the current application (such as the set of all finite collections of images of some specific size and bit depth), and that some set $S$ has been defined consisting of all valid solutions (such as the indices of the two most anomalous images in a set).
+
+TODO: replace $S$ with $\forall d \in D: S_d$?
+
+To begin with, a formal description of this problem requires that a set of all possible problem formulations is constructed. Here, it is simply assume that this set has been defined, and that it consists of the set of valid formulae in some logic sufficiently expressive to capture all relevant problem formulations. Let us call this set $P$.
+
+Next, an objective function must be formulated, which associates with each problem formulation $p \in P$ how well $p$ captures the anomalies of our hypothetical domain expert. Since how the objective function is computed is not relevant to the optimization problem formulation, it is helpful to introduce an oracle $O(p, i): P \times D \rightarrow S$, which takes a problem $p \in P$ and an input dataset $i \in D$, and computes the associated solution $s_{p,i}$. The success of $p$ in capturing the anomalies in $i$ can then be stated as $\epsilon(i, O(p, i))$, where $\epsilon: D \times S \rightarrow \mathbb{R}^+$ is an error function, consistent with the assessments of our hypothetical domain expert, that assigns a value to each $s \in S$ according to how well it captures the anomalies in $i$.
+
+Finally, since the goal is to minimise the expected error for datasets sampled from the given application, a random variable $I$ over $D$ must be introduced that models the probability of generating any given $d \in D$. A suitable objective function would then be $\mathbb{E}_I [\epsilon(i, O(p, i))]$.
+
+The goal then, is to find 
+\[
+    p_{opt} = \argmin_{p \in P}\mathbb{E}_I [ \epsilon(i, O(p, i)) ].
+\]
+
+Here, $p_{opt}$ corresponds to the best possible problem formulation for the specific $\epsilon$, and $O'(i) = O(p_{opt}, i)$ to the algorithm which computes the answer. Of course, computing either of these is impossible, for a few reasons. The biggest theoretical hurdle is that, for any logic $P^*$ sufficiently complicated to encompass non-trivial problems, the problem of producing a solution $S$ for an arbitrary problem definition $P$ with input data $I$ is uncomputable (TODO: verify), so the oracle $O$ described above can not exist. For the optimization problem to be of any real-world use, $P$ must be restricted to a set of problems that can be solved by some computable oracle $O$.
+
+Another problem is that it is generally not possible to directly formulate either $X$ or $\epsilon$. To appropriately select $X$ would require a steady stream of incoming datasets, something that is typically not available for most applications. Similarly, since $\epsilon$ essentially represents an idealised, objective domain expert's opinion of what parts of $X$ constitute anomalies, it can not be computed without (implicit) knowledge of $P^o$. To get around these issues, $X$ and $\epsilon$ must be replaced with a set of training data $T \subset D$. Unless specific knowledge of the domain is available from which $\epsilon$ can be reconstructed, this data must also be \emph{labeled}, i.e.\ with each $t_i \in T$ must be associated a $s_i \in S$.
+
+The rest of this report builds upon this problem formulation. In chapter~\ref{ch:??}, an algorithm is constructed which can solve a large class anomaly detection problems for time series. This algorithm is then taken to be a partial representation $O^*$ of $O$. Correspondingly $P$ is replaced by the set $P^* \subset P$ of problems which can be solved by $O^*$. Finally, $\epsilon$ can be approximated by $\epsilon^*(s_a, s_b) = \delta(s_a, s_b)$ for some suitable distance measure $\delta$. This enables the computation of the following estimate of $p_{opt}$:
+\[
+    p^*_{opt} = \argmin_{p \in P^*} \sum_{(i_j, s_j) \in T} \epsilon^*(s_j, O(p, i_j)).
+\]
+
+With this approach, finding the most accurate anomaly detection algorithm (supported by $O^*$) for $T$ becomes an optimization problem over $P^*$, where the objective function is $\sum_{(i_j, s_j) \in T} \epsilon^*(s_j, O(p, i_j))$.
+
+The main purpose of the framework presented in the next chapter is to simplify the formulation of a suitable restricted oracle $O^*$, by providing a means of systematically constraining $P^*$. This approach is taken in Chapter~\ref{ch:??} to construct a oracle that can solve most of the time series anomaly detection problems found in the literature, while remaining tractable.

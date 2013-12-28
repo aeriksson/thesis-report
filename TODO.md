@@ -8,7 +8,6 @@ TODO:
      4. An application to machine-generated time series
      5. Results
      6. Discussion
-- 8. Add formal problem definition to Background
 - 11. Add more references to chapter 2
 - 12. Be more clear when introducing novel concepts in chapter 2
 - 13. Reformalize the framework with the search problem in mind
@@ -20,6 +19,7 @@ TODO:
 - 24. Update introduction to reflect new chapter structure
 - 25. Come up with a more interesting name than ad-eval. Anomaly detection researcher?
 - 26. Update chapter references in Introduction
+- 29. Clean up Problem Definition in Background
 
 DONE:
 =====
@@ -28,6 +28,7 @@ DONE:
 - 5. Capitalize chapter, section, figure, and table
 - 6. Move method presentation from Background to Framework
 - 7. Remove information on project progression on Background
+- 8. Add draft of formal problem definition to Background
 - 9. Remove Splunk-specific discussion from Background
 - 10. Move section 1.2 -> 2.1
 - 18. Fix lint errors
