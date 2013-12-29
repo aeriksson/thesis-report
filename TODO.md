@@ -11,7 +11,6 @@ TODO:
 - 11. Framework: add more references.
 - 12. Framework: be more clear when introducing novel concepts.
 - 14. Framework: Clarify semi-supervised/supervised convention - add citation.
-- 15. Framework: Rename reference data -> (labeled) training data.
 - 16. Remove old sequence extraction chapter.
 - 17. Add new, more formal section on sequence extraction.
 - 22. Background: Provide example of papers which appear to target the same problem but don't.
@@ -39,6 +38,7 @@ DONE:
 - 9. Remove Splunk-specific discussion from Background
 - 10. Move section 1.2 -> 2.1
 - 13. Reformulate the framework with the search problem in mind
+- 15. Framework: Rename reference data -> (labeled) training data.
 - 18. Fix lint errors
 - 19. Rewrite the first half of Background to more clearly explain and motivate the work
 - 21. Add survey references to the Anomaly Detection section
@@ -53,3 +53,4 @@ DONE:
 - 38. Framework: Move last paragraph of description.
 - 39. Framework: Create draft of Dataset Format section.
 - 43. Framework: Create draft of Solution Format section.
+- 44. Framework: Clean up Training Data section.

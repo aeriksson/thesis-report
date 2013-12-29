@@ -67,40 +67,15 @@ In applications there is usually additional structure present, such as orderings
     \vspace{-40pt}
 \end{wrapfigure}
 
-As is customary in most areas of machine learning, anomaly detection problems are classified as either \emph{supervised}, \emph{semi-supervised} or \emph{unsupervised} based on the availability of \emph{training} (or \emph{training}) data. In contrast to the \emph{evaluation data}, which is the data in which anomalies are to be found, the training data acts as a baseline, defining what constitutes normal and/or anomalous. The three classes of training data are now discussed and presented as tasks, starting with supervised anomaly detection:
+As is customary in most areas of machine learning, anomaly detection problems are classified as either \emph{supervised}, \emph{semi-supervised} or \emph{unsupervised}~\footnote{Note that we here use the convention of~\cite{chandola}, and take supervised learning to mean that both classes of training data are available, and semi-supervised to mean that only one class of training data is available. Conventially, supervised learning is taken to mean any learning from training data, and semi-supervised learning is taken to mean that both labeled and unlabeled data is available~\cite{TODO}.} based on the availability of \emph{training} (or \emph{training}) data. In contrast to the input dataset, the training data acts as a baseline, defining what constitutes normal and anomalous.
 
-\begin{task}[Supervised anomaly detection]
-\label{task:supervised}\ \\
-    Given training sets $N$ (containing normal training data) and $A$ (containing anomalous training data), find anomalies (with regard to $N$ and $A$) in a data set $D$.
-\end{task}
-In essence, supervised anomaly detection constitutes a traditional supervised classification problem. As such, it can be handled by any two-class classifier, such as regular support vector machines. However, characteristics shared by most anomaly detection applications make supervised approaches unsuitable.
+In \emph{supervised} anomaly detection, training data containing both normal and anomalous items is available. In essence, this constitutes a traditional supervised classification problem. As such, it can be handled by any two-class classifier, such as regular support vector machines. Unfortunately, supervised approaches are usually not suitable for anomaly detection, for a few reasons. To begin with, anomalous training data is almost always relatively scarce, potentially leading to skewed classes (described in~\cite{phua} and~\cite{joshi}). Secondly, supervised anomaly detection methods are by definition unable to detect types on anomalies that are not represented in the training data, and so can not be used to find \emph{novel} anomalies. This is problematic as it is often not possible to obtain training data containing all possible anomalies.
 
-First, anomalous training data is almost always relatively scarce, potentially leading to skewed classes (described in~\cite{phua} and~\cite{joshi}). Furthermore, supervised anomaly detection methods are by definition unable to detect types on anomalies that are not represented in $A$, and so can not be used to find \emph{novel} anomalies. This is problematic as it is often not feasible to construct an $A$ containing all possible anomalies.
+\emph{Semi-supervised} anomaly detection, on the other hand, assumes the availability of only one class of training data. While anomaly detection with only anomalous training data has been discussed (for instance in~\cite{dasgupta}), the vast majority of semi-supervised methods assume that normal training data is available. Considering the difficulties involved in obtaining anomalous training data mentioned above, this should not be surprising. Semi-supervised methods are used more frequently than supervised methods in part due to the relative ease of producing normal training data to anomalous training data.
 
-Semi-supervised anomaly detection, on the other hand, assumes the availability of either only $A$ or only $N$. Divided according to which of the two training classes is available, the following two tasks can be specified:
-\begin{task}[Semi-supervised anomaly detection with normal training data]
-  Given a training set $N$ containing normal training data, find anomalies (with regard to $N$) in a data set $D$.
-\end{task}
-\begin{task}[Semi-supervised anomaly detection with anomalous training data]
-\label{task:semisupervised_anomaly_detection}
-  Given a training set $A$ containing anomalous training data, find anomalies (with regard to $A$) in a data set $D$.
-\end{task}
+Finally, \emph{unsupervised} anomaly detection requires no training data set. Since training data is not always available, unsupervised methods are typically considered to be of wider applicability than both supervised and semi-supervised methods~\cite{chandola}. However, unsupervised methods are unsuitable for certain tasks. Since training data can not be manually specified, it is more difficult to sift out uncommon but uninteresting items in unsupervised anomaly detection than in semi-supervised anomaly detection. Furthermore, unsupervised methods will not detect anomalies that are common but unexpected (although such items are arguably not anomalies by definition).
 
-While the latter task has been discussed (for instance in~\cite{dasgupta}), the vast majority of methods focus on the former. Considering the difficulties involved in obtaining anomalous training data, as mentioned above, this should not be surprising.
-
-Semi-supervised methods are often used more frequently than supervised methods due to the relative ease with which they can be configured.
-
-Finally, unsupervised anomaly detection requires no training data set, and can be defined by the following task:
-\begin{task}[Unsupervised anomaly detection]
-\label{task:unsupervised_anomaly_detection}
-  Find subsets of some data set $D$ that are anomalous with regard to the rest of $D$.
-\end{task}
-
-For unsupervised anomaly detection, $D$ itself is referred to as the training data.
-
-Since training data is not always available, unsupervised methods are typically considered to be of wider applicability than both supervised and semi-supervised methods~\cite{chandola}. However, unsupervised methods are unsuitable for certain tasks. Since training data can not be manually specified, it is more difficult to sift out uncommon but uninteresting items in unsupervised anomaly detection than in semi-supervised anomaly detection. Furthermore, unsupervised methods will not detect anomalies that are common but unexpected (although such items are arguably not anomalies by definition).
-
-It is useful to note that unsupervised anomaly detection tasks can often be reduced to semi-supervised anomaly detection tasks by setting $A = D$ and modifying the underlying anomaly measure such that all elements $a_i \in A$ are judged as dissimilar to themselves.
+It is useful to note that unsupervised anomaly detection tasks can often be reduced to semi-supervised anomaly detection tasks by letting the input dataset serve as normal training data and modifying the anomaly measure such that all elements are judged as dissimilar to themselves.
 
 Of course, it is sometimes not feasible or desirable to compare items with the entirety of the training data set. This is mainly the case when the data set supports additional structure, such an ordering or metric, which gives rise to a natural concept of locality within the data set. As a concrete example of such an application, consider unsupervised anomaly detection in a long sequence: often how an item compares to those items `closest' to it (in the ordering) is much more relevant to whether or not that item should be considered an anomaly than how it compares to the rest of the sequence.
 
