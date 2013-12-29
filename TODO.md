@@ -10,7 +10,6 @@ TODO:
      6. Discussion
 - 11. Add more references to chapter 2
 - 12. Be more clear when introducing novel concepts in chapter 2
-- 13. Reformalize the framework with the search problem in mind
 - 14. Clarify semi-supervised/supervised convention - add quote
 - 15. Rename reference data -> (labeled) training data
 - 16. Remove old sequence extraction chapter
@@ -31,6 +30,7 @@ DONE:
 - 8. Add draft of formal problem definition to Background
 - 9. Remove Splunk-specific discussion from Background
 - 10. Move section 1.2 -> 2.1
+- 13. Reformulate the framework with the search problem in mind
 - 18. Fix lint errors
 - 19. Rewrite the first half of Background to more clearly explain and motivate the work
 - 21. Add survey references to the Anomaly Detection section
