@@ -24,7 +24,6 @@ TODO:
 - 35. Everything: Rename "Output format" -> "Solution format".
 - 36. Everything: Rename "Reference data" -> "Training data".
 - 37. Everything: Replace tasks with factor choices.
-- 38. Framework: Move last paragraph of description.
 - 39. Framework: Clean up Dataset Format section.
 - 40. Framework: Add discussion of discretisation to Dataset Format.
 - 41. Framework: Add discussion of numerosity reduction to Dataset Format.
@@ -50,4 +49,5 @@ DONE:
 - 30. Talk about distinction between problems and methods in Background.
 - 31. Rewrite the Framework introduction.
 - 34. Everything: Rename "Data format" -> "Dataset format".
+- 38. Framework: Move last paragraph of description.
 - 39. Framework: Create draft of dataset format discussion.
