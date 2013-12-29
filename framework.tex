@@ -22,61 +22,39 @@ We here propose using the following factors to classify anomaly detection proble
   \item[Anomaly type] Which structural properties of the data should be considered.
   \item[Anomaly measure] The heuristic used to assess how anomalous items are.
 \end{description}
-The remainder of this chapter deals with each of these factors in turn, listing choices treated by existing methods, and introducing a few new concepts along the way.
-
 As mentioned previously, one major advantage of an approach based on factors is that it facilitates comparisons of methods. Studying common factor choices between problems can be useful in illuminating differences and similarities. Furthermore, as we will see, specific factor choices often generalise other factor choices. Recognising this is crucial to finding general methods. Thus, the framework can be utilized to recognize when problems are similar or (partially) generalise other problems.
+
+The remainder of this chapter deals with each of the factors presented above in turn, listing choices treated by existing methods, and introducing a few new concepts along the way.
 
 TODO: Move this section to background?
 Due to the inexact and subjective nature of many anomaly detection applications---the notion of an `anomaly' is typically vague and can not be given a precise definition---it is often not possible to fully specify all factors necessary to define problems. Anomaly detection often deals with the detection of unforeseen phenomena; in this case, the nature of interesting anomalies can not be known until they are detected. Therefore, tasks are often more relevant than problems when developing approaches to new domains.
 
-\section{Data format}
+\section{Dataset format}
 \label{sect:data_format}
 
-Obviously, the format of the data sets on which anomaly detection is performed varies drastically between applications, and it is not possible to exhaustively cover this factor. Nevertheless, data sets from different applications often share some fundamental characteristics, which can affect the analysis and the selection of other factors. A few such characteristics are now discussed.
+Obviously, the available choices of dataset format are typically heavily restricted by the application under consideration. However, transforming source datasets to some more appropriate format is a common and important task. Since the format of the data also limits the set of suitable problem definitions, selecting an appropriate format is important.
 
-To begin with, assuming that input is given as a data set $D = (d_1, d_2, \dots, d_n)$, where the $d_i$ belong to some set $X$, the structure of $X$ is vital to the choice of the other principal factors. A distinction is typically made between \emph{categorical}, \emph{discrete}, and \emph{real-valued} data sets based on the properties of $X$. We now formulate these as tasks, starting with categorical data sets:
+In the literature, various classifications are used to distinguish different dataset formats. In this section, a few of these are presented.
 
-\begin{task}[Anomaly detection for categorical data]
-  Detect anomalies in a data set $D$, where $\forall d \in D: d \in A$ for some finite alphabet $A = \{a_1, a_2, \dots, a_k\}$.
-\end{task}
+To begin with, assuming that input is given as a data set $D = (d_1, d_2, \dots, d_n)$, where the $d_i$ belong to some set $X$, the structure of $X$ is of interest. A distinction is typically made between categorical, discrete, and real-valued datasets based on the properties of $X$. A dataset is said to be \emph{categorical} (or \emph{symbolic}) if $X$ is finite, \emph{discrete} if $X$ is countable and \emph{real-valued} if $X \subseteq \mathbb{R}^n$ for some $n$. It is also frequently the case that $X$ consists of some combination of categorical, discrete and real-valued data. In this case, $D$ is referred to as \emph{mixed}.
 
-Categorical (or \emph{symbolic}) data arises in many contexts and is comparatively easy to handle. In many cases, methods for handling categorical data have been fully developed.
+Categorical (or \emph{symbolic}) data arises in many contexts and is comparatively easy to handle. In many cases, methods for handling categorical data are relatively mature. For instance, categorical sequences are exhaustively treated in~\cite{TODO}. Often, there is no ordering or other relation between the elements in the underlying set, which makes the analysis simpler.
 
-If the underlying set is infinite but countable, it is referred to as discrete:
+Many techniques used for categorical data (such as information-theoretic measures and certain probabilistic models) are not applicable to discrete or real-valued data. In such cases, a suitable discretisation of the underlying set might be useful. TODO: move discussion about discretisation here.
 
-\begin{task}[Anomaly detection for discrete data]
-  Detect anomalies in a data set $D$, where $\forall d \in D: d \in B$ for some $k$ and some infinite countable set $B = \{b_1, b_2, \dots\}$.
-\end{task}
+Real-valued data sets encountered in applications are often samples of processes that are assumed to be continuous. When the ordering of these samples is reflected in the data set, the dataset is sometimes referred to as \emph{continuous}.
 
-Usually, the underlying set is either $\mathbb{Z}$ or $\mathbb{N}$ in this task.
+Anomaly detection in mixed datasets is relatively poorly understood; typically, such data is split into several separate datasets that are either categorical, discrete or real-valued before analysis.
 
-Finally, the underlying set might be uncountable. To the author's knowledge, the only uncountable sets encountered in anomaly detection applications is the real numbers. For this reason, other uncountable sets are ignored in the following task.
+It is fairly common to use \emph{numerosity reduction} techniques to convert discrete data to categorical data, or to compress categorical data. TODO: put numerosity reduction discussion here
 
-\begin{task}[Anomaly detection for real-valued data]
-  Detect anomalies in a data set $D$, where $\forall d \in D: d \in \mathbb{R}^n$.
-\end{task}
+Another important classification considers the dimensionality of the data points. A distinction is typically made between univariate and multivariate data. A dataset $D = (d_1, d_2, \dots, d_n)$ is said to be \emph{univariate} if the $d_i$ are scalars, and \emph{multivariate} if the $d_i$ are vectors of length greater than one.
 
-Many anomaly measures used for discrete or categorical data (such as information-theoretic measures or certain probabilistic models) are not valid for real-valued data. In such cases, a suitable discretization of the data might be useful. Real-valued data sets encountered in applications are often samples of processes that are assumed to be continuous. When the ordering of the samples is reflected in the data set, the data set is referred to as \emph{continuous}.
+While the distinction between uni- and multivariate data might seem superfluous, it proves important in applications. Most machine learning methods take significantly longer to learn (both in terms of time and convergence) as the dimensions of the data increase. Furthermore, many methods are not applicable to multivariate data at all.
 
-Of course, data sets consisting of multiple types of data are frequently encountered in applications. Such data sets are usually referred to as \emph{mixed}:
-\begin{task}[Anomaly detection for mixed data]
-  Detect anomalies in a data set $D$, where $\forall (a, b, c) \in D: a \in A, b \in B, c \in C$, where $A = \{a_1, a_2, \dots, a_l\}$ is categorical, $B = \{b_1, b_2, \dots\}$ is discrete and $C = \mathbb{R}^n$ is continuous.\footnote{Of course, any of $A, B$ or $C$ might be empty.}
-\end{task}
+To mitigate the difficulties of analysing high-dimensional data, \emph{dimensionality reduction} is often performed as a pre-analysis step on multidimensional datasets. TODO: put dimensionality reduction discussion here.
 
-Few methods have been proposed for dealing with mixed data. Typically, such data is split into individual series that are analyzed individually.
-
-Another characteristic that has a large impact on the analysis is the dimensionality of the data points. A distinction is typically made between \emph{univariate} and \emph{multivariate} data. We address this with the following two tasks:
-\begin{task}[Univariate anomaly detection]
-  Detect anomalies in a data set $D$, where the $d \in D$ are scalars.
-\end{task}
-\begin{task}[Multivariate anomaly detection]
-  Detect anomalies in a data set $D$, where the $d \in D$ are vectors (of length greater than one).
-\end{task}
-While the distinction between uni- and multivariate data might seem unnecessary, it proves important in applications. Most machine learning methods take significantly longer to learn (both in terms of time and convergence) as the dimensions of the data increase. Furthermore, some are not applicable to multivariate data at all.
-
-Finally, we consider the presence of additional structure in the data set. Utilizing this characteristic, when it is present, is usually vital to successful analysis. For instance, many data sets encountered in applications have a natural ordering, which typically affects the intuitive notion of what should constitute an anomaly. As we will see in Sections~\ref{sect:anomaly_types} and~\ref{sect:anomaly_measures}, it is common to base the choice of other factors---such as the anomaly type or anomaly measure---on the presence of such additional structure.
-
-Finally, it should be noted that the data is often filtered or otherwise modified to affect how it is presented to the anomaly detection method. The issue of appropriate presentations for temporal machine-generated data is considered in depth in Chapter~\ref{ch:transformations}.
+In applications there is usually additional structure present, such as orderings or other relations between elements within datasets, that can be utilised to improve the analysis. Such additional structure is discussed in Sections~\ref{sect:anomaly_types} and~\ref{sect:anomaly_measures}.
 
 \clearpage
 
