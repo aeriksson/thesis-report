@@ -1,6 +1,6 @@
 TODO:
 =====
-- 1. Finish project plan
+- 1. Finish project plan.
 - 3. Reshape chapters to:
      1. Introduction
      2. Background
@@ -8,17 +8,24 @@ TODO:
      4. An application to machine-generated time series
      5. Results
      6. Discussion
-- 11. Add more references to chapter 2
-- 12. Be more clear when introducing novel concepts in chapter 2
-- 14. Clarify semi-supervised/supervised convention - add quote
-- 15. Rename reference data -> (labeled) training data
-- 16. Remove old sequence extraction chapter
-- 17. Add new, more formal section on sequence extraction
-- 22. Provide example of papers which appear to target the same problem but don't
-- 24. Update introduction to reflect new chapter structure
+- 11. Framework: add more references.
+- 12. Framework: be more clear when introducing novel concepts.
+- 14. Framework: Clarify semi-supervised/supervised convention - add citation.
+- 15. Framework: Rename reference data -> (labeled) training data.
+- 16. Remove old sequence extraction chapter.
+- 17. Add new, more formal section on sequence extraction.
+- 22. Background: Provide example of papers which appear to target the same problem but don't.
+- 24. Introduction: update to reflect new chapter structure.
 - 25. Come up with a more interesting name than ad-eval. Anomaly detection researcher?
-- 26. Update chapter references in Introduction
-- 29. Clean up Problem Definition in Background
+- 26. Introduction: update chapter references.
+- 29. Background: clean up Problem Definition.
+- 32. Everything: Change uses of "-ize" to "-ise".
+- 33. Everything: Decide on one of "data set" and "dataset".
+- 34. Everything: Rename "Data format" -> "Dataset format".
+- 35. Everything: Rename "Output format" -> "Solution format".
+- 36. Everything: Rename "Reference data" -> "Training data".
+- 37. Everything: Replace tasks with factor choices.
+- 38. Framework: Move last paragraph of description.
 
 DONE:
 =====
