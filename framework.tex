@@ -75,7 +75,7 @@ In \emph{supervised} anomaly detection, training data containing both normal and
 
 Finally, \emph{unsupervised} anomaly detection requires no training data set. Since training data is not always available, unsupervised methods are typically considered to be of wider applicability than both supervised and semi-supervised methods~\cite{chandola}. However, unsupervised methods are unsuitable for certain tasks. Since training data can not be manually specified, it is more difficult to sift out uncommon but uninteresting items in unsupervised anomaly detection than in semi-supervised anomaly detection. Furthermore, unsupervised methods will not detect anomalies that are common but unexpected (although such items are arguably not anomalies by definition).
 
-It is useful to note that unsupervised anomaly detection tasks can often be reduced to semi-supervised anomaly detection tasks by letting the input dataset serve as normal training data and modifying the anomaly measure such that all elements are judged as dissimilar to themselves.
+It is useful to note that unsupervised anomaly detection problems can often be reduced to semi-supervised anomaly detection problems by letting the input dataset serve as normal training data and modifying the anomaly measure such that all elements are judged as dissimilar to themselves.
 
 Of course, it is sometimes not feasible or desirable to compare items with the entirety of the training data set. This is mainly the case when the data set supports additional structure, such an ordering or metric, which gives rise to a natural concept of locality within the data set. As a concrete example of such an application, consider unsupervised anomaly detection in a long sequence: often how an item compares to those items `closest' to it (in the ordering) is much more relevant to whether or not that item should be considered an anomaly than how it compares to the rest of the sequence.
 
@@ -120,7 +120,7 @@ Figure~\ref{fig:contexts} shows a schematic view of a data set, along with three
 \label{fig:filters}
 \end{figure}
 
-An important aspect of any problem is which subsets of the data set $D$ to consider when looking for anomalies; i.e.\ which subsets of $D$ should constitute the \emph{evaluation set} $E$. If all subsets are considered, the size $|E|$ of $E$ is $2^{|D|}$. This number is obviously too large to handle effectively, and the evaluation set must somehow be limited.
+An important aspect of any problem is which subsets of the data set $D$ to consider as potential anomalies; i.e.\ which subsets of $D$ should constitute the \emph{evaluation set} $E$. If all subsets are considered, the size $|E|$ of $E$ is $2^{|D|}$. This number is obviously too large to handle effectively, and the evaluation set must somehow be limited.
 
 Fortunately, only a small fraction of all possible subsets is typically of interest in any given application. Precisely which subsets are interesting depends on the structure of $D = \{d_1, d_2, \dots, d_n\}$. If $D$ lacks additional structure (such as an ordering or metric) inducing a concept of locality, then it is reasonable to consider only the singleton sets, i.e. $E = \{\{d_i\} | d_i \in D\}$. When such additional structure exists (and is pertinent to the analysis), it is reasonable to let $E$ consist of subsets in which all elements are `close' (with regards to this additional structure).
 
@@ -130,13 +130,13 @@ As an example, consider a sequence $S = (s_1, s_2, \dots, s_n)$. As mentioned in
 \]
 For such $E$, it is the case that $|E| \in O(|D|^2)$. Furthermore, it is often the case that not all contiguous subsequences must be evaluated---for instance it may suffice to treat only subsequences of some specific length, leading to $|E| \in O(|D|)$. Finally, if the ordering is not relevant to the analysis, then $E$ should be the singleton sets of $S$, and $|E| = |D|$. Thus, placing reasonable restrictions (based on the structure of the data set) on $E$ can render the analysis much more manageable.
 
-To facilitate the construction of $E$, the concept of $\emph{filters}$ can be used. An \emph{evaluation filter} is a function $\mathcal{F}_E(D): D \mapsto E \subset 2^D$ that constructs the evaluation set. One evaluation filter for sequences used extensively in this report is the \emph{sliding window filter}:
+As a way of formalising the construction of $E$, we propose that the concepts of training and evaluation $\emph{filters}$ be introduced. Informally, these are functions from some set $X$ to some subset of the power set $2^X$ of possible subsets of $X$. An \emph{evaluation filter} is a function $\mathcal{F}_E(D): D \mapsto E \subset 2^D$ that constructs the evaluation set. One evaluation filter for sequences used later in this report is the \emph{sliding window filter}:
 \[
     \mathcal{F}_E(S) = \{(s_1, s_2, \dots, s_w), (s_{s+1}, s_{s+2}, \dots, s_{s+w}), \dots, (s_{n-w}, s_{n-w+1}, \dots, c_{n})\}\footnote{It is here assumed that $ (s+w) | n$. If this is not the case, the last element extracted might be a bit different.}
 \]
 with width $w$ and step $s$. This filter is the most reasonable choice for sequences when all items in $E$ must be of the same length (as is typically the case).
 
-Of course, it is often reasonable to, in addition to the evaluation set $E$, also construct a training set, with regards to which to compare the elements in $E$. Naturally, with each element $e_i \in E$ should be associated one such set $R_{e_i}$, consisting of subsets of the context $C(e_i)$. Analogously with evaluation filters, \emph{training filters} can be introduced, which simplify the construction of such $R_{e_i}$. Since the context is a set of sets, these should have the form $\mathcal{F}(e_i): C(e_i) \mapsto R_{e_i} \subset 2^D$. As an example of a training filter, consider the sliding window training filter for sequences with length $w$ and step $s$:
+It is further useful to, in addition to the evaluation set $E$, also construct a training set with regards to which to compare the elements in $E$. If this training set is taken to be fixed, then it can be seen as the training dataset used in a semi-supervised problem. However, we can generalise this concept to other setups by using a context function to associate different training sets with different $e_i \in E$. In this case, with each element $e_i \in E$ should be associated one such set $R_{e_i}$, consisting of subsets of the context $C(e_i)$. Analogously with evaluation filters, \emph{training filters} can be introduced, which simplify the construction of such $R_{e_i}$. Since the context is a set of sets, these should have the form $\mathcal{F}(e_i): C(e_i) \mapsto R_{e_i} \subset 2^D$. As an example of a training filter, consider the sliding window training filter for sequences with length $w$ and step $s$:
 \[
     \mathcal{F}_R(e_i) = \bigcup_{(c_1, c_2, \dots, c_n) \in C(e_i)}\{(c_1, c_2, \dots, c_w), (c_{s+1}, c_{s+2}, \dots, c_{s+w}), \dots, (c_{n-w}, c_{n-w+1}, \dots, c_{n})\}.
 \]
@@ -151,47 +151,25 @@ A schematic illustration of the operation on a sequence of sliding window filter
 \label{fig:anomaly_types}
 \end{figure}
 
-To simplify the discussion of contexts and evaluation/training sets, it is helpful to introduce a few different \emph{anomaly types}, based on which appropriate choices of evaluation and training filters can be inferred. For the purposes of the discussion in this report, an introduction of four anomaly types will suffice. In order of increasing generality, these are \emph{point anomalies}, \emph{contextual point anomalies}, \emph{collective anomalies}, and \emph{contextual collective anomalies}. An illustration of these anomaly types in the context of real-valued sequences is shown in Figure~\ref{fig:anomaly_types}.
+To simplify the discussion of contexts and evaluation/training sets, we will now introduce a few different \emph{anomaly types}, inspired by the concepts of contextual and collective anomalies discussed in~\cite{chandola}. In order of increasing generality, these are \emph{point anomalies}, \emph{contextual point anomalies}, \emph{collective anomalies}, and \emph{contextual collective anomalies}. An illustration of these anomaly types in the context of real-valued sequences is shown in Figure~\ref{fig:anomaly_types}.
 
-\emph{Point anomalies} are arguably the simplest out of these anomaly types. They correspond to single points in the data set (i.e.\ $E$ consists of the singleton sets of $D$) that are considered anomalous with regard to the entire training set (i.e.\ a trivial context is appropriate). Finding them can be formulated as the following task:
+\emph{Point anomalies} are arguably the simplest out of these anomaly types. They correspond to single points in the data set (i.e.\ $E$ consists of the singleton sets of $D$) that are considered anomalous with regard to the entire training set (i.e.\ a trivial context is appropriate). Point anomalies are often referred to as \emph{outliers} and arise in many domains~\cite{eskin}. Their detection is often relatively straightforward. Statistical anomaly measures have been shown to be well suited for handling point anomalies, and are often used. For certain applications, distance-based anomaly measures, such as the local outlier factor~\cite{TODO} are useful.
 
-\begin{task}[Point anomaly detection]
-\label{task:point}
-  Given a data set $D$, detect individual $d_i \in D$ that are anomalous with regard to the entire training set.
-\end{task}
+Of course, point anomalies are not often not sufficient to describe all anomalies when $D$ admits a concept of locality. In this case, \emph{contextual point anomalies} can capture a more general class of anomalies. Contextual anomalies are individual items that are anomalous with regards to their context (as given by some non-trivial context function); i.e.\ while they might seem normal when compared with all elements in the training data, they are anomalous when compared to the other items in their context. Formally, contextual point anomalies can be defined as, given a dataset $D$ and a context function $C(d)$, the contextual point anomalies of $D$ are the elements $d \in D$ that are point anomalies in $C(d)$. Thus, contextual point anomalies are a generalisation of point anomalies, in the sense that a point anomaly is a contextual point anomaly with regard to the trivial context $C(d) = D \setminus {d}$.
 
-Point anomalies are often referred to as \emph{outliers} and arise in many domains~\cite{eskin}. Their detection is often relatively straightforward. Statistical methods have been shown to be well suited for handling point anomalies, and are usually sufficient.
+Sometimes detecting individual anomalous points $d \in D$ might not always suffice, and \emph{collective anomalies} might be required to capture relevant anomalies. Collective anomalies correspond to contiguous sets of non-anomalous points that, when taken as a whole, are anomalous with regards to the entire training set. The task of detecting such anomalies can be formulated using filters. Formally, given a set $D$ and a filter $\mathcal{F}$, the collective anomalies of $D$ are the point anomalies of $\mathcal{F}(D)$. Of course, point anomalies are a special case of collective anomalies, corresponding to the case where $\mathcal{F}(D) = D$.
 
-Of course, point anomalies are not often not sufficient to describe all anomalies when $D$ admits a concept of locality. In this case, \emph{contextual point anomalies} can capture a more general class of anomalies. Contextual anomalies are individual items that are anomalous with regards to their context (as given by some non-trivial context function); i.e.\ while they might seem normal when compared with all elements in the training data, they are anomalous when compared to the other items in their context. Detecting contextual point anomalies can be formulated as the following task:
+Finally, \emph{contextual collective anomalies} are the most general class of anomalies, and correspond to contiguous sets of non-anomalous points that are anomalous with regard to a specific context but not to the entire training set. Formally, given a dataset $D$, a filter $\mathcal{F}$, and a context function $C$, the contextual collective anomalies of $D$ are the elements of $X \in \mathcal{F}(D)$ that are point anomalies in $C(X)$. As expected, all of the three previous anomaly types can be considered special cases of contextual collective anomalies.
 
-\begin{task}[Contextual anomaly detection]
-\label{task:contextual}
-  Given a set $D$ and a non-trivial context function $C(d)$, detect elements $d \in D$ anomalous with regards to $C(d)$.
-\end{task}
+An illustration of the above concepts in real-valued sequences is shown in Figure~\ref{fig:anomaly_types}. Assuming that unsupervised anomaly detection is used, Detecting point anomalies amounts to disregarding the information provided by the ordering and detecting only `rare' items. While the task can capture the aberration in the first sequence in Figure~\ref{fig:anomaly_types}, none of the aberrations in the other sequences would be considered point anomalies.
 
-Furthermore, detecting individual anomalous points $d \in D$ might not always suffice (specifically, when the anomalies are continuous), and \emph{collective anomalies} might be required to capture relevant phenomena. These correspond to contiguous sets of non-anomalous points that, when taken as a whole, are anomalous with regards to the entire training set (i.e.\ a trivial context is appropriate). The task of detecting such anomalies can be formulated using filters:
+While the value at the aberrant point at the center of the second sequence occurs elsewhere in that sequence, it is anomalous with regards to its local context, and as such, should be considered a contextual point anomaly and can be captured by problem formulations that use contextual point anomalies.
 
-\begin{task}[Collective anomaly detection]
-\label{task:collective}
-  Given a set $D$ and a (non-singleton) filter $\mathcal{F}$, detect point anomalies in the evaluation set $\mathcal{F}(D)$.
-\end{task}
+Since the third time series is continuous, the aberration present at its center can not be a (contextual) point anomaly. It is, however, a collective anomaly, and can be accurately captured by problem formulations that use collective anomalies.
 
-Finally, \emph{contextual collective anomalies} are the most general class of anomalies, and correspond to contiguous sets of non-anomalous points that are anomalous with regard to a specific context but not to the entire training set.
+Finally, neither of the first three types of anomalies can capture the aberration in the fourth sequence, as it is both continuous and occurs elsewhere in the sequence. However, with an appropriate choice of (local) context, it can be deemed a contextual collective anomaly, and can be captured by problem formulations that use contextual collective anomalies.
 
-\begin{task}[Contextual collective anomaly detection]
-\label{task:contextual_power}
-  Given a data set $D$, a (non-singular) filter $\mathcal{F}$ and a non-trivial context function $C$, detect elements $e_i$ in the evaluation set $\mathcal{F}(D)$ that are anomalous with regards to the context $C(e_i)$.
-\end{task}
-
-An illustration of the above concepts in real-valued sequences is shown in Figure~\ref{fig:anomaly_types}. Assuming that unsupervised anomaly detection is used, Task~\ref{task:point} amounts to disregarding the information provided by the ordering and detecting only `rare' items. While the task can capture the aberration in the first sequence in Figure~\ref{fig:anomaly_types}, none of the aberrations in the other sequences would be considered point anomalies.
-
-While the value at the aberrant point at the center of the second sequence occurs elsewhere in that sequence, it is anomalous with regards to its local context, and as such, should be considered a contextual point anomaly and can be captured by Task~\ref{task:contextual}.
-
-Since the third time series is continuous, the aberration present at its center can not be captured by Tasks~\ref{task:point} Or~\ref{task:contextual}. It is, however, a collective anomaly, and can be accurately captured by Task~\ref{task:collective}.
-
-Finally, neither of the Tasks~\ref{task:point},~\ref{task:contextual} or~\ref{task:collective} captures the aberration in the fourth sequence, as it is both continuous and occurs elsewhere in the sequence. However, with an appropriate choice of (local) context, it can be deemed a contextual collective anomaly, and can be captured by Task~\ref{task:contextual_power}.
-
-It should be noted that while all of the above tasks are special cases of contextual collective anomaly detection, it is often possible to reduce each of the tasks to detection of point anomalies, as well. Task~\ref{task:collective} reduces to detection of point anomalies by its definition (i.e.\ it corresponds to detecting point anomalies in a higher-dimensional space), while data normalization can sometimes be utilized to perform this reduction for contextual anomaly detection (see~\cite{meckesheimer} for instance).
+It should be noted that while contextual point anomalies, collective anomalies, and contextual collective anomalies are all generalisations of point anomalies, it is often possible to reduce each of these anomaly types to of point anomalies, as well. As outlined above, each of these anomaly types can be defined using point anomalies. Furthermore, data normalisation be utilized to solve some contextual anomaly detection problems using point anomaly detection (see~\cite{meckesheimer}, for instance).
 
 \section{Anomaly measures}
 \label{sect:anomaly_measures}

@@ -53,4 +53,4 @@ DONE:
 - 38. Framework: Move last paragraph of description.
 - 39. Framework: Create draft of Dataset Format section.
 - 43. Framework: Create draft of Solution Format section.
-- 44. Framework: Clean up Training Data section.
+- 45. Framework: Create draft of Training Data section.
