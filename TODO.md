@@ -57,3 +57,4 @@ DONE:
 - 46. Framework: Create draft of Anomaly Type section.
 - 47. Framework: Create draft of Anomaly Measures section.
 - 48. Framework: Incorporate Related High-level Tasks section into other sections.
+- 49. Framework: Be more clear about context functions being a novel concept.
