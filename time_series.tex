@@ -1,0 +1,558 @@
+\chapter{An application to time series}
+\label{ch:time_series}
+
+\section{Presentation}
+\label{ch:transformations}
+
+The \emph{presentation} of data is an important aspect of any anomaly detection problem. When talking about presentation, we refer to the structure of the dataset presented to the anomaly detection algorithm. Real-world datasets can typically be presented in a myriad of different ways, and the choice of presentation has a great impact both on the difficulty of the analysis and on the set of applicable tasks.
+
+For large datasets, only selected subsets are typically used for analysis. Furthermore, datasets are often aggregated, compressed or otherwise subjected to \emph{transformations} to convert them into a more manageable form before analysis. Transformations are typically applied to simplify or speed up the analysis, but they also have an impact on what types of anomalies can be detected.
+
+In this chapter, a thorough overview is given of various aspects of the presentation of temporal machine data and how they affect the analysis thereof.
+
+As previously, we adhere to the framework of tasks and problems and present tasks where appropriate. However, we do not try to be as exhaustive as in the previous chapter; instead we briefly introduce various presentations and transformations, and avoid presenting tasks for presentations and transformations not used in the remainder of the report.
+
+We begin in Section~\ref{sect:splunk_techniques} by discussing the typical structure of data in the target domain (large databases of temporal machine data). A focus is placed on sequences, and two high-level tasks that cover anomaly detection in the target domain are presented.
+
+In Section~\ref{sect:terminology}, some terminology regarding time series and sequences is presented.
+
+In Sections~\ref{sect:unimultivariate},~\ref{sect:aggregation} and~\ref{sect:compression}, we discuss various transformations and aspects of the presentation and how they impact the analysis.
+
+Finally, in Section~\ref{sect:series_mining} we discuss the automated extraction of interesting univariate sequences in datasets consisting of long sequences.
+
+\subsection{Presentation of temporal machine data}
+\label{sect:splunk_techniques}
+
+Unlike those found in most application domains, the datasets encountered in temporal machine data applications are typically very large, unstructured, and contain large amounts of non-pertinent information. For this reason, culling and aggregating the data before analysis is essential, and selecting a presentation is an important part of constructing problem formulations.
+
+Machine data is almost exclusively recorded and stored as strings (corresponding to events) of plain-text data (especially in Splunk). Each of these strings (or events), in turn, encodes a data point of one- or multidimensional, usually mixed, data. Obviously, letting anomaly detection methods handle large amounts of such strings directly is not optimal, and the data must given an alternative presentation before it can be analyzed.
+
+Fortunately, Splunk and other databases targeted at machine data can parse such events automatically and extract the interesting \emph{fields} (i.e.\ individual data dimensions). In a sense, a dataset of temporal machine data that has gone through such a field-extraction process can be seen as a long sequence $S$ of multi-dimensional data with associated time stamps
+\[
+  S = (s_1, s_2, \dots, s_n), \quad \text{ where } \quad \forall i: s_i = (s_i, t_i) \in X \times T \quad \text{ and } \quad \forall i,j: i > j \Rightarrow t_i > t_j
+\]
+where $X$ is the Cartesian product of all fields present in any data item and $T$ is a set of associated time stamps.
+
+Of course, analysing such databases in their entirety is often costly and unnecessary: a majority of events are likely to be unrelated or non-pertinent. Instead, databases are typically split into multiple \emph{indexes} containing related events. While limiting the analysis to an individual index will typically simplify the analysis, we can not assume that the items in an index are sufficiently homogeneous to warrant analysing the index as a whole. Instead, we need to complement the analysis with methods for extracting interesting series, something we discuss in Section~\ref{sect:series_mining}. Nevertheless, we can discern the following major anomaly detection tasks for temporal data:
+
+\begin{task}[Detecting anomalous subsequences]
+\label{task:ad_splunk}
+  Given a sequence $S = (s_1, s_2, \dots)$ where $\forall s \in S: s \in X \times T$ (for some mixed-dataset $X$ and the set of time stamps $T \subset \mathbb{R}$) and $\forall (s_i, t_i), (s_j, t_j) \in S: i > j \Rightarrow t_i \geq t_j$, detect subsequences $S' \subset S$ that are anomalous.
+\end{task}
+\begin{task}[Detecting anomalous sequences in a set of sequences]
+\label{task:ad_splunk2}
+  Given a set of sequences\\ $\{S_1, S_2, \dots, S_n\}$ where $S_i = (s_{i,1}, s_{i,2}, \dots, s_{i, n_i})$ and $\forall s_j \in S_i: s_j \in X \times T$ (for some mixed-dataset $X$ and the set of time stamps $T \subset \mathbb{R}$) and $\forall (s_i, t_i), (s_j, t_j) \in S: i > j \Rightarrow t_i \geq t_j$, detect sequences $S_i$ that are anomalous.
+\end{task}
+
+These are the most general tasks we can specify, in the sense that any task specifying additional factors must exclude at least some problems that could be relevant. Thus, before more interesting tasks and problems can be formulated, the relative values of the specific principal factor choices must be estimated. This is done in Chapter~\ref{ch:problems}.
+
+Note that Task~\ref{task:ad_splunk2} is mainly interesting when the dataset consists of large amounts of similar sequences, for instance when analyzing user command records (as in Figure~\ref{fig:calls}). While this task is relevant in many applications, it is not as generally applicable as~\ref{task:ad_splunk} to large databases of temporal machine data. While such databases will always contain plenty of long sequences that are interesting to study individually, there is no guarantee that they contain enough similar short sequences to warrant the application of~\ref{task:ad_splunk2}. We here simply note that many papers have been published on Task~\ref{task:ad_splunk2} (\cite{blender},~\cite{chan},~\cite{ye},~\cite{forrest},~\cite{sekar1},~\cite{sekar2}), and refer to~\cite{chandola2} and~\cite{chandola3} for more thorough reviews.
+
+Finally, it should be noted that the Tasks~\ref{task:ad_splunk} and~\ref{task:ad_splunk2} are related, in the sense that a problem of finding anomalous subsequences of some long sequence $S$ can be reduced to the problem of finding anomalous sequences in a set of sequences by extracting and comparing all subsequences (or all subsequences of some specific length) of $S$.
+
+
+\subsection{Terminology}
+\label{sect:terminology}
+
+Since we have assumed that the datasets we are dealing with consist of discrete events with associated time stamps, we now turn our focus to sequences and time series, and their relation to anomaly detection. Since various incompatible definitions of sequences and time series are used in the literature, we begin by defining these concepts.
+
+From here on, we take a \emph{sequence} to mean a progression (finite, or in the case of monitoring applications, infinite) $S = (s_1, s_2, \dots)$, where $\forall i: s_i \in X$ for some set $X$. Furthermore, we will take a \emph{time series} to be any sequence $T = ((s_1, t_1), (s_2, t_2), \dots)$, where $\forall i: (s_i, t_i) \in X \times \mathbb{R}^+$ for some set $X$ and $\forall i, j: i > j \rightarrow t_i \geq t_j$. In other words, a time series is any sequence in which each item is associated with a point in time. We refer to sequences and time series as symbolic/categorical, discrete, real-valued, vector-valued et cetera based on the characteristics of $X$.
+
+When the time series is sampled at regular intervals in time (i.e.\ $\forall i, j: t_{i+1} - t_i = t_{j+1} - t_j$), we say that the time series is \emph{regular}. We will treat regular time series as sequences, suppressing the $t_i$ and writing $T = (s_1, s_2, \dots)$. Henceforth we will take all time series to be equidistant unless explicitly stated\footnote{As mentioned above, there is some confusion surrounding these terms in the literature. Specifically, what we would refer to as `symbolic sequences' and `regular time series' are often simply referred to as `sequences' or `time series'. In such contexts, other types of sequences (and time series) are usually ignored}.
+
+\subsection{Uni- and multivariate data}
+\label{sect:unimultivariate}
+
+\begin{wrapfigure}{r}{0.5\textwidth}
+    \vspace{-25pt}
+    \begin{center}
+        \leavevmode
+        \includegraphics[trim = 20mm 3mm 20mm 5mm, clip, width=0.5\textwidth]{resources/multi_vs_univariate}
+    \end{center}
+    \vspace{-15pt}
+    \caption{{\small Two sine curves regarded as two separate univariate time series (dotted lines) and as one multivariate time series (solid lines).}}
+\label{fig:multi_vs_univariate}
+    \vspace{-25pt}
+\end{wrapfigure}
+
+The dimensionality of the individual elements in a sequence has a profound impact on the difficulty and efficiency of the analysis. Representing a sequence by $S = (s_1, s_2, \dots)$, where $s_i \in X$ for some set $X$, we say that $S$ is \emph{multivariate} if $X$ is the Cartesian product of some collection of non-empty sets $X_i$, and that $S$ is \emph{univariate} otherwise. The difference between uni- and multivariate time series is illustrated in Figure~\ref{fig:multi_vs_univariate}.
+
+In a sense, univariate and multivariate sequences are two sides of the same coin. Obviously, any multivariate sequence $S = (s_1, s_2, \dots)$, where $s_i = (s_{i,1}, s_{i,2}, \dots, s_{i,n})$ may be split into multiple univariate time sequences $S_1, S_2, \dots, S_n$, where $S_i = (s_{1,i}, s_{2, i}, \dots )$. Conversely, any $S_1, S_2, \dots, S_n$ can be aggregated into a multivariate time series (although this is meaningless unless the $S_i$ were all sampled at the same times).
+
+Multivariate time series are arguably more powerful, in the sense that a data point $(\vect{s_i}, t_i)$ where $\vect{s_i} = (s_{i,1}, s_{i,2}, \dots, s_{i,n})$ may be anomalous with regard to the rest of the data, while its individual components $s_{i,j}$ are not, as illustrated in Figure~\ref{fig:dimensionality_reduction}.
+
+On the other hand, analyzing higher-dimensional data is often difficult (in terms of both analysis time and accuracy), making multivariate analysis both computationally and conceptually more difficult. For this reason, it might be beneficial to (when safe) split multivariate sequences or otherwise reduce their dimensionality before performing the analysis.
+
+A majority of the literature on anomaly detection in sequences, and especially in real-valued time series, focuses on univariate data, and while some algorithms can be extended to handle multivariate time series, this is not always possible. Keeping this in mind, it makes more sense to focus on univariate sequences, at least initially.
+
+\subsection{Compression}
+\label{sect:compression}
+
+\begin{figure}[htb]
+\begin{center}
+\leavevmode
+\includegraphics[width=\textwidth]{resources/multivariate}
+\end{center}
+\caption{\small{An example of dimensionality reduction in a point anomaly detection problem in $R^2$. The left figure shows a set of $500$ data points $(x_i, y_i)$ containing one anomaly. The top right figure shows a histogram of the $x_i$, while the bottom right figure shows a histogram of the distance from the center point. In each figure, the location of the anomalous point is marked by an arrow. While the anomaly is easy to detect in the left and bottom right figures, it can not be seen in the top right figure. This is due to the linear inseparability of the data, and illustrates how dimensionality reduction can lead to information losses if not performed properly.}}
+\label{fig:dimensionality_reduction}
+\end{figure}
+
+Analyzing high-dimensional data can be difficult, both due to increased computational time and due to topological properties of high-dimensional spaces (a phenomenon commonly referred to as the \emph{curse of dimensionality}). In many analysis tasks, it is therefore desirable to (if possible) reduce the dimensionality of data in such a way that only the aspects of the data most pertinent to the analysis remain.
+
+Many techniques have been designed with this goal in mind. A distinction is typically made between \emph{feature selection} and \emph{feature extraction} approaches. Feature selection approaches try to select a subset of the dimensions present in the original data. Feature extraction approaches, in contrast, transform the data into some new space, in which the relevant features are hopefully more apparent. Feature extraction methods are commonly employed as a pre-processing step in anomaly detection algorithms, while feature selection methods are not commonly used. We will here focus on feature extraction methods.
+
+Common feature extraction methods for data in $\mathbb{R}^n$ include \emph{principle component analysis} (PCA), \emph{semidefinite embedding}, \emph{partial least-squares regression}, and \emph{independent component analysis}. Which methods are appropriate to use depends heavily on the problem domain. In order to illustrate the concept of feature extraction, we will now briefly present a typical example of $\mathbb{R}^n$ feature extraction, before moving on to methods designed specifically for sequences (and time series in particular).
+
+%Consider the two-dimensional dataset in the left panel of figure~\ref{fig:multi_vs_univariate}. Here, all data points are generated from the same distribution except for a single anomalous point at the center of the panel. While the anomaly is readily identified in the left panel, due the radial symmetry of the distribution, it can not be seen when projected linearly onto any direction, as illustrated in the upper right panel. The task in dimensionality reduction is to present a projection onto a lower dimensional space (in this case $\mathbb{R}$) in which the classes (anomalous/non-anomalous) are separated, something that is surprisingly difficult even for this relatively simple dataset. Indeed, most dimensionality reduction methods, including all feature selection methods and some feature extraction methods (such as linear PCA) can not accomplish this on the given data - non-linear feature extraction methods are required. This illustrates the difficulty inherent to dimensionality reduction.
+
+\begin{figure}[htb]
+  \begin{center}
+    \leavevmode
+    \includegraphics[width=\textwidth]{resources/types_of_data}
+  \end{center}
+  \caption{\small{Illustration of numerosity and dimensionality reduction in a conversion of a real-valued sequence to a symbolic sequence. The top frame shows a real-valued time series sampled from a random walk. The second frame shows the resulting series after a (piecewise constant) dimensionality reduction has been performed. In the third frame, the series from the second frame has been numerosity-reduced through rounding. The bottom frame shows how a conversion to a symbolic sequence might work; the elements from the third series is mapped to the set $(a,b,c,d,e,f)$.}}
+\label{fig:types_of_data}
+\end{figure}
+
+When it comes to sequences, each individual component of a sequence is treated as an independent dimension, complicating the problem of dimensionality reduction significantly and rendering most ordinary methods intractable. Luckily, the temporal ordering of time series can often be used to efficiently perform feature extraction despite the high-dimensional data of the series. The literature on dimensionality reduction in sequences has mainly focused on real-valued sequences. In this context, the task of feature extraction can be rephrased as follows: \emph{Given a sequence $S = s_1, s_2, \dots, s_n$ where $s_i \in \mathbb{R}$, find a set of basis functions $\phi_1, \phi_2, \dots, \phi_n$ where $m < n$ that $T$ can be projected onto, such that the analysis is simplified and $T$ can be recovered with little error.} Many different methods for obtaining such bases have been proposed, including the discrete Fourier transform~\cite{faloutsos1}, discrete wavelet transforms~\cite{pong}, various piecewise linear and piecewise constant functions~\cite{keogh3}~\cite{geurts}, and singular value decomposition~\cite{keogh3}. An overview of different representations is provided in~\cite{fabian}.
+
+Arguably the simplest time series representation involves using a basis of piecewise constant functions $(\phi_1, \phi_2, \dots, \phi_n)$:
+\[
+  \phi_i(t) = \left\{
+    \begin{array}{l l}
+      1 & \quad \text{ if } \tau_i < t < \tau_{i+1} \\
+      0 & \quad \text{ otherwise.} \\
+    \end{array} \right.
+\]
+where $(\tau_1, \tau_2, \dots \tau_n)$ is a partition of $[t_1, t_n]$. The $s_i$ are then aggregated over the $\phi_i$ as in Section~\ref{sect:aggregation}.
+
+Different piecewise constant representations have been proposed, corresponding to different partitions. The simplest of these, corresponding to a partition with constant $\tau_{i+1} - \tau_i$ is proposed in~\cite{keogh4} and~\cite{faloutsos2} and is usually referred to as \emph{piecewise aggregate approximation (PAA)}. As shown in~\cite{keogh5},~\cite{keogh3} and~\cite{faloutsos2}, PAA rivals the more sophisticated representations listed above.
+
+Additionally, reducing the cardinality of the underlying set can be useful. This is often referred to as \emph{numerosity reduction} and corresponds to discretizing real-valued data or reducing the resolution of discrete data. This is primarily done to give real-valued time series symbolic representations, which allows for symbolic sequence analysis methods to be applied to them. The most widely used symbolic representation is \emph{symbolic aggregate approximation} (SAX)~\cite{sax}.
+
+\subsection{Sequence extraction}
+\label{sect:series_mining}
+
+In light of the discussion of uni- and multivariate data above, it seems reasonable to emphasize extracting univariate series from the long multivariate sequences encountered in temporal machine datasets (i.e.\ Task~\ref{task:ad_splunk}). Indeed, the provision of tools for manually or automatically extracting interesting time series is likely necessary for the uptake of large-scale anomaly detection (and indeed several other related tasks) in databases such as Splunk. Ideally, methods should be available that automatically examine all potentially pertinent time series and report on those in which anomalies are found. However, the total number of such time series is likely to grow quickly with the number of fields and distinct values of categorical variables in the data datasets, possibly rendering such methods intractable.
+
+In order to estimate the feasibility of these methods, it can be helpful to consider the size of the search space---i.e.\@, the number of possible interesting time series that can be constructed from a typical Splunk index. For example, consider an index consisting of web logs for a single web server. Assume that a log message is generated for every new HTTP request, containing the following fields: time stamp; host name and ident of the user; HTTP request type, URL, status and request/response size/time/latency; and the user agent and referrer. All of these factors are categorical, apart from the HTTP request/response size/time/latency, which ought to be considered real-valued. Let us denote the number of categories encountered in each categorical factor as $n_1, n_2, \dots, n_k$. For most websites, each of the $n_i$ ought to lie between a few hundred and a few million per day.
+
+We first consider the size of the set of potentially interesting univariate sequences. Interesting univariate sequences could be constructed from at least the frequencies of every value of every categorical factor; the continuous factors over time; or any factor conditioned by any single value of any categorical factor (such as the sequence of URLs or the latency over time for any single user). These combinations alone lead to a number of $N = \sum_i n_i (1 + k + \sum_{j \neq i} n_j)$ potentially interesting time series. If the $n_i$ are sufficiently small, the quadratic nature of this expression is workable. However, if the $n_i$ are large (as is the case in our example, and is likely to be the case in most Splunk applications), a very large number of time series would have to be extracted and analyzed. Of course, detecting anomalies in series conditioned by two or more variables could also be interesting---causing the addition of higher-degree terms to the expression of $N$. While linearity could be achieved by disregarding conditioned series, this would lead to a significant reduction in analysis power.
+
+Considering this, and the fact that anomaly detection is typically a computationally expensive task (especially when performed on the large datasets), completely automated series extraction is not likely to be feasible except on small indexes. However, if combined with manual pruning of the search space, automated extraction might be feasible. For instance, if in our example we were only interested in detecting anomalous user patterns, the analysis could be limited to a number of $n_u (k + \sum_{i \neq u} n_i)$ sequences (where $n_u$ is the number of distinct users), or perhaps as few as $n_u \cdot k$.
+
+Developing the tools to perform this type of extraction and analysis in Splunk should prove relatively straightforward, and this would be the logical next step once appropriate anomaly detection methods have been implemented.
+
+\section{Important tasks}
+\label{ch:problems}
+
+Having discussed principal factors and transformations in depth, we are finally in a position to reason about which tasks might be the most relevant to anomaly detection in the target domain.
+
+This chapter begins in Section~\ref{sect:goals} with a presentation and discussion of objectives in designing anomaly detection methods for machine data.
+
+In Section~\ref{sect:relevant_tasks}, the principal factors and high level tasks presented in Chapter~\ref{ch:framework} are considered, from the perspective of their applicability to temporal machine data and how well they match the chosen objectives.
+
+Finally, the chapter is concluded in Section~\ref{sect:suggested_tasks} with a summary of the anomaly detection tasks most relevant to the target domain.
+
+\subsection{Objectives}
+\label{sect:goals}
+
+A set of objectives for anomaly detection methods dealing with temporal machine data are now presented, which will be used to reason about which tasks and methods are appropriate for such data.
+
+The most fundamental objective is \emph{accuracy}. Methods must detect anomalies as accurately as possible. For obvious reasons, a high rate of false negatives will render the analysis useless, while a high false positive rate will require a high degree of manual analysis of the results---something that is is problematic since such an analysis might be hard to perform and can be sensitive to bias on part of the analyst. This objective can be stated as follows:
+
+  \emph{Methods should be as accurate as possible. They should have low misclassification rates.}
+
+Another important property is \emph{generality}. Many methods are accurate only on few sets of data. For instance, parametric statistical methods typically rely on the assumption that the data is sampled from a specific distribution. When this assumption fails, the results are usually poor. As the target domain is arbitrary sets of machine data, methods should require as few assumptions as possible. This objective is summarized as follows:
+
+  \emph{Methods should perform well on as many datasets as possible. They should make as few assumptions as possible about the data.}
+
+A related objective is that methods should have as \emph{few parameters} as possible. The goal is to provide tools that facilitate the monitoring and analysis of very large sets of data, and methods that require a lot of parameter tweaking in order to work properly will likely hamper this effort, since appropriately configuring such methods requires knowledge of the intricacies of both methods and data. Furthermore, methods with many parameters can easily lead to misinterpreted results~\cite{keogh2}. Finally, the amount of `peripheral' configuration (selection of training data, output format, etc.) should be kept to a minimum. This leads to the following objective:
+
+  \emph{Methods should require as few parameters as possible. Configuration should be kept to a minimum.}
+
+Finally, it is vital that methods be \emph{scalable}. Since the hope is to provide methods that can be useful in monitoring and diagnosis scenarios, methods that can handle large sets of data are required. Specifically, this means that methods should have low complexity in terms of both time and memory, and be able to give accurate results even for large datasets. Furthermore, it is preferable for methods can be distributable and work in a streaming fashion, e.g.\ not require random disk accesses or multiple passes over the data. This objective can be stated as follows:
+
+  \emph{Methods should be scalable: they should be able to handle very large amounts of data without long computation times or disk issues.}
+
+\subsection{High-level tasks}
+\label{sect:relevant_tasks}
+
+Which high level tasks are relevant for temporal machine data is now discussed. The principal factors are treated sequentially, according to the order they were encountered in Chapter~\ref{ch:framework}.
+
+This Section is also based in large part on the discussions in the previous Section and those of Chapter~\ref{ch:transformations}. 
+
+\subsubsection{Data format}
+\label{sect:relevant_data_format}
+
+As per the discussion in Sections~\ref{sect:splunk_techniques} and~\ref{sect:series_mining}, it is appropriate to focus on extracting sequences from indexes for use with Tasks~\ref{task:ad_splunk} or~\ref{task:ad_splunk2}.
+
+What remains is to settle on a specific presentation of these sequences. While all three aggregation tasks presented in Section~\ref{sect:aggregation} are potentially useful for temporal machine data, their relative utility to the stated objectives can still be judged. We will now discuss each of the three tasks in turn, and estimate their utility.
+
+First, consider Task~\ref{task:sequential_anomaly_detection} (sequential anomaly detection). While interesting in certain contexts (such as system call or web session traces), it is not likely to be able to capture a majority of interesting sequences in temporal machine datasets, since it is not appropriate for non-categorical sequences. While there are certainly interesting categorical sequences that can be analyzed in many temporal machine datasets, it can be expected that these constitute a low share of the total number of interesting sequences in Splunk applications. For this reason, it ought to be argued that this task, while interesting in some cases, should have lower priority than the other two aggregation tasks.
+
+Task~\ref{task:frequential_anomaly_detection} (frequential anomaly detection) is more interesting. Since it enables anomaly detection to be applied to the frequency of any recurring event or value, it should be applicable to a wider range of datasets. However, it is limited in the sense that it can not accurately capture continuous quantities or other types of quantities that vary over time. This limits its applicability to temporal machine datasets, since a large share of the interesting quantities in such data (at least in Splunk applications) vary over time.
+
+In such cases, Task~\ref{task:continuous_anomaly_detection} is more appropriate, as it allows for correct estimates of evolving quantities. As pointed out in Section~\ref{sect:aggregation}, the aggregation transformations involved in the Tasks~\ref{task:frequential_anomaly_detection} and~\ref{task:continuous_anomaly_detection} are very similar, and implementing them both should not be difficult. However, they are likely to require different anomaly measures; to limit the scope of the project, it was decided that the focus would be placed on the latter.
+
+The next issue to settle is whether uni- or multivariate sequences should be the focus. As discussed in Section~\ref{sect:unimultivariate} multivariate sequences are more difficult to analyze than univariate sequences, and can often be broken down into univariate sequences without significant losses in analysis power. Therefore, it is reasonable to (at least initially) focus solely on univariate sequences.
+
+Finally, it must be decided which of the Tasks~\ref{task:ad_splunk} (detecting anomalous subsequences) and~\ref{task:ad_splunk} (detecting anomalous sequences in a set of sequences) to focus on. While the latter task is interesting and occurs naturally in many contexts, e.g.\ system call traces (figure~\ref{fig:calls}), it is more reasonable to focus on the former since temporal machine datasets typically feature long and largely dissimilar sequences.
+
+Based on the above, the following two tasks ought to be promoted as important, with the latter being preferential as a first step:
+\begin{task}
+\label{task:frequency}
+  Detect anomalous subsequences in real-valued univariate sequences containing the frequency of some event over time.
+\end{task}
+\begin{task}
+\label{task:continuous}
+  Detect anomalous subsequences in real-valued univariate sequences sampled from a continuous process.
+\end{task}
+
+\subsubsection{Reference data}
+
+One of the four objectives stated in Section~\ref{sect:goals} is that methods should be as generally applicable and require as little configuration as possible. Obviously, the reference data tasks presented in Section~\ref{sect:reference_data} meet these demands to varying degrees. Since unsupervised anomaly detection (task~\ref{task:unsupervised_anomaly_detection}) does not require the user to provide reference data, it is superior to supervised and semi-supervised anomaly detection in this regard.
+
+However, it is not clear whether unsupervised methods can scale adequately; there seems to be a trade-off between the amount of required supervision and the scalability of algorithms. Most naive methods scale as $O(f(R \cdot N))$, where $f(n) \in \Omega(n)$, $R$ is the number of reference items, and $N$ is the number of items to be evaluated. When performing semi-supervised anomaly detection, it is usually the case that $R < N$. In unsupervised anomaly detection, however, $N = R$, and so methods scale as $O(f(N^2))$. This is problematic, and some form of pruning is required to allow large-scale analysis. One form of pruning that should perform relatively well is the use of some form of constant-size context (e.g.\@, the local context). Nevertheless, it was decided that unsupervised methods should be the focus of this project.
+
+\subsubsection{Anomaly types}
+
+The choice of both anomaly types and anomaly measure together define which anomalies will be captured by problem formulations.
+
+Reviewing Section~\ref{sect:anomaly_types}, and especially Figure~\ref{fig:anomaly_types}, can help when reasoning about anomaly types. \emph{Point anomalies} are obviously not appropriate, as they can not capture most anomalies in continuous sequences (to see this, consider that none of the aberrations in the second, third, or fourth panels of Figure~\ref{fig:anomaly_types} are point anomalies).
+
+\emph{Contextual point anomalies} are more relevant, especially in the context of Task~\ref{task:frequency}. Here, each individual data point in the resulting data series encodes the frequency of some event at some specific time. Assuming that these frequencies among points sharing context are independent, contextual anomaly methods should be sufficient to find temporary anomalous frequencies.
+
+However, contextual point anomalies do not occur in continuous sequences, such as those encountered in Task~\ref{task:continuous} or in the third and fourth panels of Figure~\ref{fig:anomaly_types}.
+
+\emph{Collective anomalies}, on the other hand, are very interesting in continuous time series, since they can cover all anomalies that arise in such series, as long as the anomalies are global (i.e.\@, they do not constitute normal behaviour elsewhere in the series).
+
+However, non-global anomalies do occur, especially in long time series such as those encountered in monitoring applications. With this in mind, it is reasonable to conclude that being able to take \emph{contextual collective anomalies} into account is highly desirable. Further, based on the fact that all the previous anomaly types are special cases of contextual collective anomalies, it can be concluded that finding this type of anomaly should be sufficient\footnote{Note that while this is certainly true, it does not mean that methods optimized for finding contextual anomalies (for instance) would not be better at that specific task than methods for finding contextual collective anomalies. A thorough evaluation of all methods---for both tasks---would have to be performed to answer this question}.
+
+As with any task involving contextual anomalies, a \emph{context function} must be specified before this method can be useful. Natural choices of sequence context functions include the \emph{symmetric local context}, which considers $k$ items before and after the subsequence in question, and the \emph{asymmetric local context}, which considers $k$ items before and $j$ items after the subsequence.
+
+Since which context functions are appropriate depends heavily on the dataset, context functions should be evaluated empirically.
+
+\subsubsection{Anomaly measures}
+
+As stressed in Section~\ref{sect:anomaly_measures}, the anomaly measure is probably the most important part of any anomaly detection problem. However, due to the unpredictability of how they affect results, there is not much that can said about which anomaly measures are the most appropriate for the target domain. For this reason, we will leave this factor unspecified, and instead focus on evaluating as many different choices of it as possible.
+
+\subsubsection{Output format}
+
+In one sense, the choice of output format is cosmetic, as it depends entirely on the context in which the results should be presented. 
+
+However, as noted in Section~\ref{sect:output_format}, most other output format tasks can be reduced to Task~\ref{task:anomaly_scores} (anomaly scores). In order to reduce the risk of focusing on an inappropriate output format, this task was chosen as a focus.
+
+\subsubsection{High-level tasks related to anomaly detection}
+
+Most of these tasks are not immediately useful for anomaly detection in Splunk. For instance, signal recovery is a complex task that is unlikely to be required for most machine data and for which using specialized software is more appropriate.
+
+The task of \emph{novelty detection} (task~\ref{task:novelty_detection}), however, has potential in both monitoring and diagnosis applications. In the former case, anomalies that occur periodically will be diagnosed every time they occur, possibly leading to an unnecessarily large number of discovered anomalies. In the latter application, anomalies that occur periodically will be completely ignored (i.e.\ treated as normal if they occur many times), which can be problematic. Novelty detection methods avoid these problems.
+
+Note that (as stated in Section~\ref{sect:related_tasks}) novelty detection is really just contextual (or contextual collective) anomaly detection with a specific context function. For this reason, we do not treat novelty detection on sequences as a task separate from anomaly detection, but as a specific choice of context, which we refer to as the \emph{novelty context}. Finally, the problems in monitoring and diagnosis applications described above can also be mitigated by other context functions.
+
+\subsection{Suggested tasks}
+\label{sect:suggested_tasks}
+
+The tasks selected in the previous Section into complete tasks in which all principal factors are fixed.
+
+Based on the discussion in Section~\ref{sect:relevant_data_format}, the following task ought to be given the highest priority:
+\begin{task}
+\label{task:main}
+  Detect contextual collective anomalies in, and assign anomaly scores to, the elements of a single univariate real-valued sequence sampled from a continuous process.
+\end{task}
+
+The remainder of this report will focus on this task. In the next chapter, the component framework, which simplifies the specification of remaining factors for this task, is proposed. Both ad-eval and the evaluation performed as part of this project focus on this task as well.
+
+Of course, there are other, similar tasks that could also be very important to machine data anomaly detection. A set of tasks which naturally complement Task~\ref{task:main} in monitoring and diagnosing of sets of machine data are now presented.:
+
+To begin with, as discussed in Section~\ref{sect:relevant_data_format}, frequential anomaly detection is very similar to continuous anomaly detection and is likely to be relevant to Splunk applications. We present this as the following task:
+
+\begin{task}
+  Detect contextual collective anomalies in, and assign anomaly scores to the elements of, a single univariate real-valued sequence containing the frequency of some event over time.
+\end{task}
+
+Furthermore, symbolic time series are potentially interesting in several applications, suggesting the following task (which is purposely vague, since it requires a different choice of principal factors):
+
+\begin{task}
+  Detect anomalous subsequences in long symbolic sequences.
+\end{task}
+
+Of course, applying Task~\ref{task:ad_splunk2} (detecting anomalous sequences in a set of sequences) to the above tasks can also be interesting. The resulting tasks can be briefly stated as follows:
+
+\begin{task}
+  Detect anomalous sequences in a set of univariate real-valued time series sampled from continuous processes.
+\end{task}
+
+\begin{task}
+  Detect anomalies sequences in a set of univariate real-valued time series containing the frequency of some event over time.
+\end{task}
+
+\begin{task}
+  Detect anomalous sequences in a set of similar symbolic sequences.
+\end{task}
+
+Since all of the tasks presented in this section are complementary, and since they share many similarities, they should ideally be implemented and evaluated in tandem. However, due to time and space constraints, it was not possible to study most of them in sufficient depth this project (although the component framework and \texttt{ad-eval} can both support these tasks).
+
+\section{Component framework}
+\label{sect:component_framework}
+
+Before Task~\ref{task:main} can be evaluated, an understanding of the set of problems that can be derived from it must be acquired. In this chapter, the \emph{component framework} is proposed, which facilitates a structured approach to this problem.
+
+First, Section~\ref{sect:framework} introduces the component framework. In Section~\ref{sect:related_tasks_framework}, modifying the component framework to handle various related tasks is discussed. Finally, the component framework is used in Section~\ref{sect:deriving_problems} to discuss and derive interesting problems from Task~\ref{task:main}.
+
+\subsection{The framework}
+\label{sect:framework}
+
+While Task~\ref{task:main} has not been previously studied, several papers exist covering special cases of it (typically corresponding to certain combinations of context functions, filters and anomaly measures). A key realization in the development of the component framework was that almost all these methods could be specified using a set of independent components, used by a common algorithm to find anomalies. If the components could be formalized and abstracted to pertain to Task~\ref{task:main}, then an understanding of the set of problems derived from that task could be obtained through the study of the individual components.
+
+The first step towards this goal was to consider which factors are needed to specify a problem from Task~\ref{task:main}. We note that, at minimum, the following factors must be specified:
+
+\begin{description}
+  \item[The context function.] Since we are dealing with contextual collective anomalies, the context must be defined.
+  \item[The filters.] Filters for extracting both \emph{evaluation subsequences} (from the input sequence) and \emph{reference subsequences} (from the context) must be specified.
+  \item[The anomaly measure.] Arguably the most significant factor still unspecified.
+  \item[Transformations.] Which transformations, if any, are to be applied to the data before analysis.
+  \item[The aggregation method.] A method for aggregating individual anomaly scores into an anomaly vector must be provided.
+\end{description}
+
+Next, these five \emph{components} were defined mathematically, in order to facilitate their standardization and use in algorithms. Specifically, the tuple of components $(\mathcal{F}_E, \mathcal{C}, \mathcal{F}_R, \mathcal{M},\mathcal{A})$ was defined, where (letting $T \in X^n$ be the sequence under consideration and $X$ be some arbitrary set, $S_T$ be the set of subsequences of $T$, and $2^{\mathbb{Z}_n}$ be the set of corresponding indices in $T$):
+\begin{description}
+   \item[The evaluation filter $\mathcal{F}_E$] selects which subsequences of $T$ are to be evaluated by the anomaly measure. We let $\mathcal{F}_E(T) = \{(T_1, I_1), (T_2, I_2), \dots, (T_k, I_k)\} \subseteq \mathcal{S}_T \times 2^{\mathbb{Z}_n}$ be a set of tuples of subsequences of $T$ and their corresponding indices.
+   \item[The context function $\mathcal{C}$] is responsible for selecting the appropriate context for subsequences. Formally, for $(T_i, I_i) \in \mathcal{F}_e(T)$, $\mathcal{C}(I_i) \subset \mathcal{S}_T$ gives one or more subsequences constituting the context.
+   \item[The reference filter $\mathcal{F}_E$] extracts subsequences from the context to produce a set of reference items.
+   \item[The anomaly measure $\mathcal{M}$] assigns an anomaly score to each of the selected items with regard to their reference set: $\mathcal{M}(T_i, \mathcal{F}_r{\mathcal{C}(I_i)}) \in \mathbb{R}$.
+   \item[The aggregation function $\mathcal{A}$] aggregates the anomaly scores to produce an anomaly vector; i.e.\  if $S = {\{(a_i, I_i)\}}_{i \in \mathbb{Z}_k}$ is a vector of anomaly scores and indices for individual elements, then $\mathcal{A}(S) \in \mathbb{R}^{n}$.
+\end{description}
+
+Finally, an algorithm could be formulated that solves an arbitrary problem specified using this component framework, as follows:
+\begin{algorithmic}
+    \Require{A sequence $T$ and a tuple $(\mathcal{F}_E, \mathcal{C}, \mathcal{F}_R, \mathcal{M}, \mathcal{A})$.}
+    \State{$S \gets \emptyset$ \Comment{initialize anomaly score container}}
+    \For{$(T_i, I_i) \in \mathcal{F}_E(T)$} \Comment{iterate over subsequences (and indexes) selected by filter}
+        \State{$C \gets \mathcal{C}(I_i)$ \Comment{acquire context}}
+        \State{$R \gets \mathcal{F}_R(C)$ \Comment{extract reference set from context}}
+        \State{$S \gets S \cup (\mathcal{M}(T_i, R), I_i)$ \Comment{save anomaly score with indexes of subsequence}}
+    \EndFor{}
+    \State{\Return{$\mathcal{A}(S)$ \Comment{aggregate scores to form anomaly vector}}}
+\end{algorithmic}
+
+Restating existing problems within this framework provides several advantages. Firstly, it facilitates comparison of methods, making it easier to see their similarities and differences. Secondly, it makes it easy to overview the entire set of problems and propose novel problems based on combinations of existing components. Finally, the components can be easily interchanged, simplifying method evaluations.
+
+The fact that a single algorithm can be used for all problems suggests the possibility of automated, accurate handling of diverse datasets. Typically, the extent to which problems can capture anomalies varies drastically between series from different sources. If this ability could be related to underlying characteristics of the series, a preliminary analysis could guide the choice of components. Since the proposed framework simplifies automated analysis and allows for problems to be applied interchangeably on the same data, it could help both in finding these underlying characteristics and in applying them to anomaly detection.
+
+As an example of such a characteristic, in~\cite{chandola3}, various anomaly measures are compared on a task derived From~\ref{task:ad_splunk2} (finding anomalous real-valued sequences in a set of similar sequences) and a correlation is noted for some problems between the share of anomalies captured and the periodicity of the sequences. Based on this, investigating links between problem accuracy and characteristics of series in the frequency domain may prove fruitful.
+
+\subsection{Related tasks}
+\label{sect:related_tasks_framework}
+
+It is important to note that the component framework is not limited to Task~\ref{task:main}, but can be modified to handle several related tasks as well. For instance:
+\begin{description}
+    \item[Semi-supervised] tasks are retrieved by specifying a reference sequence $R$ in addition to the evaluation sequence $T$, and letting $\mathcal{C}(T_i) \equiv R$.
+    \item[Collective anomaly] detection tasks are retrieved by specifying $\mathcal{C}(T_i) = T \setminus T_i$.
+    \item[Point anomaly and contextual anomaly] detection tasks can be retrieved by specifying $\mathcal{F}_{E,R}(T) = {\{(t_i)\}}_{t_i \in T}$ and selecting an appropriate context function.
+    \item[Sequential and frequential] tasks need no modifications; they merely require different types of pre-processing.
+    \item[Alternative anomaly scores] can be retrieved through trivial modifications of the aggregation method $\mathcal{A}$.
+    \item[Finding anomalous sequences among a set of sequences] mainly requires simplification: $\mathcal{F}_E$, $\mathcal{C}$, $\mathcal{F}_R$ and $\mathcal{A}$ can all be ignored for such tasks. The only relevant part is the anomaly measure.
+\end{description}
+
+Based on this, the component framework could help elucidate how different sequential anomaly detection tasks are related. Furthermore, since all derived problems can be solved using a single algorithm when formulated using the component framework, the implementation and evaluation of a large class of anomaly detection tasks could be performed relatively easily. Indeed, it would be simple to modify \texttt{ad-eval} (which implements the component framework) to handle any of the above tasks.
+
+\subsection{Components}
+\label{sect:deriving_problems}
+
+We now discuss possible choices of the components $\mathcal{F}_E$, $\mathcal{C}$, $\mathcal{F}_R$, $\mathcal{M}$ and $\mathcal{A}$ and the implications of these choices.
+
+While Task~\ref{task:main} has not been previously studied, components based on existing methods for other tasks can be used with it. In the following discussion, several such component choices, as well as a few new components, are mentioned.
+
+\subsubsection{The evaluation filter}
+
+The evaluation filter takes a sequence and extracts subsequences from it to be used in the analysis. In the literature, \emph{sliding window} approaches are almost always taken. In these methods, evenly spaced subsequences of equal length are extracted from the series:
+\[
+  \mathcal{F}_E((t_1, t_2, \dots, t_n)) = \{(t_1, t_2, \dots, t_w), (t_{1 + s}, t_{2+s}, \dots, t_{w+s}), \dots, (t_{\alpha-s}, t_{\alpha-s+1}, \dots, t_{\alpha})\},
+\]
+where $w$ is the window length, $s$ is the displacement, and $\alpha = \lfloor \frac{n}{s} \rfloor \times w$. A constant value of $w$ is almost always used, since most anomaly measures can not deal with items of varying dimensionality. The value of $s$ is typically taken to be $1 \leq s \leq w$. The total number of elements is $\lfloor \frac{n-w}{s} \rfloor + 1$, and thus decreases with larger $s$.
+
+Other approaches might be appropriate for anomaly measures which support variable-size elements. In~\cite{keogh2}, a binary search is performed on $T$ to find discords. Note that such an approach requires a slight modification of the algorithm given above.
+
+\subsubsection{The context function}
+As mentioned before, several different context functions are plausible for use in sequential anomaly detection. We have previously mentioned the context (assuming that $T = (t_1, t_2, \dots, t_n)$ is the series under consideration):
+\[
+    \mathcal{C}((t_i, t_{i+1}, \dots, t_j)) = \{ (t_{i-m}, t_{i-m+1}, \dots t_{i-1}), (t_{j+1}, t_{j+2}, \dots, t_{j+n}) \},
+\]
+which we refer to as the \emph{symmetric local context} if $m = n$ and the \emph{asymmetric local context} otherwise; the \emph{novelty context}:
+\[
+    \mathcal{C}((t_i, t_{i+1}, \dots, t_j)) = \{ (t_1, t_2, \dots, t_{i-1}) \};
+\]
+and the \emph{trivial context} (for detecting collective or point anomalies):
+\[
+    \mathcal{C}((t_i, t_{i+1}, \dots, t_j)) = \{ (t_1, t_2, \dots, t_{i-1}), (t_{j+1}, t_{j+2}, \dots, t_n) \}.
+\]
+We also introduce the \emph{semi-supervised context}, in which $\mathcal{C}(T_i) \equiv X$ for some reference sequence $X$.
+
+Note that the number of elements in the context will typically have a significant impact on analysis time. While the sizes of the local and semi-supervised contexts are both constant as functions of the sequence length, the novelty and trivial contexts grow linearly, which is likely to cause problems in large datasets.
+
+\subsubsection{The reference filter}
+
+The reference filter works like the evaluation filter, but extracts subsequences from the context instead of from the evaluation series. As with the evaluation filter, it is usually best to use a sliding window as the reference filter. If the anomaly measure does not require items of equal length, the reference filter can be ignored, i.e.\  $\mathcal{F}_R(T) = T$.
+
+\subsubsection{The anomaly measure}
+
+As is typically the case, the anomaly measure is the central part of any problem derived from Task~\ref{task:main}. Formally, any anomaly measure that takes an evaluation vector and a set of reference vectors as inputs and returns a real value is a candidate for $\mathcal{M}$. We now discuss a few such anomaly measures, following the classification in Section~\ref{sect:anomaly_measures}.
+
+As previously mentioned, \emph{statistical measures} are attractive due to the theoretical justification they provide for anomaly detection. However, there are certain factors which render their use problematic for the task at hand. Firstly, as discussed in Section~\ref{sect:goals} we can not assume that the data belongs to any particular distribution, so parametric problem formulations are not appropriate.
+
+Since few non-parametric methods for anomaly detection in sequential data take into account either collective anomalies or context, and since naive approaches are likely to suffer from convergence issues,~\footnote{For instance, the expectation maximization algorithm for Gaussian mixture models has convergence issues in high dimensions with low sample sizes.} suggesting appropriate non-parametric methods for Task~\ref{task:main} is difficult. However, in the case of Task~\ref{task:frequency}, point anomalies (for which statistical methods have been extensively researched) are more interesting than collective anomalies, and statistical methods are likely to be applicable.
+
+\emph{Information theoretical measures} are potentially interesting for the chosen task. However, most such methods are essentially distance-based anomaly measures equipped with information theoretical distance measures. For this reason, we do not cover information theoretical anomaly measures separately from distance-based measures.
+
+Instead, we emphasize \emph{distance-based measures}. Since they encompass a wide variety of methods, which have been shown to be successful for related problems~\cite{chandola3}, we dedicate Section~\ref{sect:distance_mezurez} to discussing them.
+
+\emph{Classifier-based measures} have also shown promise for related problems~\cite{chandola3}. Generally, any \emph{one}-class classifier is potentially suitable for the task; see~\cite{classification} for an exhaustive discussion on this topic. While one-class classifiers produce binary output, appropriate anomaly vectors can still be produced through a suitable choice of $\mathcal{A}$.
+
+\emph{Predictive model-based measures} are also potentially interesting. They are naturally well suited for novelty detection, since they necessarily implement a novelty context. However, existing predictive model-based approaches seem to be lacking for the task at hand. In~\cite{chandola3}, a leading model-based novelty detection method~\cite{perkins2} which uses an autoregressive model was shown to perform poorly on a related task. While models are important as a means of reducing the computational complexity of methods, they appear appropriate to consider only as approximations to other anomaly measures.
+
+\paragraph{Distance measures}
+\label{sect:distance_mezurez}
+
+When dealing with distance-based problems, the choice of distance measure has a profound impact on which anomalies are detected. As with other aspects of anomaly measures, however, drawing conclusions about method efficacy through theory alone is difficult; implementing, evaluating, and comparing several measures will likely prove more instructive.
+
+Possible interesting measures include the \emph{Euclidean distance} or the more general \emph{Minkowski distance}; measures focused on time series, such as \emph{dynamic time warping}~\cite{dtw}, \emph{autocorrelation measures}~\cite{autocorrelation}, or the \emph{Linear Predictive Coding cepstrum}~\cite{cepstrum}; or measures developed for other types of series (accessible through transforms), such as the \emph{compression-based dissimilarity measure}~\cite{keogh2}.
+
+Additionally, the choice of distance measure affects how well methods can be optimized. Naive approaches to distance-based problems typically scale prohibitively slowly, and are not suitable for large amounts of data. Optimizations typically involve exploiting properties of the distance measure in order to reduce the number of distance computations (for instance, the commonly used k-d trees algorithm requires the distance to be a Minkowski metric).
+
+\paragraph{Transformations}
+Anomaly measures can be combined with one or more transformations of the data extracted by the filters to speed up the analysis or to facilitate the detection of certain types of anomalies.
+
+One commonly used data transformation is the Z-normalization transform, which modifies a sequence to exhibit zero empirical mean and unit variance. It has been argued that comparing time series is meaningless unless the Z-normalization transform is used~\cite{keogh5}. However, this is doubtful, as the transform masks anomalies consisting of subsequences similar to their surrounding data but with different variance or mean.
+
+Transformations that transform the data into some alternative domain can also be useful. For example, transformations based on the \emph{discrete Fourier transform} (DFT) and \emph{discrete wavelet transform} (DWT)~\cite{fu} have shown promise for sequential anomaly detection.
+
+Furthermore, transformations for real-valued data which produce symbolic sequences are very important, since they enable the application of symbolic approaches (studied in bioinfomatics, for instance) to real-valued sequences. While several such transformations exist, \emph{symbolic aggregate approximation} (SAX)~\cite{sax} is by far the most commonly used.
+
+\subsubsection{The aggregation method}
+\label{sect:aggregation_method}
+
+Once the extracted subsequences have been assigned anomaly scores, they must be aggregated before an anomaly vector can be formed. While little has been written on this subject, it is not difficult to describe reasonable aggregation methods. It seems clear that all aggregation functions, or \emph{aggregators}, ought to have the form
+\[
+    \mathcal{A}(\{(a_1, I_1), (a_2, I_2), \dots, (a_k, I_k) \}) = (f(\{a_i: 1 \in I_i\}), f(\{a_i: 2 \in I_i\}), \dots, f(\{a_i: n \in I_i\})),
+\]
+where $I_i$ are intervals, $a_i$ are assigned anomaly scores, and $f$ is some aggregator-specific function acting on a vector $\mathbb{R}^n$ and producing an aggregate score in $\mathbb{R}$. The \emph{maximum}, \emph{minimum}, \emph{median} and \emph{mean} of the values in $S$ all constitute reasonable choices of $f(S)$. We will refer to aggregators using any of these four functions as maximum, minimum, median, and mean aggregators, respectively.
+
+\section{Implementation}
+\label{ch:implementation}
+
+As stated in the abstract, the development of a software framework for the evaluation of anomaly detection methods, called \texttt{ad-eval} and available at \url{http://github.com/aeriksson/ad-eval}, was a significant part of the project. In this chapter, the design, development process, and features of \texttt{ad-eval} are discussed.
+
+Essentially, \texttt{ad-eval} consists of three separate parts: a library implementing the component framework, a comprehensive set of utilities for evaluating the performance of methods and problem, and an executable leveraging the library. The entire project is written in Python.
+
+In this chapter, \texttt{ad-eval} is described in detail. The three parts are described in Sections~\ref{sect:implemented_problems},~\ref{sect:evaluation_package}, and~\ref{sect:executable}, and some of the design choices made in the development of \texttt{ad-eval} are discussed in Section~\ref{sect:design}.
+
+\subsection{Implemented components}
+\label{sect:implemented_problems}
+
+The anomaly detection part of \texttt{ad-eval} (given the Python package name \texttt{anomaly\_detection}) is a faithful implementation of the component framework, including the algorithm proposed in Section~\ref{sect:framework}. In order to preserve the modular nature of this framework, the individual components are implemented as autonomous modules, described below.
+
+As there are no real alternatives found in the literature, the sliding window filter is the only implemented evaluation filter. Since the optimal window width $w$ and step length $s$ depend on the application, both of these parameters were left to be user-specified.
+
+Since new new context functions can be implemented relatively easily, and since they have a relatively major impact on the analysis, all previously discussed contexts (specifically, the asymmetric and symmetric local contexts, the novelty context, the trivial context, and the semi-supervised context) were implemented.
+
+As reference filters, a sliding window filter and the identity filter $\mathcal{F}_E(X)=X$ were implemented, the latter because it is a better fit for dimension-independent distance measures.
+
+Due to the limited scope of the project, the only implemented anomaly measures (henceforth referred to as \emph{evaluators}) were a variant of k-Nearest Neighbors (kNN), in which the distance to the $k$'th nearest element is considered, and a one-class support vector machine (SVM). For the kNN evaluator, the Euclidean distance as well as the compression-based dissimilarity measure~\cite{keogh2} and dynamic time warping~\cite{dtw} distances were made available. Furthermore, the symbolic aggregate approximation (SAX) and discrete Fourier transform (DFT) transformations were added as an optional pre-anomaly measure transformations. All parameters of the evaluators, distances, and transformations were left for the user to specify.
+
+
+Finally, the mean, median, maximum, and minimum aggregators were implemented.
+
+\subsection{Evaluation utilities}
+\label{sect:evaluation_package}
+
+The set of possible interesting tests that could be run on problems derived from Task~\ref{task:main} is considerable. A large number of component combinations can be used; most components have many possible parameter values, and it is important to assess how these affect the results; and a large set of methods with various optimizations and approximations can be proposed. For all of these choices, it is important that accuracy and performance are properly evaluated.
+
+However, the performance of methods is highly dependent on the characteristics of the datasets to which they are applied. As mentioned in Section~\ref{sect:evaluation_data}, there is no hope to exhaustively cover the space of possible evaluation sets. Instead, sample data from the target application domain must be obtained before any tests are performed. Furthermore, obtaining adequate labeled test data is often difficult, and artificial anomaly generation must be considered as an option.
+
+With this in mind, it was decided that an evaluation framework should be added to \texttt{ad-eval} to help facilitate the implementation, standardization, and duplication of accuracy and performance evaluations. Due to the variety of interesting tests highlighted above, an approach focused on the provision of tools that assist in scripting custom tests was deemed preferable to one focused on the construction of a single configurable testing program. To this end, utilities were developed for:
+
+\begin{itemize}
+    \item Saving and loading time series to/from file, with or without reference anomaly vectors.
+    \item Pseudorandomly selecting and manipularing subsequences of series (e.g.\ for adding anomalies).
+    \item Facilitating the testing of large numbers of parameter values.
+    \item Generating various types of artificial anomalies and superpositioning them onto sequences.
+    \item Calculating the anomaly vector distance measures $\epsilon_E$, $\epsilon_{ES}$ and $\epsilon_{FS}$ discussed in Section~\ref{sect:evaluation_measures}.
+    \item Facilitating the automated comparison of several problems and methods on individual datasets.
+    \item Automating the collection of performance metrics.
+    \item Reporting results.
+    \item Generating various types of custom plots from results.
+\end{itemize}
+
+With these tools in place, it is simple to write scripts that, for instance, generate large amounts of similar series containing random anomalies and evaluate the performance of several problems on this data in various ways. 
+
+The tools were included in \texttt{ad-eval} as a separate Python module (called \texttt{eval\_utils} and located in the \texttt{evaluation} directory of the repository). This module was used to perform all tests in the evaluation phase of this project.
+
+\subsection{Executable}
+\label{sect:executable}
+
+To enable the stand-alone use of the anomaly\_detection package, an executable was added to the \texttt{ad-eval} repository (called \texttt{anomaly\_detector} and located in the \texttt{bin} directory of the repository). This executable is used through a command-line interface and a \texttt{key:value} style configuration file, can perform supervised or semi-supervised anomaly detection on sequences from files or standard input, and can use any of the components implemented in \texttt{anomaly\_detection}.
+
+To avoid having to modify this program every time a component in \texttt{anomaly\_detection} was changed, the executable was made unaware of all internal details of that package. Consequently, a command-line interface capable of configuring the components could not be implemented; instead, a configuration file parser is used to read and pass the component configuration to \texttt{anomaly\_detection}.
+
+\subsection{Design}
+\label{sect:design}
+
+The development of \texttt{ad-eval} began at the start of the project. Initially, development efforts focused on the implementation of a few optimized methods found in the literature, to produce a Splunk app. However, as the project progressed and the issues discussed in Section~\ref{sect:adb} (that most methods were targeted at subtly different tasks, and that due to lacking evaluations, assessing which methods are really the `best' is not possible), this approach was recognized as fruitless, and abandoned.
+
+Development then shifted towards an implementation of the component framework, with the goals of maximizing the ease of implementing and evaluating large amounts of components.
+
+Consequently, modularity was a major focus throughout the development process, achieved through various means. As mentioned previously, the individual components were separated into independednt modules. Additionally, the evaluation utilities and the executable were decoupled from the component framework implementation, interfacing with it through only two method calls. Finally, the decision was made to distribute the configuration of the component framework implementation, letting each component handle its own configuration and making the rest of the package configuration-agnostic.
+
+It was a natural choice to write the entire implementation in Python, for several reasons. First, Python is well suited for small, flexible projects such as \texttt{ad-eval}, thanks to its simplicity and flexibility. Furthermore, a number of great libraries for data mining and machine learning exist for Python, which were used to accelerate the development. Finally, if \texttt{ad-eval} becomes adopted for real-world use, Python's good C integration could be leveraged to write optimized code. 
+
+Finally, the evaluation utilities were designed with ease of use and flexibility in mind. For instance, while classes facilitating test data generation, evaluation, and reporting are provided, their use is optional. As a result, evaluation scripts could be short and simple---the scripts used in the next chapter are all 30 to 70 lines long---without sacrificing flexibility.
+
+\section{Evaluation}
+\label{ch:evaluation}
+
+As mentioned throughout this report, thorough empirical evaluations on real-world datasets are pivotal to elucidating the performance characteristics of problems, methods and tasks. In this chapter, two factors important when performing evaluations are discussed: evaluation data and error measures.
+
+\subsection{Evaluation data}
+\label{sect:evaluation_data}
+
+For obvious reasons, the choice of evaluation data largely determines the outcome of the evaluation. Since the spaces of possible evaluation items for most anomaly detection methods are enormous (often $\mathbb{R}^n$ for very large $n$), there is little hope of performing exhaustive analyses. Furthermore, while only relatively small subsets of these spaces are typically interesting for any given application, discovering and delimiting these subsets is usually impossible, due to a limited understanding of the processes underlying the data.
+
+For this reason, it is critical that a set of evaluation items is used, containing as representative a selection of relevant phenomena exhibited by data items in the application domain as possible. Since such sets can not be obtained through purely synthetic means (arguably, the existence of a model that could accurately create such sets would presuppose a level of understanding of the application domain that would render anomaly detection unnecessary), real-world data must be used.
+
+However, simply obtaining real-world data is \emph{not} sufficient; if the anomalies in the data are not labeled, no baseline can be established, and the evaluation is useless. In the context of Task~\ref{task:main}, this means that, along with each sequence $S_i = (s_1, s_2, \dots, s_n)$ in the evaluation set, a reference anomaly vector $A_i = (a_1, a_2, \dots, a_n)$ must be provided, where each $a_i$ indicates how anomalous $s_i$ is.
+
+When appropriate data is unavailable, there are two possible options. The first is to generate both series and anomalies, in order to create completely artificial sequences. The second is to take unlabeled real-world datasets and superposition artificially generated anomalies onto them.
+
+Due to how greatly the dataset affects the outcome of anomaly detection analyses, the first approach is not recommended, other than as a means of gaining a qualitative understanding of tasks, problems or methods. Even if the artificial data appears highly similar to data from the target domain, it is very unlikely that the ``best'' methods for such data and real-world data will be the same. The second approach, while also problematic, can at least suggest how well methods are able to recognize normal data from the target domain from anomalous data.
+
+In the initial stages of this project, it was hoped that sufficient data would be obtained by searching the internet and existing papers on the subject, or by examining sequences of machine data with a domain expert. However, enough suitable series could not be obtained through these means, and it became clear that completely artificial data would have to be used in the evaluation. Because such data can not adequately capture the intricacies of the target domain, a qualitative evaluation of implemented methods was performed instead. Still, since a major goal of the project was to facilitate evaluations using real-world data, utilities for performing appropriate evaluations were added to \texttt{ad-eval}.
+ 
+\subsection{Error measures}
+\label{sect:evaluation_measures}
+
+For any evaluation, some way of assessing the accuracy of the produced anomaly vectors is required. Formally, given a sequence $S = (s_1, s_2, \dots, s_n)$, a reference anomaly vector $R = (r_1, r_2, \dots, r_n) \in \mathbb{R}^{n}$ and a method that takes a sequence as input and produces an anomaly vector $A = (a_1, a_2, \dots, a_n) \in \mathbb{R}^{n}$, a function $\epsilon(A, R): \mathbb{R}^n \times \mathbb{R}^n \rightarrow \mathbb{R}^+$ is required that assigns a similarity score, or \emph{error measure} to $A$ based on how well it approximates $R$.
+
+Considering the difficulties involved in obtaining any kind of labeled sequences, and the fact that ranking elements based on relative degrees of anomalousness is even more difficult, it is reasonable to assume that all reference anomaly vectors are binary: $R = (r_1, r_2, \dots, r_n) \in {\{0,1\}}^n$. Since any method derived from Task~\ref{task:main} produces real-valued output, this means that error measures should work by comparing one binary and one real-valued vector; i.e.\ $\epsilon{(A, R)}: \mathbb{R}^{n} \times {\{0,1\}}^n \rightarrow \mathbb{R}^+$.
+
+Since constant factors do not affect how accurate an anomaly vector appears, any $\epsilon(A, A_R)$ should be invariant under uniform translations and scalings of $A$. This means that regular real-valued distance measures (such as the Euclidean distance) are not applicable. This can be avoided by normalizing $A$---by scaling and translating it such that all its elements lie in $[0,1]$---before computing the distance. For instance, the \emph{normalized Euclidean error} $\epsilon_E$, given by
+\[
+    \epsilon_E = \sqrt{\sum_{i=1}^n {(\frac{a_i-a_{\min}}{a_{\max}-a_{\min}} - r_i)}^2}
+\]
+ought to constitute a reasonable choice of error measure. However, since $\epsilon_E$ is equally sensitive to the behaviour of $A$ on normal elements as on anomalous elements, how $A$ treats normal elements (which should not matter unless they have high anomaly scores) can significantly harm the accuracy of this measure, as we will see in~\ref{sect:error_measure_eval}. 
+
+This pitfall can be avoided by converting $A$ to a binary string $A_B$ as well, and using a binary distance between $A_B$ and $R$ as the error measure. Since this is equivalent to selecting a set $S_A$ of indexes of elements from $A$ and comparing it to the set $S_R$ of indexes of nonzero elements of $R$, such error measures can be seen as evaluating the performance of $A_B$ on Task~\ref{task:anomalous_set}, which is reasonable considering the binary nature of $R$.
+
+What remains is to decide how $A_B$ should be constructed from $A$ and what binary distance measure to use. Since the individual elements of $S_R$ have equal weight, and since the locations of discrepancies between $A_B$ and $R$ are not important, the \emph{Hamming distance} $\delta_H$ constitutes a suitable choice of distance measure. Furthermore, $A_B$ should be constructed such that $\forall i, j \leq n: a_i < a_j \wedge i \in S_A \Rightarrow j \in S_A$, which is equivalent to setting a threshold $a_{\min} \leq \tau \leq a_{\max}$ and letting $A_B$ be given by 
+\[
+    A_B = (a_{b,1}, a_{b,2}, \dots, a_{b,n}), \quad \text{where } a_{b,i} = \left\{ 
+    \begin{array}{l l}
+        0 & \quad \text{if } a_i < \tau \\
+        1 & \quad \text{if } a_i \geq \tau
+    \end{array} \right..
+\]
+
+This gives rise to a number of possible $A_B$ equal to the number of distinct values of $A$. We here propose two error measures corresponding to different choices of $\tau$, both based on $\delta_H$. The \emph{equal support error} $\epsilon_{ES}$ corresponds to setting $\tau$ such that $|S_A| = |S_R|$, while the \emph{full support error} $\epsilon_{FS}$ corresponds to choosing the largest $\tau$ such that $\forall i: i \in S_R \Rightarrow i \in S_A$. While other choices (such as choosing the $\tau$ that minimizes $\delta_H$) might also be appropriate, only these two were selected in order to limit the scope of the discussion.
+
+Since the three error measures proposed above are expected to produce different results, and since they have not been (to the author's knowledge) used in the context of series anomaly detection, they should be evaluated empirically before being used. Such an evaluation is performed in Section~\ref{sect:error_measure_eval}.

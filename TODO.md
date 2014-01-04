@@ -1,13 +1,6 @@
 TODO:
 =====
 - 1. Finish project plan.
-- 3. Reshape chapters to:
-     1. Introduction
-     2. Background
-     3. A Framework for Anomaly Detection
-     4. An application to machine-generated time series
-     5. Results
-     6. Discussion
 - 11. Framework: add more references.
 - 16. Remove old sequence extraction chapter.
 - 17. Add new, more formal section on sequence extraction.
@@ -26,6 +19,7 @@ TODO:
 DONE:
 =====
 - 2. Change name to "A Framework for Anomaly Detection with Applications to Machine-Generated Data"
+- 3. Reshape chapters to: Introduction, Background, Framework, Application, Results, Discussion
 - 4. Incorporate Foreword into Introduction
 - 5. Capitalize chapter, section, figure, and table
 - 6. Move method presentation from Background to Framework
@@ -58,3 +52,4 @@ DONE:
 - 47. Framework: Create draft of Anomaly Measures section.
 - 48. Framework: Incorporate Related High-level Tasks section into other sections.
 - 49. Framework: Be more clear about context functions being a novel concept.
+- 50. All: Join the chapters on time series.
