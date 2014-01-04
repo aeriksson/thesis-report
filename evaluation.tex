@@ -1,7 +1,7 @@
 \chapter{Evaluation}
 \label{ch:evaluation}
 
-As mentioned throughout this report, thorough empirical evaluations on real-world data sets are pivotal to elucidating the performance characteristics of problems, methods and tasks. In this chapter, two factors important when performing evaluations are discussed: evaluation data and error measures.
+As mentioned throughout this report, thorough empirical evaluations on real-world datasets are pivotal to elucidating the performance characteristics of problems, methods and tasks. In this chapter, two factors important when performing evaluations are discussed: evaluation data and error measures.
 
 \section{Evaluation data}
 \label{sect:evaluation_data}
@@ -12,9 +12,9 @@ For this reason, it is critical that a set of evaluation items is used, containi
 
 However, simply obtaining real-world data is \emph{not} sufficient; if the anomalies in the data are not labeled, no baseline can be established, and the evaluation is useless. In the context of Task~\ref{task:main}, this means that, along with each sequence $S_i = (s_1, s_2, \dots, s_n)$ in the evaluation set, a reference anomaly vector $A_i = (a_1, a_2, \dots, a_n)$ must be provided, where each $a_i$ indicates how anomalous $s_i$ is.
 
-When appropriate data is unavailable, there are two possible options. The first is to generate both series and anomalies, in order to create completely artificial sequences. The second is to take unlabeled real-world data sets and superposition artificially generated anomalies onto them.
+When appropriate data is unavailable, there are two possible options. The first is to generate both series and anomalies, in order to create completely artificial sequences. The second is to take unlabeled real-world datasets and superposition artificially generated anomalies onto them.
 
-Due to how greatly the data set affects the outcome of anomaly detection analyses, the first approach is not recommended, other than as a means of gaining a qualitative understanding of tasks, problems or methods. Even if the artificial data appears highly similar to data from the target domain, it is very unlikely that the ``best'' methods for such data and real-world data will be the same. The second approach, while also problematic, can at least suggest how well methods are able to recognize normal data from the target domain from anomalous data.
+Due to how greatly the dataset affects the outcome of anomaly detection analyses, the first approach is not recommended, other than as a means of gaining a qualitative understanding of tasks, problems or methods. Even if the artificial data appears highly similar to data from the target domain, it is very unlikely that the ``best'' methods for such data and real-world data will be the same. The second approach, while also problematic, can at least suggest how well methods are able to recognize normal data from the target domain from anomalous data.
 
 In the initial stages of this project, it was hoped that sufficient data would be obtained by searching the internet and existing papers on the subject, or by examining sequences of machine data with a domain expert. However, enough suitable series could not be obtained through these means, and it became clear that completely artificial data would have to be used in the evaluation. Because such data can not adequately capture the intricacies of the target domain, a qualitative evaluation of implemented methods was performed instead. Still, since a major goal of the project was to facilitate evaluations using real-world data, utilities for performing appropriate evaluations were added to \texttt{ad-eval}.
  

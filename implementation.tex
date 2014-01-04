@@ -28,7 +28,7 @@ Finally, the mean, median, maximum, and minimum aggregators were implemented.
 
 The set of possible interesting tests that could be run on problems derived from Task~\ref{task:main} is considerable. A large number of component combinations can be used; most components have many possible parameter values, and it is important to assess how these affect the results; and a large set of methods with various optimizations and approximations can be proposed. For all of these choices, it is important that accuracy and performance are properly evaluated.
 
-However, the performance of methods is highly dependent on the characteristics of the data sets to which they are applied. As mentioned in Section~\ref{sect:evaluation_data}, there is no hope to exhaustively cover the space of possible evaluation sets. Instead, sample data from the target application domain must be obtained before any tests are performed. Furthermore, obtaining adequate labeled test data is often difficult, and artificial anomaly generation must be considered as an option.
+However, the performance of methods is highly dependent on the characteristics of the datasets to which they are applied. As mentioned in Section~\ref{sect:evaluation_data}, there is no hope to exhaustively cover the space of possible evaluation sets. Instead, sample data from the target application domain must be obtained before any tests are performed. Furthermore, obtaining adequate labeled test data is often difficult, and artificial anomaly generation must be considered as an option.
 
 With this in mind, it was decided that an evaluation framework should be added to \texttt{ad-eval} to help facilitate the implementation, standardization, and duplication of accuracy and performance evaluations. Due to the variety of interesting tests highlighted above, an approach focused on the provision of tools that assist in scripting custom tests was deemed preferable to one focused on the construction of a single configurable testing program. To this end, utilities were developed for:
 
@@ -38,7 +38,7 @@ With this in mind, it was decided that an evaluation framework should be added t
     \item Facilitating the testing of large numbers of parameter values.
     \item Generating various types of artificial anomalies and superpositioning them onto sequences.
     \item Calculating the anomaly vector distance measures $\epsilon_E$, $\epsilon_{ES}$ and $\epsilon_{FS}$ discussed in Section~\ref{sect:evaluation_measures}.
-    \item Facilitating the automated comparison of several problems and methods on individual data sets.
+    \item Facilitating the automated comparison of several problems and methods on individual datasets.
     \item Automating the collection of performance metrics.
     \item Reporting results.
     \item Generating various types of custom plots from results.

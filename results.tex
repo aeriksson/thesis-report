@@ -5,16 +5,16 @@ Due to the lack of appropriate evaluation data mentioned in Chapter~\ref{ch:eval
 
 In this chapter, the results of this evaluation are presented. Since distance-based evaluators can be combined with a wider set of other components than classifier-based or other types of evaluators, and to keep this report from becoming overly long, the focus was placed entirely on the kNN evaluator implemented in \texttt{ad-eval}. The performance of this evaluator was investigated through the identification of all remaining unspecified parameters of the components $(\mathcal{F}_E, \mathcal{C}, \mathcal{F}_R, \mathcal{M},\mathcal{A})$, and individual investigations of how these parameters affect the analysis.
 
-Of course, all graphs and data in this chapter were obtained using \texttt{ad-eval}. Since one of the main goals of the evaluation was to demonstrate how \texttt{ad-eval} can be used to perform standardized evaluations, all scripts used to obtain the figures and results in this chapter are available in the \texttt{ad-eval} source code repository. Modifying these scripts to use other data sets or to evaluate other components (such as the SVM evaluator implemented in \texttt{ad-eval}) is trivial.
+Of course, all graphs and data in this chapter were obtained using \texttt{ad-eval}. Since one of the main goals of the evaluation was to demonstrate how \texttt{ad-eval} can be used to perform standardized evaluations, all scripts used to obtain the figures and results in this chapter are available in the \texttt{ad-eval} source code repository. Modifying these scripts to use other datasets or to evaluate other components (such as the SVM evaluator implemented in \texttt{ad-eval}) is trivial.
 
 \section{Evaluation approach}
 
 Since the number of possible combinations of components and parameter values is enormous (even with the limited number of components implemented in \texttt{ad-eval}), it was not feasible to include a comprehensive evaluation of all these combinations in this report. Instead, the components were studied individually, using a preset configuration and varying individual parameter values. Note that this approach only allows for the assessment of local characteristics of the parameter space around the specific configuration.
 
-As a second limitation, it was decided that the analysis would be focused on a single artificial sequence, owing to the lack of proper data sets to evaluate.
-While a large artificial data set could have been generated for the evaluation, this would have been counterproductive for several reasons.
-Specifically, as discussed in Chapter~\ref{ch:evaluation}, generating data set sufficiently diverse to accurately reflect the characteristics of real-world data sets in target domain is practically impossible, and creating even a rough artificial approximation would require substantial effort.
-Any such data set that could fit within the scope of this project would thus be severely limited, and would not be appropriate for assessing real-world performance.
+As a second limitation, it was decided that the analysis would be focused on a single artificial sequence, owing to the lack of proper datasets to evaluate.
+While a large artificial dataset could have been generated for the evaluation, this would have been counterproductive for several reasons.
+Specifically, as discussed in Chapter~\ref{ch:evaluation}, generating dataset sufficiently diverse to accurately reflect the characteristics of real-world datasets in target domain is practically impossible, and creating even a rough artificial approximation would require substantial effort.
+Any such dataset that could fit within the scope of this project would thus be severely limited, and would not be appropriate for assessing real-world performance.
 To highlight these deficiencies, and to simplify the exposition, it was decided that the focus would be placed on examining the performance characteristics of problems on a single artificial sequence.
 Rather than performing evaluations with different types of artificial sequences, all scripts used in the evaluation were added to the \texttt{ad-eval} source repository, and were constructed such that performing similar evaluations on new sequences would be trivial.
 
@@ -33,13 +33,13 @@ Before choosing a sequence, there were a few things to consider. Since evaluatin
 
 \section{Parameter space}
 
-When considering the set of problems derived from some task, it can be helpful to regard the set of variables necessary to fully specify a problem from it as the \emph{parameter space} of that task. Individual variables correspond to dimensions in the space, while problems correspond to points. General tasks are associated with large, high-dimensional parameter spaces while more specific tasks have smaller, more manageable spaces.  Searching for an optimal problem derived from some task for some data set, then, means searching for a point in the parameter space of the task at which the corresponding problem can most efficiently find the anomalies in the data set. Equivalently, this can be thought of as an attempt to minimize some error function over the parameter space. 
+When considering the set of problems derived from some task, it can be helpful to regard the set of variables necessary to fully specify a problem from it as the \emph{parameter space} of that task. Individual variables correspond to dimensions in the space, while problems correspond to points. General tasks are associated with large, high-dimensional parameter spaces while more specific tasks have smaller, more manageable spaces.  Searching for an optimal problem derived from some task for some dataset, then, means searching for a point in the parameter space of the task at which the corresponding problem can most efficiently find the anomalies in the dataset. Equivalently, this can be thought of as an attempt to minimize some error function over the parameter space. 
 
-In this case, the parameter space corresponds to the free parameters of the components $C = (\mathcal{F}_E, \mathcal{C}, \mathcal{F}_R, \mathcal{M},\mathcal{A})$. We will denote these by $\Theta$. Assuming that some function $A(\Theta, s)$ is provided that solves the problem corresponding to $\Theta$ for a sequence $s$ (or equivalently uses the anomaly detector corresponding to $\Theta$ to evaluate $s$) and outputs an anomaly vector, the task of finding an optimal problem formulation for some data set $S$ can be seen as the task of finding $\argmin_\Theta E(\Theta, S)$ for some error function $E$ that evaluates the error of $A(\Theta, s)$ for each $s \in S$. Assuming that this error function is a linear combination of the errors according to some error measure $\delta$ of the elements in $S$, this can be written as
+In this case, the parameter space corresponds to the free parameters of the components $C = (\mathcal{F}_E, \mathcal{C}, \mathcal{F}_R, \mathcal{M},\mathcal{A})$. We will denote these by $\Theta$. Assuming that some function $A(\Theta, s)$ is provided that solves the problem corresponding to $\Theta$ for a sequence $s$ (or equivalently uses the anomaly detector corresponding to $\Theta$ to evaluate $s$) and outputs an anomaly vector, the task of finding an optimal problem formulation for some dataset $S$ can be seen as the task of finding $\argmin_\Theta E(\Theta, S)$ for some error function $E$ that evaluates the error of $A(\Theta, s)$ for each $s \in S$. Assuming that this error function is a linear combination of the errors according to some error measure $\delta$ of the elements in $S$, this can be written as
 \[
     E_{S, \delta}(\Theta) = \sum_{(s_i, a_i) \in (S, A)} \delta(A(\Theta, s_i), a_i).
 \]
-Given a data set and a set of possible components, this task is relatively straight-forward. While filters, contexts and aggregators with infinite parameter spaces are possible, the components discussed in this report have relatively small, finite parameter spaces. This means that an exhaustive search would be possible in theory.
+Given a dataset and a set of possible components, this task is relatively straight-forward. While filters, contexts and aggregators with infinite parameter spaces are possible, the components discussed in this report have relatively small, finite parameter spaces. This means that an exhaustive search would be possible in theory.
 
 However, most choices of $C$ will typically have a large number of free parameters, resulting in a high-dimensional parameter space. This, in combination with the fact that $E_{S, \delta}(\Theta)$ typically takes a long time to evaluate, even for small $S$, renders such exhaustive searches prohibitively computationally expensive in practice.
 
@@ -152,7 +152,7 @@ As mentioned previously, since the analysis in this Section is based on studying
     \vspace{-10pt}
 \end{wrapfigure}
 
-It is important to study how the anomaly vectors vary with $k$; first, because the choice of $k$ is likely to have a large impact on the appearance of the anomaly vector, regardless of the data set; and second, because the kNN evaluator only operates on a single $k$ value at a time, it is in a sense the simplest distance-based evaluator, and thus an ideal tool for better understanding how the choice of $k$ impacts the analysis. This understanding is crucial in effectively designing other types of distance-based evaluators. 
+It is important to study how the anomaly vectors vary with $k$; first, because the choice of $k$ is likely to have a large impact on the appearance of the anomaly vector, regardless of the dataset; and second, because the kNN evaluator only operates on a single $k$ value at a time, it is in a sense the simplest distance-based evaluator, and thus an ideal tool for better understanding how the choice of $k$ impacts the analysis. This understanding is crucial in effectively designing other types of distance-based evaluators. 
 
 In order to understand how the $k$ value affects the resulting anomaly vectors, the anomaly vectors $A_{k}$ for $k = 1,2,\dots,100$ were calculated. Figure~\ref{fig:k_heat_map} shows the resulting anomaly vectors, displayed as a heat map in which all anomaly vectors have been individually normalized to lie in the unit interval. Corresponding values of the three error measures are shown in Figure~\ref{fig:k_errors}. Note that this plot shows only relative errors, as the three error graphs have been individually normalized to the unit interval.
 
@@ -235,7 +235,7 @@ The performance of the DFT was investigated by evaluating the standard sequence 
 \label{fig:dft_errors}
 \end{wrapfigure}
 
-While the DFT gave fairly accurate anomaly vectors for low values of $k$, it performed poorly overall, returning less accurate anomaly vectors and higher error values over all $k$. This is reasonable: the DFT is not expected to perform well on random data. A proper evaluation of the performance characteristics of kNN methods using the DFT would require a more diverse data set.
+While the DFT gave fairly accurate anomaly vectors for low values of $k$, it performed poorly overall, returning less accurate anomaly vectors and higher error values over all $k$. This is reasonable: the DFT is not expected to perform well on random data. A proper evaluation of the performance characteristics of kNN methods using the DFT would require a more diverse dataset.
 
 \clearpage
 
@@ -355,7 +355,7 @@ In light of these results, perhaps a multi-resolution scheme should be considere
 \label{fig:m_heat_map}
 \end{figure}
 
-Which values of the context width $m$ are appropriate depends heavily on the application domain and on the types of anomalies present in the data. Ideally, the importance of the context width should be evaluated by considering several sequences with a natural context concept, such as the bottom series in Figure~\ref{fig:anomaly_types}. Constructing representative artificial data sets of such sequences is likely to be difficult, so real-world series should be used for such an evaluation.
+Which values of the context width $m$ are appropriate depends heavily on the application domain and on the types of anomalies present in the data. Ideally, the importance of the context width should be evaluated by considering several sequences with a natural context concept, such as the bottom series in Figure~\ref{fig:anomaly_types}. Constructing representative artificial datasets of such sequences is likely to be difficult, so real-world series should be used for such an evaluation.
 
 \begin{wrapfigure}{r}{0.49\textwidth} \vspace{-20pt}
     \vspace{-10pt}
@@ -368,7 +368,7 @@ Which values of the context width $m$ are appropriate depends heavily on the app
 \label{fig:m_error}
 \end{wrapfigure}
 
-While such data sets are not available, a simple evaluation on the available data can still prove illuminating. The standard sequence is highly homogeneous and has no natural contexts. Thus, all errors should be expected to decrease monotonically with increasing $m$. To confirm this, the anomaly vectors $A_m$ were computed for $m = 20$ to $400$. The results of this evaluation are shown in Figures~\ref{fig:m_heat_map},~\ref{fig:m_error}, and~\ref{fig:m_time}.
+While such datasets are not available, a simple evaluation on the available data can still prove illuminating. The standard sequence is highly homogeneous and has no natural contexts. Thus, all errors should be expected to decrease monotonically with increasing $m$. To confirm this, the anomaly vectors $A_m$ were computed for $m = 20$ to $400$. The results of this evaluation are shown in Figures~\ref{fig:m_heat_map},~\ref{fig:m_error}, and~\ref{fig:m_time}.
 
 As these figures demonstrate, the anomaly vectors identify a false anomaly at the left end until $m \approx 330$, at which point the false anomaly disappears and the errors decline sharply. That this false anomaly appears for small context widths is understandable since, as seen in Figure~\ref{fig:reference_sequence}, the sequence includes values at its left end that are not seen again until the right end. As expected, the error is minimized when the trivial context (corresponding to $m > 390$) is incorporated.
 

@@ -43,7 +43,7 @@ Finally, an algorithm could be formulated that solves an arbitrary problem speci
 
 Restating existing problems within this framework provides several advantages. Firstly, it facilitates comparison of methods, making it easier to see their similarities and differences. Secondly, it makes it easy to overview the entire set of problems and propose novel problems based on combinations of existing components. Finally, the components can be easily interchanged, simplifying method evaluations.
 
-The fact that a single algorithm can be used for all problems suggests the possibility of automated, accurate handling of diverse data sets. Typically, the extent to which problems can capture anomalies varies drastically between series from different sources. If this ability could be related to underlying characteristics of the series, a preliminary analysis could guide the choice of components. Since the proposed framework simplifies automated analysis and allows for problems to be applied interchangeably on the same data, it could help both in finding these underlying characteristics and in applying them to anomaly detection.
+The fact that a single algorithm can be used for all problems suggests the possibility of automated, accurate handling of diverse datasets. Typically, the extent to which problems can capture anomalies varies drastically between series from different sources. If this ability could be related to underlying characteristics of the series, a preliminary analysis could guide the choice of components. Since the proposed framework simplifies automated analysis and allows for problems to be applied interchangeably on the same data, it could help both in finding these underlying characteristics and in applying them to anomaly detection.
 
 As an example of such a characteristic, in~\cite{chandola3}, various anomaly measures are compared on a task derived From~\ref{task:ad_splunk2} (finding anomalous real-valued sequences in a set of similar sequences) and a correlation is noted for some problems between the share of anomalies captured and the periodicity of the sequences. Based on this, investigating links between problem accuracy and characteristics of series in the frequency domain may prove fruitful.
 
@@ -94,7 +94,7 @@ and the \emph{trivial context} (for detecting collective or point anomalies):
 \]
 We also introduce the \emph{semi-supervised context}, in which $\mathcal{C}(T_i) \equiv X$ for some reference sequence $X$.
 
-Note that the number of elements in the context will typically have a significant impact on analysis time. While the sizes of the local and semi-supervised contexts are both constant as functions of the sequence length, the novelty and trivial contexts grow linearly, which is likely to cause problems in large data sets.
+Note that the number of elements in the context will typically have a significant impact on analysis time. While the sizes of the local and semi-supervised contexts are both constant as functions of the sequence length, the novelty and trivial contexts grow linearly, which is likely to cause problems in large datasets.
 
 \subsection{The reference filter}
 
