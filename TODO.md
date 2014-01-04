@@ -56,3 +56,4 @@ DONE:
 - 45. Framework: Create draft of Training Data section.
 - 46. Framework: Create draft of Anomaly Type section.
 - 47. Framework: Create draft of Anomaly Measures section.
+- 48. Framework: Incorporate Related High-level Tasks section into other sections.

@@ -105,7 +105,7 @@ Context functions $C(d)$ defined on individual elements $d \in D$ (such as the o
 \]
 The context functions encountered in this report are all on this form. For this reason, there is little need to make a distinction between contexts defined for single elements and contexts defined for subsets.
 
-Note that contexts can be seen as a generalization of the concept of training data. For instance, the \emph{trivial context}, given by, for $d \in D$; $C(d) = D \setminus d$, corresponds to unsupervised anomaly detection. It is obtained when the scope of any local context grows large enough.
+Note that contexts can be seen as a generalization of the concept of training data. For instance, the \emph{trivial context}, given by, for $d \in D$; $C(d) = D \setminus d$, corresponds to traditional unsupervised anomaly detection. It is obtained when the scope of any local context grows large enough. Context functions also generalise anomaly detection problems to various tasks that have traditionally been considered separate from anomaly detection. For instance, \emph{novelty detection}, \emph{novelty detection}~\cite{chandola}, which refers to the detection of novel, or previously unseen, items or subsequences in a sequence~\footnote{It should be noted that the term `novelty detection' is occasionally used in the literature to refer to semi-supervised anomaly detection.}, is really just the use of a one-sided context $C(s_i) = \{s_{i-w}, s_{i - w + 1}, \dots, s_{i - 1}\}$ in an anomaly detection problem.
 
 Figure~\ref{fig:contexts} shows a schematic view of a data set, along with three contexts. The leftmost panel illustrates the trivial context of a single element, the middle panel illustrates a local context of a single element, and the rightmost panel illustrates the natural extension of this local context to subsets.
 
@@ -210,28 +210,3 @@ A solution format that has received a lot of attention in recent years (\cite{ke
 The most general solution format is to associate \emph{anomaly scores} with the elements of $A$. Typically, anomaly scores are positive real-valued numbers, and higher anomaly scores signify more anomalous elements. Of course, the fact that anomaly scores outputs have size $|A|$ means that they are comparatively computationally intensive to produce, especially if the size of $A$ is larger than the size of the original dataset. If this is the case, anomaly scores can be produced for the elements of the input dataset by weighing the anomaly scores for $A$.
 
 While the anomaly scores of non-anomalous elements might be of little interest, producing them can still be useful for visualisation purposes. Furthermore, both of the previously mentioned solution formats can be constructed from anomaly scores, which makes anomaly scores especially useful when the output requirements are not clear.
-
-\section{Related high-level tasks}
-\label{sect:related_tasks}
-
-Anomaly detection is closely related to several other problems in data mining, machine learning and signal processing. We here briefly present a few high-level tasks, analogous to Task~\ref{task:anomaly_detection}, for a few such problems.
-
-There are multiple related problems in signal processing that involve the detection and removal of anomalies in data. Typically referred to as \emph{noise removal}, \emph{data cleaning}~\cite{meckesheimer}, or \emph{signal recovery}, these problems are summarized in the following task:
-\begin{task}[Signal detection]
-  Given a data set $D$ consisting of a relevant signal with added noise, remove all anomalies caused by the noise.
-\end{task}
-
-\emph{Novelty detection}~\cite{chandola} refers to the detection of novel, or previously unseen, items or subsequences in a sequence~\footnote{It should be noted that the term `novelty detection' is occasionally used in the literature to refer to semi-supervised anomaly detection.}, as formalized by the following task:
-\begin{task}[Novelty detection]
-\label{task:novelty_detection}
-  Given a sequence $S$, detect subsequences $(s_i, s_{i+1}, \dots, s_j) \subset S$ that are anomalous with regards to earlier subsequences (i.e. $(s_i, s_{i+1}, \dots, s_j) \subset S$ for $k < i$ and $l < j$).
-\end{task}
-Most of the high-level tasks presented in this chapter can be combined with novelty detection, which is reasonable considering that it can be reduced to Task~\ref{task:contextual_power} through the choice of an appropriate context function. It is especially interesting when used in monitoring applications and in the context of long sequences.
-
-\emph{Change detection} (or \emph{event detection}) is the problem of detecting points at which sequences change in some way.
-\begin{task}[Change detection]
-      Given a sequence $S$, detect points at which the underlying distribution or model generating the $s_i$ changes.
-\end{task}
-Change detection is almost exclusively associated with time series, and has been used mainly in the study of climate data~\cite{gopala} and image analysis~\cite{radke}.
-
-Other tasks that are often interesting in the same contexts as anomaly detection include \emph{clustering}~\cite{clustering} and \emph{motif discovery}~\cite{motif}~\cite{motif2}.
