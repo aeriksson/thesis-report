@@ -1,8 +1,22 @@
 \chapter{An application to time series}
 \label{ch:time_series}
 
+In this chapter, the framework presented in the previous chapter is applied to univariate real-valued time series, in order to derive an instance of the omptimisation problem defined in Section~\ref{sect:problem_formulation} appropriate for univariate, real-valued time series. As mentioned, the optimisation problem can be stated as
+\[
+    p^*_{opt} = \argmin_{p \in P^*} \sum_{(i_j, s_j) \in T} \epsilon^*(s_j, O(p, i_j)),
+\]
+where the objects that need to defined are the problem set $P^*$, the test data $T$, the error function $\epsilon^*$, and the oracle $O$.
+
+In Section~\ref{sect:background}, some terminology related to time series is presented, along with a brief summary of previous research on time series anomaly detection. The construction of regular time series from irregular data is also discussed.
+
+In Section~\ref{sect:component_framework}, a problem set $P^*$ is constructed, which generalises many of the approaches presented in the previous section. An oracle $O$ for problems in this set is then presented.
+
+Next, in Section~\ref{sect:evaluation}, issues related to the test data $T$, as well as a few possible choices of $\epsilon^*$, are discussed.
+
+Finally, Section~\ref{sect:implementation} details an implementation of the optimisation problem using the objects from the previous sections.
+
 \section{Presentation}
-\label{ch:transformations}
+\label{sect:background}
 
 The \emph{presentation} of data is an important aspect of any anomaly detection problem. When talking about presentation, we refer to the structure of the dataset presented to the anomaly detection algorithm. Real-world datasets can typically be presented in a myriad of different ways, and the choice of presentation has a great impact both on the difficulty of the analysis and on the set of applicable tasks.
 

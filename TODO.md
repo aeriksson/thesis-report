@@ -15,7 +15,6 @@ TODO:
 - 41. Framework: Add discussion of numerosity reduction to Dataset Format.
 - 42. Framework: Add discussion of dimensionality reduction to Dataset Format.
 - 44. Framework: Clean up Solution Format section.
-- 51. Time series: Write an introduction.
 - 52. Time series: Replace Presentation section with a shorter section introducing time series.
 - 53. Time series: Add section summarising existing research.
 - 54. Time series: Rewrite oracle section.
@@ -59,3 +58,4 @@ DONE:
 - 48. Framework: Incorporate Related High-level Tasks section into other sections.
 - 49. Framework: Be more clear about context functions being a novel concept.
 - 50. All: Join the chapters on time series.
+- 51. Time series: Write an introduction.
