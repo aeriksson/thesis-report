@@ -54,3 +54,5 @@ DONE:
 - 39. Framework: Create draft of Dataset Format section.
 - 43. Framework: Create draft of Solution Format section.
 - 45. Framework: Create draft of Training Data section.
+- 46. Framework: Create draft of Anomaly Type section.
+- 47. Framework: Create draft of Anomaly Measures section.
