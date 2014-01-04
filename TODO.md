@@ -2,8 +2,8 @@ TODO:
 =====
 - 1. Finish project plan.
 - 11. Framework: add more references.
-- 16. Remove old sequence extraction chapter.
-- 17. Add new, more formal section on sequence extraction.
+- 16. Time series: Remove sequence extraction section.
+- 17. Time series: Add more formal section on sequence extraction.
 - 22. Background: Provide example of papers which appear to target the same problem but don't.
 - 25. Come up with a more interesting name than ad-eval. Anomaly detection researcher?
 - 26. Introduction: update chapter references.
@@ -15,11 +15,17 @@ TODO:
 - 41. Framework: Add discussion of numerosity reduction to Dataset Format.
 - 42. Framework: Add discussion of dimensionality reduction to Dataset Format.
 - 44. Framework: Clean up Solution Format section.
+- 51. Time series: Write an introduction.
+- 52. Time series: Replace Presentation section with a shorter section introducing time series.
+- 53. Time series: Add section summarising existing research.
+- 54. Time series: Rewrite oracle section.
+- 55. Time series: Rewrite evaluation section.
+- 56. Time series: Rewrite implementation section.
 
 DONE:
 =====
 - 2. Change name to "A Framework for Anomaly Detection with Applications to Machine-Generated Data"
-- 3. Reshape chapters to: Introduction, Background, Framework, Application, Results, Discussion
+- 3. Reshape chapters to Introduction, Background, Framework, Application, Results, Discussion
 - 4. Incorporate Foreword into Introduction
 - 5. Capitalize chapter, section, figure, and table
 - 6. Move method presentation from Background to Framework
