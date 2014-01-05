@@ -70,7 +70,11 @@ Another important classification considers the dimensionality of the data points
 
 While the distinction between uni- and multivariate data might seem superfluous, it proves important in applications. Most machine learning methods take significantly longer to learn (both in terms of time and convergence) as the dimensions of the data increase. Furthermore, many methods are not applicable to multivariate data at all. Any multivariate dataset may be trivially split into a set of univariate datasets, something that should reasonably always be done unless there are anomalies in the multivariate dataset which are not reflected in the individual dimensions (for an example of this, see figure~\ref{fig:dimensionality_reduction}).
 
-To mitigate the difficulties of analysing high-dimensional data, \emph{dimensionality reduction} is often performed as a pre-analysis step on multidimensional datasets. TODO: put dimensionality reduction discussion here.
+To mitigate the difficulties of analysing high-dimensional data, \emph{dimensionality reduction} is often performed as a pre-analysis step on multidimensional datasets. Essentially, dimensionality reduction refers to the process of transforming multidimensional data to a lower-dimensional representation, such that the aspects most pertinent to the analysis remain.
+
+Many techniques have been designed with this goal in mind. A distinction is typically made between \emph{feature selection} and \emph{feature extraction} approaches. Feature selection approaches try to select a subset of the dimensions present in the original data. Feature extraction approaches, in contrast, transform the data into some new space, in which the relevant features are hopefully more apparent. Feature extraction methods are commonly employed as a pre-processing step in anomaly detection algorithms.
+
+Common feature extraction methods for data in $\mathbb{R}^n$ include \emph{principle component analysis}~\cite{TODO} (PCA), \emph{semidefinite embedding}~\cite{TODO}, \emph{partial least-squares regression}~\cite{TODO}, and \emph{independent component analysis}~\cite{TODO}. Which methods are appropriate to use depends heavily on the application. An example of feature extraction is shown in figure~\ref{fig:dimensionality_reduction}.
 
 In applications there is usually additional structure present, such as orderings or other relations between elements within datasets, that can be utilised to improve the analysis. Such additional structure is discussed in Sections~\ref{sect:anomaly_types} and~\ref{sect:anomaly_measures}.
 

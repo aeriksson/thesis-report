@@ -77,15 +77,6 @@ When the time series is sampled at regular intervals in time (i.e.\ $\forall i, 
 \subsection{Compression}
 \label{sect:compression}
 
-
-Analyzing high-dimensional data can be difficult, both due to increased computational time and due to topological properties of high-dimensional spaces (a phenomenon commonly referred to as the \emph{curse of dimensionality}). In many analysis tasks, it is therefore desirable to (if possible) reduce the dimensionality of data in such a way that only the aspects of the data most pertinent to the analysis remain.
-
-Many techniques have been designed with this goal in mind. A distinction is typically made between \emph{feature selection} and \emph{feature extraction} approaches. Feature selection approaches try to select a subset of the dimensions present in the original data. Feature extraction approaches, in contrast, transform the data into some new space, in which the relevant features are hopefully more apparent. Feature extraction methods are commonly employed as a pre-processing step in anomaly detection algorithms, while feature selection methods are not commonly used. We will here focus on feature extraction methods.
-
-Common feature extraction methods for data in $\mathbb{R}^n$ include \emph{principle component analysis} (PCA), \emph{semidefinite embedding}, \emph{partial least-squares regression}, and \emph{independent component analysis}. Which methods are appropriate to use depends heavily on the problem domain. In order to illustrate the concept of feature extraction, we will now briefly present a typical example of $\mathbb{R}^n$ feature extraction, before moving on to methods designed specifically for sequences (and time series in particular).
-
-%Consider the two-dimensional dataset in the left panel of figure~\ref{fig:multi_vs_univariate}. Here, all data points are generated from the same distribution except for a single anomalous point at the center of the panel. While the anomaly is readily identified in the left panel, due the radial symmetry of the distribution, it can not be seen when projected linearly onto any direction, as illustrated in the upper right panel. The task in dimensionality reduction is to present a projection onto a lower dimensional space (in this case $\mathbb{R}$) in which the classes (anomalous/non-anomalous) are separated, something that is surprisingly difficult even for this relatively simple dataset. Indeed, most dimensionality reduction methods, including all feature selection methods and some feature extraction methods (such as linear PCA) can not accomplish this on the given data - non-linear feature extraction methods are required. This illustrates the difficulty inherent to dimensionality reduction.
-
 \begin{figure}[htb]
   \begin{center}
     \leavevmode
