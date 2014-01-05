@@ -11,7 +11,6 @@ TODO:
 - 32. All: Change uses of "-ize" to "-ise".
 - 37. All: Replace tasks with factor choices.
 - 39. Framework: Clean up Dataset Format section.
-- 40. Framework: Add discussion of discretisation to Dataset Format.
 - 44. Framework: Clean up Solution Format section.
 - 52. Time series: Replace Presentation section with a shorter section introducing time series.
 - 53. Time series: Add section summarising existing research.
@@ -49,6 +48,7 @@ DONE:
 - 36. Framework: Rename "Reference data" -> "Training data".
 - 38. Framework: Move last paragraph of description.
 - 39. Framework: Create draft of Dataset Format section.
+- 40. Framework: Finish discretisation discussion in Dataset Format.
 - 41. Framework: Add discussion of numerosity reduction to Dataset Format.
 - 42. Framework: Add discussion of dimensionality reduction to Dataset Format.
 - 43. Framework: Create draft of Solution Format section.
