@@ -45,9 +45,30 @@ Anomaly detection in mixed datasets is relatively poorly understood; typically, 
 
 It is fairly common to use \emph{numerosity reduction} techniques to convert discrete data to categorical data, or to compress categorical data. TODO: put numerosity reduction discussion here
 
-Another important classification considers the dimensionality of the data points. A distinction is typically made between univariate and multivariate data. A dataset $D = (d_1, d_2, \dots, d_n)$ is said to be \emph{univariate} if the $d_i$ are scalars, and \emph{multivariate} if the $d_i$ are vectors of length greater than one.
+\begin{wrapfigure}{r}{0.5\textwidth}
+    \vspace{-25pt}
+    \begin{center}
+        \leavevmode
+        \includegraphics[trim = 20mm 3mm 20mm 5mm, clip, width=0.5\textwidth]{resources/multi_vs_univariate}
+    \end{center}
+    \vspace{-15pt}
+    \caption{{\small Two sine curves regarded as two separate univariate time series (dotted lines) and as one multivariate time series (solid lines).}}
+\label{fig:multi_vs_univariate}
+    \vspace{-25pt}
+\end{wrapfigure}
 
-While the distinction between uni- and multivariate data might seem superfluous, it proves important in applications. Most machine learning methods take significantly longer to learn (both in terms of time and convergence) as the dimensions of the data increase. Furthermore, many methods are not applicable to multivariate data at all.
+Another important classification considers the dimensionality of the data points. A distinction is typically made between univariate and multivariate data. A dataset $D = (d_1, d_2, \dots, d_n)$ is said to be \emph{univariate} if the $d_i$ are scalars, and \emph{multivariate} if the $d_i$ are vectors of length greater than one. An illustration of uni- and multivariate time series is shown in figure~\ref{fig:multi_vs_univariate}.
+
+\begin{figure}[htb]
+\begin{center}
+\leavevmode
+\includegraphics[width=\textwidth]{resources/multivariate}
+\end{center}
+\caption{\small{An example of dimensionality reduction in a point anomaly detection problem in $R^2$. The left figure shows a set of $500$ data points $(x_i, y_i)$ containing one anomaly. The top right figure shows a histogram of the $x_i$, while the bottom right figure shows a histogram of the distance from the center point. In each figure, the location of the anomalous point is marked by an arrow. While the anomaly is easy to detect in the left and bottom right figures, it can not be seen in the top right figure. This is due to the linear inseparability of the data, and illustrates how dimensionality reduction can lead to information losses if not performed properly.}}
+\label{fig:dimensionality_reduction}
+\end{figure}
+
+While the distinction between uni- and multivariate data might seem superfluous, it proves important in applications. Most machine learning methods take significantly longer to learn (both in terms of time and convergence) as the dimensions of the data increase. Furthermore, many methods are not applicable to multivariate data at all. Any multivariate dataset may be trivially split into a set of univariate datasets, something that should reasonably always be done unless there are anomalies in the multivariate dataset which are not reflected in the individual dimensions (for an example of this, see figure~\ref{fig:dimensionality_reduction}).
 
 To mitigate the difficulties of analysing high-dimensional data, \emph{dimensionality reduction} is often performed as a pre-analysis step on multidimensional datasets. TODO: put dimensionality reduction discussion here.
 

@@ -59,3 +59,4 @@ DONE:
 - 49. Framework: Be more clear about context functions being a novel concept.
 - 50. All: Join the chapters on time series.
 - 51. Time series: Write an introduction.
+- 57. Framework/Time series: Move dimensionality discussion to Framework.

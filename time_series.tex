@@ -74,42 +74,9 @@ From here on, we take a \emph{sequence} to mean a progression (finite, or in the
 
 When the time series is sampled at regular intervals in time (i.e.\ $\forall i, j: t_{i+1} - t_i = t_{j+1} - t_j$), we say that the time series is \emph{regular}. We will treat regular time series as sequences, suppressing the $t_i$ and writing $T = (s_1, s_2, \dots)$. Henceforth we will take all time series to be equidistant unless explicitly stated\footnote{As mentioned above, there is some confusion surrounding these terms in the literature. Specifically, what we would refer to as `symbolic sequences' and `regular time series' are often simply referred to as `sequences' or `time series'. In such contexts, other types of sequences (and time series) are usually ignored}.
 
-\subsection{Uni- and multivariate data}
-\label{sect:unimultivariate}
-
-\begin{wrapfigure}{r}{0.5\textwidth}
-    \vspace{-25pt}
-    \begin{center}
-        \leavevmode
-        \includegraphics[trim = 20mm 3mm 20mm 5mm, clip, width=0.5\textwidth]{resources/multi_vs_univariate}
-    \end{center}
-    \vspace{-15pt}
-    \caption{{\small Two sine curves regarded as two separate univariate time series (dotted lines) and as one multivariate time series (solid lines).}}
-\label{fig:multi_vs_univariate}
-    \vspace{-25pt}
-\end{wrapfigure}
-
-The dimensionality of the individual elements in a sequence has a profound impact on the difficulty and efficiency of the analysis. Representing a sequence by $S = (s_1, s_2, \dots)$, where $s_i \in X$ for some set $X$, we say that $S$ is \emph{multivariate} if $X$ is the Cartesian product of some collection of non-empty sets $X_i$, and that $S$ is \emph{univariate} otherwise. The difference between uni- and multivariate time series is illustrated in Figure~\ref{fig:multi_vs_univariate}.
-
-In a sense, univariate and multivariate sequences are two sides of the same coin. Obviously, any multivariate sequence $S = (s_1, s_2, \dots)$, where $s_i = (s_{i,1}, s_{i,2}, \dots, s_{i,n})$ may be split into multiple univariate time sequences $S_1, S_2, \dots, S_n$, where $S_i = (s_{1,i}, s_{2, i}, \dots )$. Conversely, any $S_1, S_2, \dots, S_n$ can be aggregated into a multivariate time series (although this is meaningless unless the $S_i$ were all sampled at the same times).
-
-Multivariate time series are arguably more powerful, in the sense that a data point $(\vect{s_i}, t_i)$ where $\vect{s_i} = (s_{i,1}, s_{i,2}, \dots, s_{i,n})$ may be anomalous with regard to the rest of the data, while its individual components $s_{i,j}$ are not, as illustrated in Figure~\ref{fig:dimensionality_reduction}.
-
-On the other hand, analyzing higher-dimensional data is often difficult (in terms of both analysis time and accuracy), making multivariate analysis both computationally and conceptually more difficult. For this reason, it might be beneficial to (when safe) split multivariate sequences or otherwise reduce their dimensionality before performing the analysis.
-
-A majority of the literature on anomaly detection in sequences, and especially in real-valued time series, focuses on univariate data, and while some algorithms can be extended to handle multivariate time series, this is not always possible. Keeping this in mind, it makes more sense to focus on univariate sequences, at least initially.
-
 \subsection{Compression}
 \label{sect:compression}
 
-\begin{figure}[htb]
-\begin{center}
-\leavevmode
-\includegraphics[width=\textwidth]{resources/multivariate}
-\end{center}
-\caption{\small{An example of dimensionality reduction in a point anomaly detection problem in $R^2$. The left figure shows a set of $500$ data points $(x_i, y_i)$ containing one anomaly. The top right figure shows a histogram of the $x_i$, while the bottom right figure shows a histogram of the distance from the center point. In each figure, the location of the anomalous point is marked by an arrow. While the anomaly is easy to detect in the left and bottom right figures, it can not be seen in the top right figure. This is due to the linear inseparability of the data, and illustrates how dimensionality reduction can lead to information losses if not performed properly.}}
-\label{fig:dimensionality_reduction}
-\end{figure}
 
 Analyzing high-dimensional data can be difficult, both due to increased computational time and due to topological properties of high-dimensional spaces (a phenomenon commonly referred to as the \emph{curse of dimensionality}). In many analysis tasks, it is therefore desirable to (if possible) reduce the dimensionality of data in such a way that only the aspects of the data most pertinent to the analysis remain.
 
