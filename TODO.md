@@ -2,8 +2,6 @@ TODO:
 =====
 - 1. Finish project plan.
 - 11. Framework: add more references.
-- 16. Time series: Remove sequence extraction section.
-- 17. Time series: Add more formal section on sequence extraction.
 - 22. Background: Provide example of papers which appear to target the same problem but don't.
 - 25. Come up with a more interesting name than ad-eval. Anomaly detection researcher?
 - 26. Introduction: update chapter references.
@@ -35,6 +33,8 @@ DONE:
 - 13. Reformulate the framework with the search problem in mind
 - 14. Framework: Clarify semi-supervised/supervised convention - add citation.
 - 15. Framework: Rename reference data -> (labeled) training data.
+- 16. Time series: Remove sequence extraction section.
+- 17. Time series: Add more formal section on sequence extraction [ABANDONED].
 - 18. Fix lint errors
 - 19. Rewrite the first half of Background to more clearly explain and motivate the work
 - 21. Add survey references to the Anomaly Detection section
@@ -63,4 +63,4 @@ DONE:
 - 51. Time series: Write an introduction.
 - 52. Time series: Replace Presentation section with a shorter section introducing time series.
 - 53. Time series: Add section summarising existing research.
-- 57. Framework/Time series: Move dimensionality discussion to Framework.
+g 57. Framework/Time series: Move dimensionality discussion to Framework.
