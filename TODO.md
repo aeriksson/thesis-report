@@ -12,8 +12,6 @@ TODO:
 - 37. All: Replace tasks with factor choices.
 - 39. Framework: Clean up Dataset Format section.
 - 44. Framework: Clean up Solution Format section.
-- 52. Time series: Replace Presentation section with a shorter section introducing time series.
-- 53. Time series: Add section summarising existing research.
 - 54. Time series: Rewrite oracle section.
 - 55. Time series: Rewrite evaluation section.
 - 56. Time series: Rewrite implementation section.
@@ -59,4 +57,6 @@ DONE:
 - 49. Framework: Be more clear about context functions being a novel concept.
 - 50. All: Join the chapters on time series.
 - 51. Time series: Write an introduction.
+- 52. Time series: Replace Presentation section with a shorter section introducing time series.
+- 53. Time series: Add section summarising existing research.
 - 57. Framework/Time series: Move dimensionality discussion to Framework.
