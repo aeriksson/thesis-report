@@ -124,11 +124,7 @@ Consider again the example of a long sequence. Writing this sequence as $S = (s_
 \]
 When using this context, which is referred to as the \emph{symmetric local context}, the local characteristics of the sequence around $s_i$ are taken into account, while the rest of the sequence is ignored.
 
-Context functions $C(d)$ defined on individual elements $d \in D$ (such as the one above) can be naturally extended to subsets $D' \subseteq D$ of the data by defining
-\[
-    C(D') = \bigcup_{d \in D'} C(d) \setminus D'.
-\]
-The context functions encountered in this report are all on this form. For this reason, there is little need to make a distinction between contexts defined for single elements and contexts defined for subsets.
+Context functions $C(d)$ defined on individual elements $d \in D$ (such as the one above) can be naturally extended to subsets $D' \subseteq D$ of the data by defining $C(D') = \bigcup_{d \in D'} C(d) \setminus D'$. The context functions encountered in this report are all on this form. For this reason, we do not make any distinction between contexts defined for single elements and contexts defined for sets.
 
 Note that contexts can be seen as a generalization of the concept of training data. For instance, the \emph{trivial context}, given by, for $d \in D$; $C(d) = D \setminus d$, corresponds to traditional unsupervised anomaly detection. It is obtained when the scope of any local context grows large enough. Context functions also generalise anomaly detection problems to various tasks that have traditionally been considered separate from anomaly detection. For instance, \emph{novelty detection}, \emph{novelty detection}~\cite{chandola}, which refers to the detection of novel, or previously unseen, items or subsequences in a sequence~\footnote{It should be noted that the term `novelty detection' is occasionally used in the literature to refer to semi-supervised anomaly detection.}, is really just the use of a one-sided context $C(s_i) = \{s_{i-w}, s_{i - w + 1}, \dots, s_{i - 1}\}$ in an anomaly detection problem.
 
