@@ -15,6 +15,10 @@ TODO:
 - 54. Time series: Rewrite oracle section.
 - 55. Time series: Rewrite evaluation section.
 - 56. Time series: Rewrite implementation section.
+- 58. Framework: Merge Training Data and Anomaly Types into a single factor.
+- 59. Abstract: Rewrite it.
+- 60. All: Use the CSC LaTeX template.
+- 61. Time series: Incorporate Important tasks section into other sections.
 
 DONE:
 =====
