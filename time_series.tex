@@ -93,7 +93,7 @@ Another common class of transformations involves estimating the (weighted) frequ
 
 Several methods can be used to generate sequences appropriate for this task from time series, such as histograms, sliding averages, etc. These can be generalised as the following transformation:
 
-Given a time series $T = ((s_1, t_1), (s_2, t_2), \dots)$ where $\forall i: s_i \in X$, with associated weights $w_i$ and some envelope function $e(s, t): X \times \mathbb{R} \rightarrow X$ as well as a spacing and offset $\Delta, t_0 \in \mathbb{R}^+$, a sequence $S' = ((s_{1}^{'}, \tau_1), (s_{2}^{'}, \tau_2), \dots)$ is constructed, where $\tau_i = t_0 + \Delta \cdot i$ and $s_{i}^{'} = \sum_{(s_j, t_j) \in S} s_i w_i e(t_j - \tau_i)$.
+Given a time series $T = ((s_1, t_1), (s_2, t_2), \dots)$ where $\forall i: (s_i, t_i) \in X \times \mathbb{R}$, with associated weights $w_i$ and some envelope function $e(s, t): X \times \mathbb{R} \rightarrow X$, as well as a spacing and offset $\Delta, t_0 \in \mathbb{R}^+$, a sequence $S' = ((s_{1}^{'}, \tau_1), (s_{2}^{'}, \tau_2), \dots)$ is constructed where $\tau_i = t_0 + \Delta \cdot i$ and $s_{i}^{'} = \sum_{(s_j, t_j) \in S} s_i w_i e(t_j - \tau_i)$.
 
 The $\tau_i$ can then be discarded and the regular time series treated as a sequence. Histograms are recovered if $e(s, t) = 1$ when $|t| < \Delta/2$ and $e(x, t) = 0$ otherwise. Note that this method requires multiplication and addition to be defined for $X$, and is thus not applicable to most symbolic/categorical data. Also note that $S'$ is really just a sequence of samples of the convolution $f_S \ast e$ where $f_S = \sum_i \delta(t_i) s_i w_i$.
 
@@ -155,91 +155,122 @@ Additionally, the choice of distance measure affects how well methods can be opt
 
 Since any solution format can be used with any problem, and since the solution format has little impact on the analysis (except performance-wise), it is not treated in depth here. As noted in the previous chapter, all common output formats can be produced from anomaly scores, so other output formats are interesting mainly as optimisations.
 
-A problem set for anomaly detection in sequences is now presented, together with an algorithm for solving arbitrary problems in this problem set.
+\section{Optimisation problem}
 
-\subsection{Limitations}
+The construction of appropriate problem sets for the tasks of detecting anomalous sequences and subsequences, as well as corresponding oracles, is now discussed.
 
-As mentioned in the section~\ref{sect:problem_formulation}, the problem space must be limited in order for it to admit an oracle. The goal of this section is to present a problem set that is general enough to admit most of the problems while remaining limited enough to be useful in practice.
+First, in Section~\ref{sect:problem_set}, a few reasonable restrictions on the problem sets, as well a suggested set of components useful in parametrising the problem sets, are introduced.
 
-Based on the previous discussion, a few sensible limitations can be derived. Since other solution formats can be constructed from anomaly scores, anomaly scores are a reasonable solution format. Furthermore, since contextual collective anomalies generalise all other mentioned anomaly types (point anomalies, contextual anomalies, and collective anomalies), as well as the most commonly used forms of supervision (semi-supervised and unsupervised), limiting the problem set to this anomaly type is reasonable.
+Next, in Sections~\ref{sect:subsequence_oracle} and~\ref{sect:sequence_oracle}, the components are formally defined, and oracles which operate on them are presented.
+
+Finally, in Section~\ref{sect:components}, a few component choices are presented along with the parameters they take.
+
+\subsection{Problem set}
+\label{sect:problem_set}
+
+As mentioned in the section~\ref{sect:problem_formulation}, the problem set must be limited in order for it to admit an oracle. The goal of this section is to present a problem set that is general enough to admit most of the problems while remaining limited enough to be useful in practice.
+
+Based on the previous discussion, a few sensible limitations can be derived. Since other solution formats can be constructed from anomaly scores, anomaly scores are a reasonable solution format. Furthermore, since contextual collective anomalies generalise all other mentioned anomaly types (point anomalies, contextual anomalies, and collective anomalies), as well as the most commonly used forms of supervision (semi-supervised and unsupervised), limiting the problem set to this anomaly type is reasonable. While further limiting the problem set is possible, in the interest of generality, this is not done here.
+
+In order for a problem set to be tractable, it needs to be parametrisable. To this end, it is useful to, if possible, try to define the set in terms of a few components which can be chosen independently (and then parametrised and optimised individually).
 
 Since which factors remain to be specified depends on the task being studied, we will treat the tasks of detecting anomalous subsequences and detecting anomalous sequences in a set of sequences separately, beginning with the former.
 
-In this case, the information left to be specified can be formalised using the following set of components:
+For the task of detecting anomalous subsequences, we propose that the following set of components be used:
 \begin{description}
   \item[The context.] Since we are dealing with contextual collective anomalies, the context must be defined.
   \item[The filters.] Filters for extracting sequences from the input data and context must be specified.
   \item[The anomaly measure.] The measure by which extracted sequences are judged as anomalous or normal must be specified.
-  \item[Transformations.] Which transformations (including discretisation, numerosity reduction and dimensionality reduction transformations), if any, are to be applied to the data before analysis.
+  \item[Transformations.] Which transformations (including discretisation, numerosity reduction and dimensionality reduction transformations), if any, are to be applied to the extracted data items before the anomaly measure is applied.
   \item[The aggregation method.] A method for aggregating individual anomaly scores into an anomaly vector must be provided.
 \end{description}
 
-Finding anomalous sequences in a set of sequences is really a (contextual) point anomaly detection; it corresponds to finding anomalous sequences (points) in a set of sequences, either with regard to the rest of that set (unsupervised context) or to some other set of sequences (semi-supervised context). As such, there is no need for either filters or an aggregation method, and the task can be specified using the following two components:
+Finding anomalous sequences in a set of sequences is really a (contextual) point anomaly detection; it corresponds to finding anomalous sequences (points) in a set of sequences, either with regard to the rest of that set (unsupervised context) or to some other set of sequences (semi-supervised context). As such, there is no need for either filters or an aggregation method, and the task can be specified using the following components:
 \begin{description}
   \item[The context.] Since we are dealing with contextual anomalies, the context must be defined.
   \item[The anomaly measure.] The measure by which extracted sequences are judged as anomalous or normal must be specified.
+  \item[Transformations.] Which transformations (including discretisation, numerosity reduction and dimensionality reduction transformations), if any, are to be applied to the individual vectors.
 \end{description}
 
-While searching over all possible choices of any of these components is still not feasible, this is not really problematic since a vast majority of the possible choices can be expected to perform poorly. Instead, a constructive approach can be taken in which the problem space is built up from component choices which have already been shown to be effective. Indeed, searching over most or all of the previously studied choices for each individual component is likely to be feasible. If the components can chosen and optimised somewhat independently, the development of efficient optimisation heuristics should be possible.
+While searching over all possible choices of any of these components is still not feasible, this is not really problematic since a vast majority of the possible choices can be expected to perform poorly. Instead, a constructive approach can be taken in which the problem set is built up from component choices which have already been shown to be effective. Indeed, searching over most or all of the previously studied choices for each individual component is likely to be feasible. If the components can chosen and optimised somewhat independently, the development of efficient optimisation heuristics should be possible.
 
 Taking a constructive approach has the additional advantage that proposed new components (such as novel anomaly measures) can be efficiently compared to existing methods. Another interesting advantage is that the approach could facilitate research into possible connections between characteristics of the input datasets and appropriate choices of components. Typically, the extent to which problems can capture anomalies varies drastically between series from different sources. If this ability could be related to underlying characteristics of the series, a preliminary dataset analysis could be used to seed the optimisation. As an example of such a characteristic, in~\cite{chandola3}, various anomaly measures compared on the task of finding anomalous real-valued sequences in a set of similar sequences, and it is concluded that different anomaly measures are appropriate depending on the periodicity of the sequences.
 
 \subsection{An oracle for anomalous subsequence problems}
+\label{sect:subsequence_oracle}
 
 Before the oracle can be specified, the dataset and solution formats, as well as the unspecified components specified above, must be formally defined.
 
 For the task of detecting anomalous subsequences in a long sequence, the input dataset consists of a sequence $\mathbf{x} \in X^n$, for some set $X$. The corresponding anomaly scores are a vector $\mathbf{a} \in \mathbb{R}^n$.
 
-The components can then be defined as (where $S(\mathbf{x})$ is the set of indexed subsequences of some sequence \mathbf{x}, e.g. $S((x_1, x_2)) = \{((x_1), (1)), ((x_2), (2)), ((x_1, x_2), (1, 2))\}$):
+The components can then be defined as (where $S(\mathbf{x})$ is the set of indexed subsequences of some sequence $\mathbf{x}$, e.g. $S((x_1, x_2)) = \{((x_1), (1)), ((x_2), (2)), ((x_1, x_2), (1, 2))\}$):
 \begin{description}
     \item[The evaluation filter $F_E$]maps a sequence $\mathbf{x}$ to a subset of $S(\mathbf{x})$ to be evaluated.
     \item[The context function $C$]maps a sequence $\mathbf{x}$ and a vector of indices $\mathbf{i} \in \mathbb{Z}_n^m$ (representing a subsequence) to a subset of $S(\mathbf{x})$ (representing the context of $\mathbf{i}$).
     \item[The training filter $F_T$,]like the evaluation filter, is a function that takes a sequence $\mathbf{x}$ (from the output of $C$) to some subset of $S(\mathbf{x})$.
-    \item[The anomaly measure $M$]maps a sequence $\mathbf{x}$ and a set of sequences ${\{\mathbf{x}_i\}}_{i \in \mathbb{Z}_n}$ to an anomaly score in $\mathbb{R}$.
+    \item[The transformation $T$]maps a sequence $\mathbf{x}$ to some other sequence $\mathbf{y} \in Y^l$ for some set $Y$ and some $l \in \mathbb{N}$.
+    \item[The anomaly measure $M$]maps a sequence $\mathbf{y}$ and a set of sequences ${\{\mathbf{y}_i\}}_{i \in \mathbb{Z}_n}$ to an anomaly score in $\mathbb{R}$.
     \item[The aggregation function $A$]aggregates a set of subsequences and anomaly scores to produce an anomaly vector; i.e.\  if $S = {\{(a_i, \mathbf{i}_i)\}}_{i \in \mathbb{Z}_k}$ is a set of anomaly scores and indices for individual subsequences, then $A(S) \in \mathbb{R}^{n}$.
 \end{description}
 
 Given these definitions, the oracle can be formulated as follows:
 \begin{algorithmic}
-    \Require{A sequence $\mathbf{x}$ and a tuple $(F_E, C, F_T, M, A)$.}
+    \Require{A sequence $\mathbf{x}$ and a tuple $(F_E, C, F_T, T, M, A)$.}
     \State{$S \gets \emptyset$ \Comment{initialize anomaly score container}}
     \For{$(\mathbf{x}_i, \mathbf{i}_i) \in F_E(\mathbf{x})$} \Comment{iterate over subsequences (and indexes) selected by filter}
-        \State{$\{\mathbf{c}_1, \mathbf{c}_2, \dots, \mathbf{c}_j\} \gets C(\mathbf{i}_i)$ \Comment{acquire context}}
+        \State{$\{\mathbf{c}_1, \mathbf{c}_2, \dots, \mathbf{c}_j\} \gets C(\mathbf{i}_i)$ \Comment{compute context}}
         \State{$\{\mathbf{t}_1, \mathbf{t}_2, \dots, \mathbf{t}_k\} \gets \bigcup_{\mathbf{c} \in \{\mathbf{c}_1, \mathbf{c}_2, \dots, \mathbf{c}_j\}} F_T(\mathbf{c})$ \Comment{extract training set from context}}
-        \State{$S \gets S \cup (M(\mathbf{x}_i, \{\mathbf{t}_1, \mathbf{t}_2, \dots, \mathbf{t}_k\}), \mathbf{i}_i)$ \Comment{save anomaly score with indexes of subsequence}}
+        \State{$S \gets S \cup (M(T(\mathbf{x}_i), \{T(\mathbf{t}_1), T(\mathbf{t}_2), \dots, T(\mathbf{t}_k)\}), \mathbf{i}_i)$ \Comment{save transformed anomaly score with indexes}}
     \EndFor{}
     \State{\Return{$A(S)$ \Comment{aggregate scores to form anomaly vector}}}
 \end{algorithmic}
 
+The corresponding optimisation problem is to find
+\[
+    \argmin_{(F_E, C, F_T, T, M, A)} \sum_i \epsilon^*(\mathbf{s}_i, O(\mathbf{x}_i, (F_E, C, F_T, T, M, A))),
+\]
+where $\{(\mathbf{x}_1, \mathbf{s}_1), (\mathbf{x}_2, \mathbf{s}_2), \dots, (\mathbf{x}_k, \mathbf{s}_k)\}$ is some set of labeled training data.
+
 \subsection{An oracle for anomalous sequence problems}
+\label{sect:sequence_oracle}
 
 For the chosen task of detecting anomalous sequences in a set of sequences, the input dataset consists of a collection $(\mathbf{x}_1, \mathbf{x}_2, \dots, \mathbf{x}_n) \in X^n$, for some arbitrary set $X$ (typically $X$ is the set all vectors of some specific length over some other set $Y$). The corresponding anomaly scores are a vector $\mathbf{a} \in \mathbb{R}^n$.
 
 The components can then be defined as:
 \begin{description}
     \item[The context function $C$] maps a sequence $(\mathbf{x}_1, \mathbf{x}_2, \dots, \mathbf{x}_n) \in X^n$ and an index $i \in \mathbb{Z}_n$ (representing one of the sequences) to a subset of ${\{\mathbf{x}_j\}}_{j \in \mathbb{Z}_n} \setminus \mathbf{x}_i$ (representing the context of $\mathbf{x}_k$).
-    \item[The anomaly measure $M$] maps a sequence $\mathbf{x}$ and a set of sequences $\{\mathbf{x}_1, \mathbf{x}_2, \dots, \mathbf{x}_n\}$ (representing the context) to an anomaly score in $\mathbb{R}$.
+    \item[The transformation $T$]maps a sequence $\mathbf{x}$ and to some other sequence $\mathbf{y} \in Y^o$ for some set $Y$ and some $o \in \mathbb{N}$.
+    \item[The anomaly measure $M$] maps a sequence $\mathbf{y}$ and a set of sequences $\{\mathbf{y}_1, \mathbf{y}_2, \dots, \mathbf{y}_n\}$ (representing the context) to an anomaly score in $\mathbb{R}$.
 \end{description}
 
 Given these components, a simple oracle can be formulated as follows:
 \begin{algorithmic}
     \Require{A vector of sequences $\mathcal{X} = (\mathbf{x_1}, \mathbf{x_2}, \dots, \mathbf{x_m})$ and a tuple $(C, M)$.}
     \For{$\mathbf{x}_i \in S(\mathcal{X})$} \Comment{iterate over sequences}
-        \State{$a_i \gets M(\mathbf{x}_i, C(\mathcal{X}, i))$ \Comment{save anomaly score}}
+        \State{$\{\mathbf{c}_1, \mathbf{c}_2, \dots, \mathbf{c}_j\} \gets C(\mathcal{X}, i)$ \Comment{compute context}}
+        \State{$a_i \gets M(T(\mathbf{x}_i), \{T(\mathbf{c}_1), T(\mathbf{c}_2), \dots, T(\mathbf{c}_j)\})$ \Comment{save anomaly score}}
     \EndFor{}
     \State{\Return{$(a_1, a_2, \dots, a_n)$} \Comment{aggregate scores to form anomaly vector}}
 \end{algorithmic}
 
-\subsection{Components}
-\label{sect:deriving_problems}
+The corresponding optimisation problem is to find
+\[
+    \argmin_{(C, T, M)} \sum_i \epsilon^*(\mathcal{S}_i, O(\mathcal{X}_i, (C, T, M))),
+\]
+where $\{(\mathcal{X}_1, \mathcal{S}_1), (\mathcal{X}_2, \mathcal{S}_2), \dotS, (\mathcal{X}_k, \mathcal{S}_k)\}$ is some set of labeled training data.
 
-We now discuss possible choices of the individual components for the oracles above.
+\subsection{Components}
+\label{sect:components}
+
+Possible choices of the individual components above are now discussed. Before the optimisation problem can be implemented, a set of possible parameters must be defined for each component. With this in mind, the component choices discussed in this section include parameter descriptions.
 
 \subsubsection{The filters}
 
 The evaluation filter takes a sequence and extracts subsequences from it to be used in the analysis. In the literature, \emph{sliding window} approaches, as described in section~\ref{sect:prev_research} are almost always taken.
 
 The reference filter works like the evaluation filter, but extracts subsequences from the context instead of from the evaluation series. As with the evaluation filter, there is typically little reason to use any filter other than a sliding window filter as the reference filter. If the anomaly measure does not require items of equal length, the reference filter can be ignored, i.e.\ $F_R(T) = T$.
+
+Sliding windows are parametrised by the \emph{step length} $s \in \mathbb{N}$ and \emph{window width} $w \in \mathbb{N}$; i.e.\ any sliding window filter will have the form $F(\mathbf{x}) = \{(x_1, x_2, \dots, x_w), (x_{s+1}, x_{s+2}, \dots, x_{s+w}), \dots, (x_{n-w}, x_{n-w+1}, \dots, x_{n})\}$.
 
 \subsubsection{The context function}
 
@@ -249,51 +280,41 @@ Note that the number of elements in the context will typically have a significan
 
 For the task of detecting anomalous sequences, contexts other than the semi-supervised and unsupervised contexts are not likely to be interesting.
 
+Different contexts admit different numbers of parameters. The trivial context and the novelty context are both parameter-free, while the local contexts admit two integral parameters.
+
+\subsubsection{The transformation}
+
+Anomaly measures can be combined with one or more transformations of the data extracted by the filters, in order speed up or otherwise improve the analysis.
+
+One commonly used transformation for real-valued data is the Z-normalization transform, which modifies a sequence to exhibit zero empirical mean and unit variance.\footnote{It has been argued that comparing time series is meaningless unless the Z-normalization transform is used~\cite{keogh5}. However, this is doubtful, as the transform masks sequences that are anomalous because they are displaced or scaled relative to other sequences.}
+
+Transformations that transform the data into some alternative domain can also be useful. For example, transformations based on the \emph{discrete Fourier transform} (DFT) and \emph{discrete wavelet transform} (DWT)~\cite{fu} have shown promise. The DFT is parameter-free, while the DWT can be said to be parametrised due to the variety of possible wavelet transforms.
+
+Furthermore, transformations for real-valued data which produce symbolic sequences are very important, since they enable the application of symbolic approaches to real-valued sequences. While several such transformations exist, \emph{symbolic aggregate approximation} (SAX)~\cite{sax} is by far the most commonly used. This transformation takes two integral parameters which control the degrees of numerosity and dimensionality reduction, respectively.
+
 \subsubsection{The anomaly measure}
-Since the anomaly measures work in the two oracles presented above (they both assign a real-valued anomaly score to a sequence based on its dissimilarity to a set of sequences), we treat them simultaneously.
+As mentioned previously, the anomaly measure is likely the most important component. It is also the component with the largest number of interesting choices. Properly defining the required parameters for all of the anomaly measures discussed in Section~\ref{sect:prev_research} is not possible within the scope of this report, so we only discuss the most interesting anomaly measures here as indicated in~\cite{chandola3}.
 
-TODO: rewrite this
+Distance-based anomaly measures, and especially kNN-based anomaly measures are among these. Essentially, the kNN anomaly measure takes two parameters: a distance measure (defined on the specific type of sequences under consideration) $\delta$, and a k-value $k \in \mathbb{N}$, and given a sequence $\mathbf{x}$ and a set of context sequences $\{\mathbf{x}_1, \mathbf{x}_2, \dots, \mathbf{x}_n\}$, computes the anomaly score by taking the average of the $k$ smallest $\delta(\mathbf{x}, \mathbf{x}_i)$.
 
-As is typically the case, the anomaly measure is the central part of any problem derived from Task~\ref{task:main}. Formally, any anomaly measure that takes an evaluation vector and a set of reference vectors as inputs and returns a real value is a candidate for $M$. We now discuss a few such anomaly measures, following the classification in Section~\ref{sect:anomaly_measures}.
+Thus, the kNN anomaly measure has the two parameters $k$ and $\delta$, where $\delta$ may (for instance) be any of the distance measures discussed in Section~\ref{sect:prev_research}. Note that the distance measure, in turn, may be parametrised (for instance, the Minkowski measure has an order parameter $p \in \mathbb{R}^+$).
 
-As previously mentioned, \emph{statistical measures} are attractive due to the theoretical justification they provide for anomaly detection. However, there are certain factors which render their use problematic for the task at hand. Firstly, as discussed in Section~\ref{sect:goals} we can not assume that the data belongs to any particular distribution, so parametric problem formulations are not appropriate.
+TODO: discuss parameters for distance measures?
 
-Since few non-parametric methods for anomaly detection in sequential data take into account either collective anomalies or context, and since naive approaches are likely to suffer from convergence issues,~\footnote{For instance, the expectation maximization algorithm for Gaussian mixture models has convergence issues in high dimensions with low sample sizes.} suggesting appropriate non-parametric methods for Task~\ref{task:main} is difficult. However, in the case of Task~\ref{task:frequency}, point anomalies (for which statistical methods have been extensively researched) are more interesting than collective anomalies, and statistical methods are likely to be applicable.
+Classifier-based anomaly measures are also interesting. A support vector machine-based anomaly measure is shown to perform especially well in~\cite{chandola3}. Support vector machine-based anomaly measures take a few parameters: a kernel, eventual kernel parameters, and a soft margin parameter $C$. For a more thorough discussion of support vector machines and their parameters, see~\cite{TODO}.
 
-\emph{Information theoretical measures} are potentially interesting for the chosen task. However, most such methods are essentially distance-based anomaly measures equipped with information theoretical distance measures. For this reason, we do not cover information theoretical anomaly measures separately from distance-based measures.
+Note that further anomaly measures can be constructed by chopping up the input sequences $\mathbf{x}$ and $\{\mathbf{x}_1, \mathbf{x}_2, \dots, \mathbf{x}_n\}$ into smaller sequences using filters before applying the distance measure, and then aggregating the result into an anomaly score using some aggregation function. This is done for the support vector machine anomaly measure in~\ref{chandola3}.
 
-Instead, we emphasize \emph{distance-based measures}. Since they encompass a wide variety of methods, which have been shown to be successful for related problems~\cite{chandola3}, we dedicate Section~\ref{sect:distance_mezurez} to discussing them.
-
-\emph{Classifier-based measures} have also shown promise for related problems~\cite{chandola3}. Generally, any \emph{one}-class classifier is potentially suitable for the task; see~\cite{classification} for an exhaustive discussion on this topic. While one-class classifiers produce binary output, appropriate anomaly vectors can still be produced through a suitable choice of $A$.
-
-\emph{Predictive model-based measures} are also potentially interesting. They are naturally well suited for novelty detection, since they necessarily implement a novelty context. However, existing predictive model-based approaches seem to be lacking for the task at hand. In~\cite{chandola3}, a leading model-based novelty detection method~\cite{perkins2} which uses an autoregressive model was shown to perform poorly on a related task. While models are important as a means of reducing the computational complexity of methods, they appear appropriate to consider only as approximations to other anomaly measures.
-
-\paragraph{Distance measures}
-\label{sect:distance_mezurez}
-
-When dealing with distance-based problems, the choice of distance measure has a profound impact on which anomalies are detected. As with other aspects of anomaly measures, however, drawing conclusions about method efficacy through theory alone is difficult; implementing, evaluating, and comparing several measures will likely prove more instructive.
-
-Possible interesting measures include the \emph{Euclidean distance} or the more general \emph{Minkowski distance}; measures focused on time series, such as \emph{dynamic time warping}~\cite{dtw}, \emph{autocorrelation measures}~\cite{autocorrelation}, or the \emph{Linear Predictive Coding cepstrum}~\cite{cepstrum}; or measures developed for other types of series (accessible through transforms), such as the \emph{compression-based dissimilarity measure}~\cite{keogh2}.
-
-Additionally, the choice of distance measure affects how well methods can be optimized. Naive approaches to distance-based problems typically scale prohibitively slowly, and are not suitable for large amounts of data. Optimizations typically involve exploiting properties of the distance measure in order to reduce the number of distance computations (for instance, the commonly used k-d trees algorithm requires the distance to be a Minkowski metric).
-
-\paragraph{Transformations}
-Anomaly measures can be combined with one or more transformations of the data extracted by the filters to speed up the analysis or to facilitate the detection of certain types of anomalies.
-
-One commonly used data transformation is the Z-normalization transform, which modifies a sequence to exhibit zero empirical mean and unit variance. It has been argued that comparing time series is meaningless unless the Z-normalization transform is used~\cite{keogh5}. However, this is doubtful, as the transform masks anomalies consisting of subsequences similar to their surrounding data but with different variance or mean.
-
-Transformations that transform the data into some alternative domain can also be useful. For example, transformations based on the \emph{discrete Fourier transform} (DFT) and \emph{discrete wavelet transform} (DWT)~\cite{fu} have shown promise for sequential anomaly detection.
-
-Furthermore, transformations for real-valued data which produce symbolic sequences are very important, since they enable the application of symbolic approaches (studied in bioinfomatics, for instance) to real-valued sequences. While several such transformations exist, \emph{symbolic aggregate approximation} (SAX)~\cite{sax} is by far the most commonly used.
+TODO: maybe mention a few other anomaly measures
 
 \subsubsection{The aggregation method}
 \label{sect:aggregation_method}
 
-Once the extracted subsequences have been assigned anomaly scores, they must be aggregated into an anomaly vector. We here suggest a few aggregation functions, or \emph{aggregators}, on the form
+Once the extracted subsequences have been assigned anomaly scores, they must be aggregated into an anomaly vector. We here suggest a few aggregation functions, on the form
 \[
-    A(\{(a_1, I_1), (a_2, I_2), \dots, (a_k, I_k) \}) = (f(\{a_i: 1 \in I_i\}), f(\{a_i: 2 \in I_i\}), \dots, f(\{a_i: n \in I_i\})),
+    A(\{(\mathbf{a}_1, \mathbf{i}_1), (\mathbf{a}_2, \mathbf{i}_2), \dots, (\mathbf{a}_k, \mathbf{i}_k) \}) = (f(\{\mathbf{a}_i: 1 \in \mathbf{i}_i\}), f(\{\mathbf{a}_i: 2 \in \mathbf{i}_i\}), \dots, f(\{\mathbf{a}_i: n \in \mathbf{i}_i\})),
 \]
-where $I_i$ are intervals, $a_i$ are assigned anomaly scores, and $f$ is some aggregator-specific function acting on real-valued vectors to produce a real-valued aggregate score. The \emph{maximum}, \emph{minimum}, \emph{median} and \emph{mean} of the values in $S$ all constitute reasonable choices of $f(S)$. Aggregators using any of these four functions will be referred to as maximum, minimum, median, and mean aggregators, respectively.
+where $I_i$ are intervals, $a_i$ are assigned anomaly scores, and $f$ is some aggregation method-specific function that produced a real-valued aggregate score from a set of real-valued element-wise scores. The \emph{maximum}, \emph{minimum}, \emph{median} and \emph{mean} of the values in $S$ all constitute reasonable choices of $f(S)$. Aggregation functions using any of these four functions will be referred to as maximum, minimum, median, and mean aggregators, respectively. Each of these is parameter-free.
 
 \section{Evaluation}
 \label{ch:evaluation}
