@@ -63,27 +63,28 @@ In summary, then, the parameter space for this evaluation is parametrized by $(k
 \section{Error measures}
 \label{sect:error_measure_eval}
 
-\begin{figure}[H]
-    \centering
-    \begin{subfigure}[b]{0.32\textwidth}
-        \centering
-        \includegraphics[trim = 30mm 5mm 35mm 15mm, clip, width=\textwidth]{resources/normalized_euclidean_error_heat_map}
-        \caption{Normalized Euclidean error}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.32\textwidth}
-        \centering
-        \includegraphics[trim = 30mm 5mm 35mm 15mm, clip, width=\textwidth]{resources/equal_support_error_heat_map}
-        \caption{Equal support error}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.32\textwidth}
-        \centering
-        \includegraphics[trim = 30mm 5mm 35mm 15mm, clip, width=\textwidth]{resources/full_support_error_heat_map}
-        \caption{Full support error}
-    \end{subfigure}
-    \caption{Heat maps showing the normalized values of $\epsilon(A(\Theta_{k, w}^*, s^*), a^*)$ for the three errors and $k, w = 1,2,\dots,50$. Blue and red correspond to low and high error values, respectively.}
-\label{fig:error_heat_maps}
-    \vspace{-10pt}
-\end{figure}
+% TODO: figure out how to use subfigure with the nada template
+% \begin{figure}[H]
+%     \centering
+%     \begin{subfigure}[b]{0.32\textwidth}
+%         \centering
+%         \includegraphics[trim = 30mm 5mm 35mm 15mm, clip, width=\textwidth]{resources/normalized_euclidean_error_heat_map}
+%         \caption{Normalized Euclidean error}
+%     \end{subfigure}
+%     \begin{subfigure}[b]{0.32\textwidth}
+%         \centering
+%         \includegraphics[trim = 30mm 5mm 35mm 15mm, clip, width=\textwidth]{resources/equal_support_error_heat_map}
+%         \caption{Equal support error}
+%     \end{subfigure}
+%     \begin{subfigure}[b]{0.32\textwidth}
+%         \centering
+%         \includegraphics[trim = 30mm 5mm 35mm 15mm, clip, width=\textwidth]{resources/full_support_error_heat_map}
+%         \caption{Full support error}
+%     \end{subfigure}
+%     \caption{Heat maps showing the normalized values of $\epsilon(A(\Theta_{k, w}^*, s^*), a^*)$ for the three errors and $k, w = 1,2,\dots,50$. Blue and red correspond to low and high error values, respectively.}
+% \label{fig:error_heat_maps}
+%     \vspace{-10pt}
+% \end{figure}
 
 In Section~\ref{sect:evaluation_measures}, three error measures for anomaly vectors were introduced: the normalized Euclidean error $\epsilon_E$, the equal support error $\epsilon_{ES}$, and the full support error $\epsilon_{FS}$. Since these methods have not been previously studied with regards to sequential anomaly detection, how well they capture the intuitive notions of accuracy must be assessed before they can be used to evaluate problem formulations.
 
@@ -313,7 +314,7 @@ Finally, while the evaluation time ought to be roughly independent of $w$ (or pr
     \begin{minipage}{0.5\textwidth}
         \centering
         \includegraphics[width=\textwidth]{resources/s_error}
-        \caption{\small{Errors of the anomaly vectors $A_s$.\\ \quad}}
+        % \caption{\small{Errors of the anomaly vectors $A_s$.\\ \quad}}
 \label{fig:s_error}
     \end{minipage}%
     \begin{minipage}{0.5\textwidth}

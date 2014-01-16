@@ -15,7 +15,6 @@ TODO:
 - 56. Time series: Rewrite implementation section.
 - 58. Framework: Merge Training Data and Anomaly Types into a single factor.
 - 59. Abstract: Rewrite it.
-- 60. All: Use the CSC LaTeX template.
 - 61. Time series: Incorporate Important tasks section into other sections.
 
 DONE:
@@ -63,4 +62,5 @@ DONE:
 - 51. Time series: Write an introduction.
 - 52. Time series: Replace Presentation section with a shorter section introducing time series.
 - 53. Time series: Add section summarising existing research.
-g 57. Framework/Time series: Move dimensionality discussion to Framework.
+- 57. Framework/Time series: Move dimensionality discussion to Framework.
+- 60. All: Use the CSC LaTeX template.

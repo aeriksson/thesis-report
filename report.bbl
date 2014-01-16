@@ -1,176 +1,176 @@
 \begin{thebibliography}{1}
 
 \bibitem{machine_data}
-\sc{Curt Monash}
+Curt Monash
 \newblock "Three broad categories of data."
 \newblock \url{http://www.dbms2.com/2010/01/17/three-broad-categories-of-data/}
 
 \bibitem{splunk}
-\sc{Splunk, Inc.}
+Splunk, Inc.
 \newblock "Big Data Analytics."
 \newblock \url{http://www.splunk.com/view/big-data/SP-CAAAGFH}
 
 \bibitem{chandola}
-\sc{Chandola, Varun, Arindam Banerjee, and Vipin Kumar.}
+Chandola, Varun, Arindam Banerjee, and Vipin Kumar.
 \newblock "Anomaly detection: A survey."
 \newblock \emph{ACM Computing Surveys (CSUR)} 41.3 (2009): 15.
 
 \bibitem{chandola2}
-\sc{Chandola, Varun, Arindam Banerjee, and Vipin Kumar.}
+Chandola, Varun, Arindam Banerjee, and Vipin Kumar.
 \newblock "Anomaly detection for discrete sequences: A survey."
 \newblock \emph{Knowledge and Data Engineering, IEEE Transactions on} 24.5 (2012): 823-839.
 
 \bibitem{chandola3}
-\sc{Chandola, Varun.}
+Chandola, Varun.
 \newblock "Anomaly detection for symbolic sequences and time series data."
 \newblock \emph{Dissertation.} University of Minnesota, 2009.
 
 \bibitem{hodge}
-\sc{Hodge, Victoria, and Jim Austin.}
+Hodge, Victoria, and Jim Austin.
 \newblock A survey of outlier detection methodologies.
 \newblock \emph{Artificial Intelligence Review} 22.2 (2004): 85-126.
 
 \bibitem{agyemang}
-\sc{Agyemang, Malik, Ken Barker, and Rada Alhajj.}
+Agyemang, Malik, Ken Barker, and Rada Alhajj.
 \newblock "A comprehensive survey of numeric and symbolic outlier mining techniques."
 \newblock \emph{Intelligent Data Analysis} 10.6 (2006): 521-538.
 
 \bibitem{barnett}
-\sc{Barnett, Vic, and Toby Lewis.}
+Barnett, Vic, and Toby Lewis.
 \newblock "Outliers in statistical data."
 \newblock \emph{Wiley Series in Probability and Mathematical Statistics. Applied Probability and Statistics, Chichester: Wiley, 1984, 3nd} (1984).
 
 \bibitem{hawkins}
-\sc{Hawkins, D. M.}
+Hawkins, D. M.
 \newblock "Identification of outliers."
 \newblock \emph{Monographs on Applied Probability and Statistics}, (1980).
 
 \bibitem{leroy}
-\sc{Leroy, Annick M., and Peter J. Rousseeuw.}
+Leroy, Annick M., and Peter J. Rousseeuw.
 \newblock "Robust regression and outlier detection."
 \newblock \emph{Wiley Series in Probability and Mathematical Statistics, New York: Wiley}, (1987).
 
 \bibitem{bakar}
-\sc{Bakar, Zuriana Abu, et al.}
+Bakar, Zuriana Abu, et al.
 \newblock "A comparative study for outlier detection techniques in data mining."
 \newblock \emph{Cybernetics and Intelligent Systems, 2006 IEEE Conference on.} IEEE, 2006.
 
 \bibitem{phua}
-\sc{Phua, Clifton, Damminda Alahakoon, and Vincent Lee.}
+Phua, Clifton, Damminda Alahakoon, and Vincent Lee.
 \newblock "Minority report in fraud detection: classification of skewed data."
 \newblock \emph{ACM SIGKDD Explorations Newsletter} 6.1 (2004): 50-59.
 
 \bibitem{joshi}
-\sc{Joshi, Mahesh V., Ramesh C. Agarwal, and Vipin Kumar.}
+Joshi, Mahesh V., Ramesh C. Agarwal, and Vipin Kumar.
 \newblock "Predicting rare classes: Can boosting make any weak learner strong?."
 \newblock \emph{Proceedings of the eighth ACM SIGKDD international conference on Knowledge discovery and data mining.} ACM, 2002.
 
 \bibitem{dasgupta}
-\sc{Dasgupta, Dipankar, and Fernando Nino.}
+Dasgupta, Dipankar, and Fernando Nino.
 \newblock "A comparison of negative and positive selection algorithms in novel pattern detection."
 \newblock \emph{Systems, Man, and Cybernetics, 2000 IEEE International Conference on.} Vol. 1. IEEE, 2000.
 
 %%\bibitem{singh1}
-%%\sc{Markou, Markos, and Sameer Singh.}
+%%Markou, Markos, and Sameer Singh.
 %%\newblock "Novelty detection: a review—part 1: statistical approaches."
 %%\newblock \emph{Signal Processing} 83.12 (2003): 2481-2497.
 %%
 %%\bibitem{singh2}
-%%\sc{Markou, Markos, and Sameer Singh.}
+%%Markou, Markos, and Sameer Singh.
 %%\newblock "Novelty detection: a review—part 2:: neural network based approaches."
 %%\newblock \emph{Signal Processing} 83.12 (2003): 2499-2521.
 
 %\bibitem{ids1}
-%\sc{Lazarevic, Aleksandar, et al.}
+%Lazarevic, Aleksandar, et al.
 %\newblock "A comparative study of anomaly detection schemes in network intrusion detection."
 %\newblock \emph{Proceedings of the third SIAM international conference on data mining.} Vol. 3. Society for Industrial \& Applied, 2003.
 %
 %\bibitem{ids2}
-%\sc{Patcha, Animesh, and Jung-Min Park.}
+%Patcha, Animesh, and Jung-Min Park.
 %\newblock "An overview of anomaly detection techniques: Existing solutions and latest technological trends."
 %\newblock \emph{Computer Networks 51.12 (2007):} 3448-3470.
 %
 %\bibitem{ids3}
-%\sc{Lee, Wenke, Salvatore J. Stolfo, and Kui W. Mok}
+%Lee, Wenke, Salvatore J. Stolfo, and Kui W. Mok
 %\newblock "A data mining framework for building intrusion detection models."
 %\newblock \emph{Security and Privacy, 1999. Proceedings of the 1999 IEEE Symposium on.} IEEE, 1999.
 %
 %\bibitem{fraud1}
-%\sc{Fawcett, Tom, and Foster Provost.}
+%Fawcett, Tom, and Foster Provost.
 %\newblock "Adaptive fraud detection."
 %\newblock \emph{Data mining and knowledge discovery} 1.3 (1997): 291-316.
 %
 %\bibitem{fraud2}
-%\sc{Bolton, Richard J., and David J. Hand.}
+%Bolton, Richard J., and David J. Hand.
 %\newblock "Statistical fraud detection: A review."
 %\newblock \emph{Statistical Science} (2002): 235-249.
 %
 %\bibitem{sensor1}
-%\sc{Du, Wenliang, Lei Fang, and Ning Peng.}
+%Du, Wenliang, Lei Fang, and Ning Peng.
 %\newblock "Lad: Localization anomaly detection for wireless sensor networks."
 %\newblock \emph{Journal of Parallel and Distributed Computing} 66.7 (2006): 874-886.
 %
 %\bibitem{sensor2}
-%\sc{Bhuse, Vijay, and Ajay Gupta.}
+%Bhuse, Vijay, and Ajay Gupta.
 %\newblock "Anomaly intrusion detection in wireless sensor networks."
 %\newblock \emph{Journal of High Speed Networks} 15.1 (2006): 33-51.
 
 \bibitem{song}
-\sc{Song, Xiuyao, et al.}
+Song, Xiuyao, et al.
 \newblock "Conditional anomaly detection."
 \newblock \emph{Knowledge and Data Engineering, IEEE Transactions on} 19.5 (2007): 631-645.
 
 \bibitem{eskin}
-\sc{Eskin, Eleazar, et al.}
+Eskin, Eleazar, et al.
 \newblock "A geometric framework for unsupervised anomaly detection: Detecting intrusions in unlabeled data." (2002).
 
 %\bibitem{abraham}
-%\sc{Abraham, Bovas, and Alice Chuang.}
+%Abraham, Bovas, and Alice Chuang.
 %\newblock "Outlier detection and time series modeling."
 %\newblock \emph{Technometrics} 31.2 (1989): 241-248.
 %
 %\bibitem{bianco}
-%\sc{Bianco, Ana Maria, et al.}
+%Bianco, Ana Maria, et al.
 %\newblock "Outlier detection in regression models with arima errors using robust estimates."
 %\newblock \emph{Journal of Forecasting} 20.8 (2001): 565-579.
 
 \bibitem{meckesheimer}
-\sc{Basu, Sabyasachi, and Martin Meckesheimer.}
+Basu, Sabyasachi, and Martin Meckesheimer.
 \newblock "Automatic outlier detection for time series: an application to sensor data."
 \newblock \emph{Knowledge and Information Systems} 11.2 (2007): 137-154.
 
 %\bibitem{perkins1}
-%\sc{Ma, Junshui, and Simon Perkins.}
+%Ma, Junshui, and Simon Perkins.
 %\newblock "Time-series novelty detection using one-class support vector machines."
 %\newblock \emph{Neural Networks, 2003. Proceedings of the International Joint Conference on.} Vol. 3. IEEE, 2003.
 
 \bibitem{perkins2}
-\sc{Ma, Junshui, and Simon Perkins.}
+Ma, Junshui, and Simon Perkins.
 \newblock "Online novelty detection on temporal sequences."
 \newblock \emph{Proceedings of the ninth ACM SIGKDD international conference on Knowledge discovery and data mining.} ACM, 2003.
 
 %\bibitem{fox}
-%\sc{Fox, Anthony J.}
+%Fox, Anthony J.
 %\newblock "Outliers in time series."
 %\newblock \emph{Journal of the Royal Statistical Society. Series B (Methodological)} (1972): 350-363.
 
 %\bibitem{chuang}
-%\sc{Abraham, Bovas, and Alice Chuang.}
+%Abraham, Bovas, and Alice Chuang.
 %\newblock "Outlier detection and time series modeling."
 %\newblock \emph{Technometrics} 31.2 (1989): 241-248.
 
 %\bibitem{box}
-%\sc{Abraham, Bovas, and George EP Box.}
+%Abraham, Bovas, and George EP Box.
 %\newblock "Bayesian analysis of some outlier problems in time series."
 %\newblock \emph{Biometrika} 66.2 (1979): 229-236.
 
 %\bibitem{galeano}
-%\sc{Galeano, Pedro, Daniel Peña, and Ruey S. Tsay.}
+%Galeano, Pedro, Daniel Peña, and Ruey S. Tsay.
 %\newblock "Outlier detection in multivariate time series by projection pursuit."
 %\newblock \emph{Journal of the American Statistical Association} 101.474 (2006): 654-669.
 
 %\bibitem{zeevi}
-%\sc{Meir, Assaf J. Zeevi Ron, and Robert J. Adler.}
+%Meir, Assaf J. Zeevi Ron, and Robert J. Adler.
 %\newblock "Time series prediction using mixtures of experts."
 %\newblock \emph{Advances in Neural Information Processing Systems 9: Proceedings of The 1996 Conference.} Vol. 9. MIT Press, 1997.
 
@@ -180,7 +180,7 @@
 \newblock \emph{Proceedings of the 1994 ACM SIGMOD International Conference on Management of Data.} ACM, 1994
 
 \bibitem{faloutsos2}
-\sc{Yi, Byoung-Kee, and Christos Faloutsos.}
+Yi, Byoung-Kee, and Christos Faloutsos.
 \newblock "Fast time sequence indexing for arbitrary Lp norms."
 \newblock \emph{Proceedings of the 26th international conference on very large databases}, 2000.
 
@@ -195,284 +195,284 @@
 %\newblock \emph{Biometrika} 87.4 (2000): 789-804.
 
 %\bibitem{yi}
-%\sc{Yi, B-K., et al.}
+%Yi, B-K., et al.
 %\newblock "Online data mining for co-evolving time sequences."
 %\newblock \emph{Data Engineering, 2000. Proceedings. 16th International Conference on}. IEEE, 2000.
 
 \bibitem{ye}
-\sc{Ye, Nong.}
+Ye, Nong.
 \newblock "A markov chain model of temporal behavior for anomaly detection."
 \newblock \emph{Proceedings of the 2000 IEEE Systems, Man, and Cybernetics Information Assurance and Security Workshop.} Vol. 166. Oakland: IEEE, 2000.
 
 %\bibitem{hirsh}
-%\sc{Weiss, Gary M., and Haym Hirsh.}
+%Weiss, Gary M., and Haym Hirsh.
 %\newblock "Learning to predict rare events in event sequences."
 %\newblock \emph{Proceedings of the Fourth International Conference on Knowledge Discovery and Data Mining.} 1998.
 
 %\bibitem{vilalta}
-%\sc{Vilalta, Ricardo, and Sheng Ma.}
+%Vilalta, Ricardo, and Sheng Ma.
 %\newblock "Predicting rare events in temporal domains."
 %\newblock \emph{Data Mining, 2002. ICDM 2003. Proceedings. 2002 IEEE International Conference on.} IEEE, 2002.
 
 %\bibitem{ilgun}
-%\sc{Ilgun, Koral, Richard A. Kemmerer, and Phillip A. Porras.}
+%Ilgun, Koral, Richard A. Kemmerer, and Phillip A. Porras.
 %\newblock "State transition analysis: A rule-based intrusion detection approach."
 %\newblock \emph{Software Engineering, IEEE Transactions on} 21.3 (1995): 181-199.
 
 \bibitem{blender}
-\sc{Blender, R., K. Fraedrich, and F. Lunkeit.}
+Blender, R., K. Fraedrich, and F. Lunkeit.
 \newblock "Identification of cyclone-track regimes in the North Atlantic."
 \newblock \emph{Quarterly Journal of the Royal Meteorological Society} 123.539 (1997): 727-741.
 
 \bibitem{sekar1}
-\sc{Sekar, R., et al.}
+Sekar, R., et al.
 \newblock "A fast automaton-based method for detecting anomalous program behaviors."
 \newblock \emph{Security and Privacy, 2001. S\&P 2001. Proceedings. 2001 IEEE Symposium on.} IEEE, 2001.
 
 \bibitem{sekar2}
-\sc{Sekar, R., et al.}
+Sekar, R., et al.
 \newblock "Specification-based anomaly detection: a new approach for detecting network intrusions."
 \newblock \emph{Proceedings of the 9th ACM conference on Computer and communications security.} ACM, 2002.
 
 \bibitem{keogh1}
-\sc{Keogh, Eamonn, et al.}
+Keogh, Eamonn, et al.
 \newblock "Finding the most unusual time series subsequence: algorithms and applications."
 \newblock \emph{Knowledge and Information Systems} 11.1 (2007): 1-27.
 
 \bibitem{keogh2}
-\sc{Keogh, Eamonn, Stefano Lonardi, and Chotirat Ann Ratanamahatana.}
+Keogh, Eamonn, Stefano Lonardi, and Chotirat Ann Ratanamahatana.
 \newblock "Towards parameter-free data mining."
 \newblock \emph{Proceedings of the tenth ACM SIGKDD international conference on Knowledge discovery and data mining.} ACM, 2004.
 
 \bibitem{keogh3}
-\sc{Keogh, Eamonn, et al.}
+Keogh, Eamonn, et al.
 \newblock "Locally adaptive dimensionality reduction for indexing large time series databases."
 \newblock \emph{ACM SIGMOD Record.} Vol. 30. No. 2. ACM, 2001.
 
 \bibitem{keogh4}
-\sc{Keogh, Eamonn, et al.}
+Keogh, Eamonn, et al.
 \newblock "Dimensionality reduction for fast similarity search in large time series databases."
 \newblock \emph{Knowledge and information Systems} 3.3 (2001): 263-286.
 
 \bibitem{keogh5}
-\sc{Keogh, Eamonn, and Shruti Kasetty.}
+Keogh, Eamonn, and Shruti Kasetty.
 \newblock "On the need for time series data mining benchmarks: a survey and empirical demonstration."
 \newblock \emph{Data Mining and Knowledge Discovery} 7.4 (2003): 349-371.
 
 %\bibitem{keogh6}
-%\sc{Chiu, Bill, Eamonn Keogh, and Stefano Lonardi.}
+%Chiu, Bill, Eamonn Keogh, and Stefano Lonardi.
 %\newblock "Probabilistic discovery of time series motifs."
 %\newblock \emph{Proceedings of the ninth ACM SIGKDD international conference on Knowledge discovery and data mining.} ACM, 2003.
 
 \bibitem{geurts}
-\sc{Geurts, Pierre.}
+Geurts, Pierre.
 \newblock "Pattern extraction for time series classification."
 \newblock \emph{Principles of Data Mining and Knowledge Discovery} (2001): 115-127.
 
 \bibitem{fu}
-\sc{Fu, Ada, et al.}
+Fu, Ada, et al.
 \newblock "Finding time series discords based on haar transform."
 \newblock \emph{Advanced Data Mining and Applications} (2006): 31-41.
 
 \bibitem{bu}
-\sc{Bu, Yingyi, et al.}
+Bu, Yingyi, et al.
 \newblock "Wat: Finding top-k discords in time series database."
 \newblock \emph{SDM}, 2007.
 
 \bibitem{yankov}
-\sc{Yankov, Dragomir, Eamonn Keogh, and Umaa Rebbapragada.}
+Yankov, Dragomir, Eamonn Keogh, and Umaa Rebbapragada.
 \newblock "Disk aware discord discovery: Finding unusual time series in terabyte sized datasets."
 \newblock \emph{Data Mining, 2007. ICDM 2007. Seventh IEEE International Conference on.} IEEE, 2007.
 
 %\bibitem{zaki}
-%\sc{Sequeira, Karlton, and Mohammed Zaki.}
+%Sequeira, Karlton, and Mohammed Zaki.
 %\newblock "ADMIT: anomaly-based data mining for intrusions."
 %\newblock \emph{Proceedings of the eighth ACM SIGKDD international conference on Knowledge discovery and data mining.} ACM, 2002.
 %
 \bibitem{lin}
-\sc{Lin, Jessica, et al.}
+Lin, Jessica, et al.
 \newblock "Approximations to magic: Finding unusual medical time series."
 \newblock \emph{Computer-Based Medical Systems, 2005. Proceedings. 18th IEEE Symposium on.} IEEE, 2005.
 
 %\bibitem{hotsax}
-%\sc{Keogh, Eamonn, Jessica Lin, and Ada Fu.}
+%Keogh, Eamonn, Jessica Lin, and Ada Fu.
 %\newblock "HOT SAX: Efficiently finding the most unusual time series subsequence."
 %\newblock \emph{Data Mining, Fifth IEEE International Conference on.} IEEE, 2005.
 %
 \bibitem{density_estimation}
-\sc{Venables, William N., and Brian D. Ripley.}
+Venables, William N., and Brian D. Ripley.
 \newblock ch. 5.6 "Density Estimation"
 \newblock \emph{Modern applied statistics with S.} Springer, 2002.
 
 %\bibitem{smyth}
-%\sc{Smyth, Padhraic.}
+%Smyth, Padhraic.
 %\newblock "Clustering sequences with hidden Markov models."
 %\newblock \emph{Advances in neural information processing systems} (1997): 648-654.
 
 \bibitem{chan}
-\sc{Chan, Philip K., and Matthew V. Mahoney.}
+Chan, Philip K., and Matthew V. Mahoney.
 \newblock "Modeling multiple time series for anomaly detection."
 \newblock \emph{Data Mining, Fifth IEEE International Conference on.} IEEE, 2005.
 
 %%\bibitem{pca1}
-%%\sc{Jolliffe, Ian.}
+%%Jolliffe, Ian.
 %%\newblock \emph{Principal component analysis.} John Wiley \& Sons, Ltd, 2005.
 %%
 %%\bibitem{pca2}
-%%\sc{Pearson, Karl.}
+%%Pearson, Karl.
 %%\newblock "LIII. On lines and planes of closest fit to systems of points in space."
 %%\newblock \emph{The London, Edinburgh, and Dublin Philosophical Magazine and Journal of Science} 2.11 (1901): 559-572.
 
 \bibitem{forrest}
-\sc{Warrender, Christina, Stephanie Forrest, and Barak Pearlmutter.}
+Warrender, Christina, Stephanie Forrest, and Barak Pearlmutter.
 \newblock "Detecting intrusions using system calls: Alternative data models."
 \newblock \emph{Security and Privacy, 1999. Proceedings of the 1999 IEEE Symposium on.} IEEE, 1999.
 
 \bibitem{sax}
-\sc{Lin, Jessica, et al.}
+Lin, Jessica, et al.
 \newblock "Experiencing SAX: a novel symbolic representation of time series."
 \newblock \emph{Data Mining and Knowledge Discovery} 15.2 (2007): 107-144.
 
 %\bibitem{andre}
-%\sc{André-Jönsson, Henrik, and Dushan Badal.}
+%André-Jönsson, Henrik, and Dushan Badal.
 %\newblock "Using signature files for querying time-series data."
 %\newblock \emph{Principles of Data Mining and Knowledge Discovery} (1997): 211-220.
 %
 %\bibitem{daw}
-%\sc{Daw, C. Stuart, Charles Edward Andrew Finney, and Eugene R. Tracy.}
+%Daw, C. Stuart, Charles Edward Andrew Finney, and Eugene R. Tracy.
 %\newblock "A review of symbolic analysis of experimental data."
 %\newblock \emph{Review of Scientific Instruments} 74.2 (2003): 915-930.
 %
 %\bibitem{huang}
-%\sc{Huang, Yun-Wu, and Philip S. Yu.}
+%Huang, Yun-Wu, and Philip S. Yu.
 %\newblock "Adaptive query processing for time-series data."
 %\newblock \emph{Proceedings of the fifth ACM SIGKDD international conference on Knowledge discovery and data mining.} ACM, 1999.Huang, Yun-Wu, and Philip S. Yu.
 %
 %\bibitem{ultsch}
-%\sc{Mörchen, Fabian, and Alfred Ultsch.}
+%Mörchen, Fabian, and Alfred Ultsch.
 %\newblock "Optimizing time series discretization for knowledge discovery."
 %\newblock \emph{Proceedings of the eleventh ACM SIGKDD international conference on Knowledge discovery in data mining}. ACM, 2005.
 %
 \bibitem{fabian}
-\sc{Mörchen, Fabian.}
+Mörchen, Fabian.
 \newblock "Time series knowledge mining."
 \newblock \emph{Dissertation}. 2006, Philipps-Universität Marburg.
 
 %\bibitem{salvador}
-%\sc{Salvador, Stan, Philip Chan, and John Brodie.}
+%Salvador, Stan, Philip Chan, and John Brodie.
 %\newblock "Learning states and rules for time series anomaly detection."
 %\newblock \emph{Proc. 17th Intl. FLAIRS Conf.} 2004.
 
 %\bibitem{moore}
-%\sc{Davies, Scott, and Andrew Moore.}
+%Davies, Scott, and Andrew Moore.
 %\newblock "Mix-nets: Factored mixtures of gaussians in Bayesian networks with mixed continuous and discrete variables."
 %\newblock \emph{Proceedings of the Sixteenth conference on Uncertainty in artificial intelligence.} Morgan Kaufmann Publishers Inc., 2000.
 
 %%\bibitem{ghoting1}
-%%\sc{Ghoting, Amol, Matthew Eric Otey, and Srinivasan Parthasarathy.}
+%%Ghoting, Amol, Matthew Eric Otey, and Srinivasan Parthasarathy.
 %%\newblock "LOADED: Link-based outlier and anomaly detection in evolving data sets."
 %%\newblock \emph{Data Mining, 2004. ICDM'04. Fourth IEEE International Conference on.} IEEE, 2004.
 %%
 %%\bibitem{ghoting2}
-%%\sc{Ghoting, Amol, Srinivasan Parthasarathy, and Matthew Eric Otey.}
+%%Ghoting, Amol, Srinivasan Parthasarathy, and Matthew Eric Otey.
 %%\newblock "Fast mining of distance-based outliers in high-dimensional datasets."
 %%\newblock \emph{Data Mining and Knowledge Discovery} 16.3 (2008): 349-364.
 %%
 %%\bibitem{johnson}
-%%\sc{Johnson, Theodore, Ivy Kwok, and Raymond Ng.}
+%%Johnson, Theodore, Ivy Kwok, and Raymond Ng.
 %%\newblock "Fast computation of 2-dimensional depth contours."
 %%\newblock \emph{Proc. KDD.} Vol. 1998. 1998.
 %
 %%\bibitem{spiros}
-%%\sc{Papadimitriou, Spiros, et al.}
+%%Papadimitriou, Spiros, et al.
 %%\newblock "LOCI: Fast outlier detection using the local correlation integral."
 %%\newblock \emph{Data Engineering, 2003. Proceedings. 19th International Conference on.} IEEE, 2003.
 %
 %%\bibitem{breunig}
-%%\sc{Breunig, Markus M., et al.}
+%%Breunig, Markus M., et al.
 %%\newblock "LOF: identifying density-based local outliers."
 %%\newblock \emph{ACM Sigmod Record.} Vol. 29. No. 2. ACM, 2000.
 %
 %\bibitem{jagadish}
-%\sc{Jagadish, H. V., Nick Koudas, and S. Muthukrishnan.}
+%Jagadish, H. V., Nick Koudas, and S. Muthukrishnan.
 %\newblock "Mining deviants in a time series database."
 %\newblock \emph{Proceedings of the 25th International Conference on Very Large Databases.} 1999.
 
 %\bibitem{ming}
-%\sc{Li, Ming, et al.}
+%Li, Ming, et al.
 %\newblock "The similarity metric."
 %\newblock \emph{Information Theory, IEEE Transactions on} 50.12 (2004): 3250-3264.
 %
 %%\bibitem{mdl}
-%%\sc{Grünwald, Peter D. }
+%%Grünwald, Peter D. 
 %%\newblock \emph{The minimum description length principle.} MIT press, 2007.
 %
 \bibitem{xiang}
-\sc{Lee, Wenke, and Dong Xiang.}
+Lee, Wenke, and Dong Xiang.
 \newblock "Information-theoretic measures for anomaly detection."
 \newblock \emph{Security and Privacy, 2001. S\&P 2001. Proceedings. 2001 IEEE Symposium on.} IEEE, 2001.
 
 %%\bibitem{information-theory}
-%%\sc{Cover, Thomas M., and Joy A. Thomas.}
+%%Cover, Thomas M., and Joy A. Thomas.
 %%\newblock \emph{Elements of information theory.} Wiley-interscience, 2006.
 
 %\bibitem{immunology}
-%\sc{Dasgupta, Dipankar, and Stephanie Forrest.}
+%Dasgupta, Dipankar, and Stephanie Forrest.
 %\newblock "Novelty detection in time series data using ideas from immunology."
 %\newblock \emph{Proceedings of the International Conference on Intelligent Systems}. 1996.
 %
 %\bibitem{immunology2}
-%\sc{González, Fabio A., and Dipankar Dasgupta.}
+%González, Fabio A., and Dipankar Dasgupta.
 %\newblock "Anomaly detection using real-valued negative selection."
 %\newblock \emph{Genetic Programming and Evolvable Machines} 4.4 (2003): 383-403.
 
 %\bibitem{tarzan}
-%\sc{Keogh, Eamonn, Stefano Lonardi, and Bill'Yuan-chi Chiu.}
+%Keogh, Eamonn, Stefano Lonardi, and Bill'Yuan-chi Chiu.
 %\newblock "Finding surprising patterns in a time series database in linear time and space."
 %\newblock \emph{Proceedings of the eighth ACM SIGKDD international conference on Knowledge discovery and data mining.} ACM, 2002.
 
 \bibitem{gopala}
-\sc{Chen, Scott, and Ponani Gopalakrishnan.}
+Chen, Scott, and Ponani Gopalakrishnan.
 \newblock "Speaker, environment and channel change detection and clustering via the Bayesian Information Criterion."
 \newblock \emph{Proc. DARPA Broadcast News Transcription and Understanding Workshop.} 1998.
 
 \bibitem{radke}
-\sc{Radke, Richard J., et al.}
+Radke, Richard J., et al.
 \newblock "Image change detection algorithms: a systematic survey."
 \newblock \emph{Image Processing, IEEE Transactions on} 14.3 (2005): 294-307.
 
 \bibitem{clustering}
-\sc{Jain, Anil K., M. Narasimha Murty, and Patrick J. Flynn.}
+Jain, Anil K., M. Narasimha Murty, and Patrick J. Flynn.
 \newblock "Data clustering: a review."
 \newblock \emph{PACM computing surveys (CSUR)} 31.3 (1999): 264-323.
 
 \bibitem{motif}
-\sc{Sandve, Geir Kjetil, and Finn Drablos.}
+Sandve, Geir Kjetil, and Finn Drablos.
 \newblock "A survey of motif discovery methods in an integrated framework."
 \newblock \emph{Biol Direct} 1.11 (2006).
 
 \bibitem{motif2}
-\sc{Tanaka, Yoshiki, Kazuhisa Iwamoto, and Kuniaki Uehara.}
+Tanaka, Yoshiki, Kazuhisa Iwamoto, and Kuniaki Uehara.
 \newblock "Discovery of time-series motif from multi-dimensional data based on mdl principle."
 \newblock \emph{Machine Learning} 58.2 (2005): 269-300.
 
 \bibitem{cepstrum}
-\sc{Kalpakis, Konstantinos, Dhiral Gada, and Vasundhara Puttagunta.}
+Kalpakis, Konstantinos, Dhiral Gada, and Vasundhara Puttagunta.
 \newblock "Distance measures for effective clustering of ARIMA time-series." 
 \newblock \emph{Data Mining, 2001. ICDM 2001, Proceedings IEEE International Conference on.} IEEE, 2001.
 
 \bibitem{classification}
-\sc{Tax, David MJ.}
+Tax, David MJ.
 \newblock "One-class classification."
 \newblock \emph{Dissertation.} University of Delft, 2001.
 
 \bibitem{autocorrelation}
-\sc{Wang, Changzhou, and X. Sean Wang.}
+Wang, Changzhou, and X. Sean Wang.
 \newblock "Supporting content-based searches on time series via approximation."
 \newblock \emph{Scientific and Statistical Database Management, 2000. Proceedings. 12th International Conference on.} IEEE, 2000.
 
 \bibitem{dtw}
-\sc{Berndt, D., and James Clifford.}
+Berndt, D., and James Clifford.
 \newblock "Using dynamic time warping to find patterns in time series."
 \newblock \emph{KDD workshop.} Vol. 10. No. 16. 1994.
 

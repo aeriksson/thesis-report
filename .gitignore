@@ -1,8 +1,9 @@
 output/
-!output/report.pdf
 bkup/
 papers/
 resources/
 *.swo
 *.swp
 *~
+*.pdf
+!output/report.pdf

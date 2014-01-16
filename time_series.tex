@@ -40,7 +40,7 @@ Naturally, categorical, discrete, and real-valued sequences have all been studie
 
 Essentially, the dataset formats in sequences can be classified into two main categories: \emph{Detecting anomalous sequences in a set of sequences}, and \emph{detecting anomalous subsequences in a long sequence}.
 
-Detecting anomalous sequences in a set of sequences is mainly interesting when the dataset consists of large amounts of similar sequences, for instance when analyzing user command records (as in Figure~\ref{fig:calls}). Many methods dealing with such applications have been published~\cite{blender}\cite{chan}\cite{ye}\cite{forrest}\cite{sekar1}\cite{sekar2}. More thorough reviews are found in~\cite{chandola2} and~\cite{chandola3}.
+Detecting anomalous sequences in a set of sequences is mainly interesting when the dataset consists of large amounts of similar sequences, for instance when analyzing user command records (as in Figure~\ref{fig:calls}). Many methods dealing with such applications have been published~\cite{blender}~\cite{chan}~\cite{ye}~\cite{forrest}~\cite{sekar1}~\cite{sekar2}. More thorough reviews are found in~\cite{chandola2} and~\cite{chandola3}.
 
 Detecting anomalous subsequences in a long sequence has not been as extensively researched, and is mainly interesting for monitoring and diagnostics applications~\cite{TODO}. TODO: write something more here 
 
@@ -109,13 +109,29 @@ The detection of point anomalies in sequences is a well-researched problem, and 
 
 The ordering present in sequences naturally give rise to a few interesting contexts when dealing with anomalous subsequences. A few interesting such contexts are now presented using context functions (assuming a sequence $S = (s_1, s_2, \dots, s_n)$).
 
-As mentioned in the previous chapter, contexts can be used to generalise the concept of training data. Semi-supervised anomaly detection corresponds to the \emph{semi-supervised context} $C((s_i, s_{i+1}, \dots, s_j)) = T$, where $T$ is some training set data. Many semi-supervised sequence and time series anomaly detection problems data have been studied~\cite{TODO}.
+As mentioned in the previous chapter, contexts can be used to generalise the concept of training data. Semi-supervised anomaly detection corresponds to the \emph{semi-supervised context}
+\[
+    C((s_i, s_{i+1}, \dots, s_j)) = T,
+\]
+where $T$ is some training set data. Many semi-supervised sequence and time series anomaly detection problems data have been studied~\cite{TODO}.
 
-Likewise, traditional unsupervised anomaly detection for subsequences can be formulated using the \emph{trivial context} $C((s_i, s_{i+1}, \dots, s_j)) = \{ (s_1, s_2, \dots, s_{i-1}), (s_{j+1}, s_{j+2}, \dots, s_n) \}$. This corresponds to finding either point anomalies or collective anomalies in a sequence, and is studied in~\cite{TODO}.
+Likewise, traditional unsupervised anomaly detection for subsequences can be formulated using the \emph{trivial context}
+\[
+    C((s_i, s_{i+1}, \dots, s_j)) = \{ (s_1, s_2, \dots, s_{i-1}), (s_{j+1}, s_{j+2}, \dots, s_n) \}.
+\]
+This corresponds to finding either point anomalies or collective anomalies in a sequence, and is studied in~\cite{TODO}.
 
-Another interesting context is the \emph{novelty context} $C((s_i, s_{i+1}, \dots, s_j)) = \{(s_1, s_2, \dots, s_{i-1})\}$. This context captures the task of novelty detection in sequences, which has been researched in~\cite{TODO}.
+Another interesting context is the \emph{novelty context}
+\[
+    C((s_i, s_{i+1}, \dots, s_j)) = \{(s_1, s_2, \dots, s_{i-1})\}.
+\]
+This context captures the task of novelty detection in sequences, which has been researched in~\cite{TODO}.
 
-Finally, a family of \emph{local contexts} $C_{n,m}((s_i, s_{i+1}, \dots, s_j)) = \{(s_{i-m}, s_{i-m+1}, \dots, s_{i-1}), (s_{j+1}, s_{j+2}, \ldots s_{j+n})\}$ may be defined, in order to handle anomalies such as the one in the last sequence of figure~\ref{fig:anomaly_types}.
+Finally, a family of \emph{local contexts}
+\[
+    C_{n,m}((s_i, s_{i+1}, \dots, s_j)) = \{(s_{i-m}, s_{i-m+1}, \dots, s_{i-1}), (s_{j+1}, s_{j+2}, \ldots s_{j+n})\}
+\]
+may be defined, in order to handle anomalies such as the one in the last sequence of figure~\ref{fig:anomaly_types}.
 
 It should finally be noted that contextual collective anomalies in sequences do not appear to have been researched.
 
@@ -203,7 +219,7 @@ Before the oracle can be specified, the dataset and solution formats, as well as
 
 For the task of detecting anomalous subsequences in a long sequence, the input dataset consists of a sequence $\mathbf{x} \in X^n$, for some set $X$. The corresponding anomaly scores are a vector $\mathbf{a} \in \mathbb{R}^n$.
 
-The components can then be defined as (where $S(\mathbf{x})$ is the set of indexed subsequences of some sequence $\mathbf{x}$, e.g. $S((x_1, x_2)) = \{((x_1), (1)), ((x_2), (2)), ((x_1, x_2), (1, 2))\}$):
+The components can then be defined as (where $S(\mathbf{x})$ is the set of indexed subsequences of $\mathbf{x}$, e.g. $S((x_1, x_2)) = \{((x_1), (1)), ((x_2), (2)), ((x_1, x_2), (1, 2))\}$):
 \begin{description}
     \item[The evaluation filter $F_E$]maps a sequence $\mathbf{x}$ to a subset of $S(\mathbf{x})$ to be evaluated.
     \item[The context function $C$]maps a sequence $\mathbf{x}$ and a vector of indices $\mathbf{i} \in \mathbb{Z}_n^m$ (representing a subsequence) to a subset of $S(\mathbf{x})$ (representing the context of $\mathbf{i}$).
@@ -234,7 +250,7 @@ where $\{(\mathbf{x}_1, \mathbf{s}_1), (\mathbf{x}_2, \mathbf{s}_2), \dots, (\ma
 \subsection{An oracle for anomalous sequence problems}
 \label{sect:sequence_oracle}
 
-For the chosen task of detecting anomalous sequences in a set of sequences, the input dataset consists of a collection $(\mathbf{x}_1, \mathbf{x}_2, \dots, \mathbf{x}_n) \in X^n$, for some arbitrary set $X$ (typically $X$ is the set all vectors of some specific length over some other set $Y$). The corresponding anomaly scores are a vector $\mathbf{a} \in \mathbb{R}^n$.
+For the chosen task of detecting anomalous sequences in a set of sequences, the input dataset consists of a collection $(\mathbf{x}_1, \mathbf{x}_2, \dots, \mathbf{x}_n) \in X^n$, for some arbitrary set $X$ (typically $X$ is the set all vectors of some specific length over some set $Y$). The corresponding anomaly scores are a vector $\mathbf{a} \in \mathbb{R}^n$.
 
 The components can then be defined as:
 \begin{description}
@@ -257,7 +273,7 @@ The corresponding optimisation problem is to find
 \[
     \argmin_{(C, T, M)} \sum_i \epsilon^*(\mathcal{S}_i, O(\mathcal{X}_i, (C, T, M))),
 \]
-where $\{(\mathcal{X}_1, \mathcal{S}_1), (\mathcal{X}_2, \mathcal{S}_2), \dotS, (\mathcal{X}_k, \mathcal{S}_k)\}$ is some set of labeled training data.
+where $\{(\mathcal{X}_1, \mathcal{S}_1), (\mathcal{X}_2, \mathcal{S}_2), \dots, (\mathcal{X}_k, \mathcal{S}_k)\}$ is some set of labeled training data.
 
 \subsection{Components}
 \label{sect:components}
@@ -270,7 +286,10 @@ The evaluation filter takes a sequence and extracts subsequences from it to be u
 
 The reference filter works like the evaluation filter, but extracts subsequences from the context instead of from the evaluation series. As with the evaluation filter, there is typically little reason to use any filter other than a sliding window filter as the reference filter. If the anomaly measure does not require items of equal length, the reference filter can be ignored, i.e.\ $F_R(T) = T$.
 
-Sliding windows are parametrised by the \emph{step length} $s \in \mathbb{N}$ and \emph{window width} $w \in \mathbb{N}$; i.e.\ any sliding window filter will have the form $F(\mathbf{x}) = \{(x_1, x_2, \dots, x_w), (x_{s+1}, x_{s+2}, \dots, x_{s+w}), \dots, (x_{n-w}, x_{n-w+1}, \dots, x_{n})\}$.
+Sliding windows are parametrised by the \emph{step length} $s \in \mathbb{N}$ and \emph{window width} $w \in \mathbb{N}$; i.e.\ any sliding window filter will have the form
+\[
+    F(\mathbf{x}) = \{(x_1, x_2, \dots, x_w), (x_{s+1}, x_{s+2}, \dots, x_{s+w}), \dots, (x_{n-w}, x_{n-w+1}, \dots, x_{n})\}.
+\]
 
 \subsubsection{The context function}
 
@@ -319,52 +338,51 @@ where $I_i$ are intervals, $a_i$ are assigned anomaly scores, and $f$ is some ag
 \section{Evaluation}
 \label{ch:evaluation}
 
-TODO: rewrite this
+Two aspects of the optimisation problem which have have not yet been discussed are the training data and error measure. Since these aspects essentially define the objective function used to guide the optimisation, it is important that they are chosen appropriately. In this section, they are discussed in detail.
 
-As mentioned throughout this report, thorough empirical evaluations on real-world datasets are pivotal to elucidating the performance characteristics of problems, methods and tasks. In this chapter, two factors important when performing evaluations are discussed: evaluation data and error measures.
-
-\subsection{Evaluation data}
+\subsection{Training data}
 \label{sect:evaluation_data}
 
-For obvious reasons, the choice of evaluation data largely determines the outcome of the evaluation. Since the spaces of possible evaluation items for most anomaly detection methods are enormous (often $\mathbb{R}^n$ for very large $n$), there is little hope of performing exhaustive analyses. Furthermore, while only relatively small subsets of these spaces are typically interesting for any given application, discovering and delimiting these subsets is usually impossible, due to a limited understanding of the processes underlying the data.
+As has been previously mentioned, while the optimisation should ideally operate on an expected error over some stream of data, this is typically infeasible. In practice, the optimisation must be performed over some pre-selected set of training data. If the optimisation is to be truly useful, this training data must also somehow be \emph{labeled} (otherwise, the optimisation would hinge on some built-in assumption of what constitutes an anomaly and what does not, which is problematic concerning the subjective nature of anomaly detection in applications).
 
-For this reason, it is critical that a set of evaluation items is used, containing as representative a selection of relevant phenomena exhibited by data items in the application domain as possible. Since such sets can not be obtained through purely synthetic means (arguably, the existence of a model that could accurately create such sets would presuppose a level of understanding of the application domain that would render anomaly detection unnecessary), real-world data must be used.
+For the task of finding anomalous subsequences, this means that the training data should ideally consist of a set of sequences and corresponding label vectors $\{(\mathbf{x}_1, \mathbf{s}_1), (\mathbf{x}_2, \mathbf{s}_2), \dots, (\mathbf{x}_k, \mathbf{s}_k)\}$, where $\mathbf{x}_i \in X^{n_i}$, $\mathbf{s}_i \in \mathbb{R}^{n_i}$.
 
-However, simply obtaining real-world data is \emph{not} sufficient; if the anomalies in the data are not labeled, no baseline can be established, and the evaluation is useless. In the context of Task~\ref{task:main}, this means that, along with each sequence $S_i = (s_1, s_2, \dots, s_n)$ in the evaluation set, a reference anomaly vector $A_i = (a_1, a_2, \dots, a_n)$ must be provided, where each $a_i$ indicates how anomalous $s_i$ is.
+However, obtaining real-valued anomaly scores that are meaningful objective is typically not possible (again, due to the subjective nature of the subject). A more realistic scenario would be for the $\mathbf{s}_i$ to instead be binary vectors, i.e.\ $\mathbf{s}_i \in {\{0,1\}}^n$. Such vectors can typically readily be constructed for any dataset by a domain expert.
 
-When appropriate data is unavailable, there are two possible options. The first is to generate both series and anomalies, in order to create completely artificial sequences. The second is to take unlabeled real-world datasets and superposition artificially generated anomalies onto them.
+If labeled training data can not be provided, an interesting alternative is to superimpose artificial anomalies onto a set of unlabeled training sequences. With this approach, the objective function measures how well problem formulations discern regular data from the application from similar data that contains (specific, artificial) anomalies. Of course, unlike with true labeled training data, there is no guarantee that the superimposed anomalies are relevant to the application, so the optimisation might still not lead to an accurate problem formulation.
 
-Due to how greatly the dataset affects the outcome of anomaly detection analyses, the first approach is not recommended, other than as a means of gaining a qualitative understanding of tasks, problems or methods. Even if the artificial data appears highly similar to data from the target domain, it is very unlikely that the ``best'' methods for such data and real-world data will be the same. The second approach, while also problematic, can at least suggest how well methods are able to recognize normal data from the target domain from anomalous data.
-
-In the initial stages of this project, it was hoped that sufficient data would be obtained by searching the internet and existing papers on the subject, or by examining sequences of machine data with a domain expert. However, enough suitable series could not be obtained through these means, and it became clear that completely artificial data would have to be used in the evaluation. Because such data can not adequately capture the intricacies of the target domain, a qualitative evaluation of implemented methods was performed instead. Still, since a major goal of the project was to facilitate evaluations using real-world data, utilities for performing appropriate evaluations were added to \texttt{ad-eval}.
- 
 \subsection{Error measures}
 \label{sect:evaluation_measures}
 
-For any evaluation, some way of assessing the accuracy of the produced anomaly vectors is required. Formally, given a sequence $S = (s_1, s_2, \dots, s_n)$, a reference anomaly vector $R = (r_1, r_2, \dots, r_n) \in \mathbb{R}^{n}$ and a method that takes a sequence as input and produces an anomaly vector $A = (a_1, a_2, \dots, a_n) \in \mathbb{R}^{n}$, a function $\epsilon(A, R): \mathbb{R}^n \times \mathbb{R}^n \rightarrow \mathbb{R}^+$ is required that assigns a similarity score, or \emph{error measure} to $A$ based on how well it approximates $R$.
+As mentioned in section~\ref{sect:problem_formulation}, an error measure must be defined, which given a sequence and an anomaly vector judges how accurately the anomaly vector captures anomalies in the sequence. Ideally, this error measure should consist of an objective and infallible domain expert, who carefully judges each sequence $\mathbf{x}_i$ and anomaly vector $\mathbf{a}_i \in \mathbb{R}^n$. Failing this, the next best thing would be to have a reference anomaly vector $\mathbf{r}_i$, with which $\mathbf{a}_i$ can be compared.
 
-Considering the difficulties involved in obtaining any kind of labeled sequences, and the fact that ranking elements based on relative degrees of anomalousness is even more difficult, it is reasonable to assume that all reference anomaly vectors are binary: $R = (r_1, r_2, \dots, r_n) \in {\{0,1\}}^n$. Since any method derived from Task~\ref{task:main} produces real-valued output, this means that error measures should work by comparing one binary and one real-valued vector; i.e.\ $\epsilon{(A, R)}: \mathbb{R}^{n} \times {\{0,1\}}^n \rightarrow \mathbb{R}^+$.
+As mentioned above, realistically such reference anomaly vectors would have to be binary. Since we have made the assumption that problems have real-valued vectors as solutions, our error measures thus have to operate on one binary and one real-valued vector, i.e.\ they must be functions $\epsilon: \mathbb{R}^n \times {\{0, 1\}}^n \rightarrow {\mathbb{R}}^+$. To our knowledge, such error methods have not been previously studied, so we now suggest a few such error measures.
 
-Since constant factors do not affect how accurate an anomaly vector appears, any $\epsilon(A, A_R)$ should be invariant under uniform translations and scalings of $A$. This means that regular real-valued distance measures (such as the Euclidean distance) are not applicable. This can be avoided by normalizing $A$---by scaling and translating it such that all its elements lie in $[0,1]$---before computing the distance. For instance, the \emph{normalized Euclidean error} $\epsilon_E$, given by
+Since constant factors do not affect how accurate an anomaly vector appears, any error measure $\epsilon(\mathbf{a}, \mathbf{r})$ should be invariant under uniform translations and scalings of $\mathbf{a}$. This means that regular real-valued distance measures (such as the Euclidean distance) are not applicable. This can be avoided by normalizing $\mathbf{a}$---by scaling and translating it such that all its elements lie in $[0,1]$---before computing the distance. For instance, we can define the \emph{normalized Euclidean error} $\epsilon_E$, given by
 \[
-    \epsilon_E = \sqrt{\sum_{i=1}^n {(\frac{a_i-a_{\min}}{a_{\max}-a_{\min}} - r_i)}^2}
+    \epsilon_E = \sqrt{\sum_{i=1}^n {(\frac{a_i-a_{\min}}{a_{\max}-a_{\min}} - r_i)}^2},
 \]
-ought to constitute a reasonable choice of error measure. However, since $\epsilon_E$ is equally sensitive to the behaviour of $A$ on normal elements as on anomalous elements, how $A$ treats normal elements (which should not matter unless they have high anomaly scores) can significantly harm the accuracy of this measure, as we will see in~\ref{sect:error_measure_eval}. 
+which ought to constitute a reasonable choice of error measure. However, since $\epsilon_E$ is as sensitive to the accuracy of $\mathbf{a}$ on normal elements as on anomalous elements, comparatively high or low values of $\mathbf{a}$ for non-anomalous elements may distort this error measure.
 
-This pitfall can be avoided by converting $A$ to a binary string $A_B$ as well, and using a binary distance between $A_B$ and $R$ as the error measure. Since this is equivalent to selecting a set $S_A$ of indexes of elements from $A$ and comparing it to the set $S_R$ of indexes of nonzero elements of $R$, such error measures can be seen as evaluating the performance of $A_B$ on Task~\ref{task:anomalous_set}, which is reasonable considering the binary nature of $R$.
+This pitfall can be avoided by converting $\mathbf{a}$ to a binary string $\mathbf{a}_B \in {\{0, 1\}}^n$ as well, and using a binary distance between $\mathbf{a}_B$ and $\mathbf{r}$ as the error measure. Since this is equivalent to selecting a set $S_\mathbf{a}$ of indexes of elements from $\mathbf{a}$ and comparing it to the set $S_\mathbf{r}$ of indexes of nonzero elements of $\mathbf{r}$, this can be seen as converting the anomaly score to a set of anomalous elements, and comparing this set to a reference set.
 
-What remains is to decide how $A_B$ should be constructed from $A$ and what binary distance measure to use. Since the individual elements of $S_R$ have equal weight, and since the locations of discrepancies between $A_B$ and $R$ are not important, the \emph{Hamming distance} $\delta_H$ constitutes a suitable choice of distance measure. Furthermore, $A_B$ should be constructed such that $\forall i, j \leq n: a_i < a_j \wedge i \in S_A \Rightarrow j \in S_A$, which is equivalent to setting a threshold $a_{\min} \leq \tau \leq a_{\max}$ and letting $A_B$ be given by 
+What remains is to decide how $\mathbf{a}_B$ should be constructed from $\mathbf{a}$ and what binary distance measure to use. If all elements in the sequence are to be assigned equal importance, the natural choice of distance measure is the \emph{Hamming distance} $\delta_H$~\cite{TODO}. Similarly, for $\mathbf{a}_B$ it ought to hold that $\forall i, j \leq n: a_i < a_j \wedge i \in S_A \Rightarrow j \in S_\mathbf{a}$, which is equivalent to setting a threshold $a_{\min} \leq \tau \leq a_{\max}$ and letting $\mathbf{a}_B$ be given by:
 \[
-    A_B = (a_{b,1}, a_{b,2}, \dots, a_{b,n}), \quad \text{where } a_{b,i} = \left\{ 
+    \mathbf{a}_B = (a_{B,1}, a_{B,2}, \dots, a_{B,n}), \quad \text{where } a_{B,i} = \left\{
     \begin{array}{l l}
         0 & \quad \text{if } a_i < \tau \\
         1 & \quad \text{if } a_i \geq \tau
     \end{array} \right..
 \]
 
-This gives rise to a number of possible $A_B$ equal to the number of distinct values of $A$. We here propose two error measures corresponding to different choices of $\tau$, both based on $\delta_H$. The \emph{equal support error} $\epsilon_{ES}$ corresponds to setting $\tau$ such that $|S_A| = |S_R|$, while the \emph{full support error} $\epsilon_{FS}$ corresponds to choosing the largest $\tau$ such that $\forall i: i \in S_R \Rightarrow i \in S_A$. While other choices (such as choosing the $\tau$ that minimizes $\delta_H$) might also be appropriate, only these two were selected in order to limit the scope of the discussion.
+This gives rise to a number of possible error measures, based on how the threshold value $\tau$ is set. We define the following measures:
+\begin{description}
+    \item[The equal support error $\epsilon_{ES}$,]which corresponds to setting $\tau$ such that $|S_\mathbf{a}| = |S_\mathbf{r}|$.
+    \item[The full support error $\epsilon_{FS}$,]which corresponds to using the largest $\tau$ for which $\forall i: i \in S_\mathbf{r} \Rightarrow i \in S_\mathbf{a}$.
+    \item[The optimal support error $\epsilon_{BS}$,]which corresponds to using the $\tau$ that gives the smallest error value.
+\end{description}
 
-Since the three error measures proposed above are expected to produce different results, and since they have not been (to the author's knowledge) used in the context of series anomaly detection, they should be evaluated empirically before being used. Such an evaluation is performed in Section~\ref{sect:error_measure_eval}.
+Since the error measures discussed above have not previously been studied in the context of series anomaly detection, an empirical evaluation of their performance is performed in Section~\ref{sect:error_measure_eval}.
 
 \section{Implementation}
 \label{ch:implementation}

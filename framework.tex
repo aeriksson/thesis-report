@@ -46,15 +46,9 @@ Anomaly detection in mixed datasets is relatively poorly understood; typically, 
 It is fairly common to use \emph{numerosity reduction} techniques to convert discrete data to categorical data, or to compress categorical data. An example of numerosity reduction in time series is shown in figure~\ref{fig:types_of_data}.
 
 \begin{wrapfigure}{r}{0.5\textwidth}
-    \vspace{-25pt}
-    \begin{center}
-        \leavevmode
-        \includegraphics[trim = 20mm 3mm 20mm 5mm, clip, width=0.5\textwidth]{resources/multi_vs_univariate}
-    \end{center}
-    \vspace{-15pt}
+    \includegraphics[width=0.5\textwidth]{resources/multi_vs_univariate}
     \caption{{\small Two sine curves regarded as two separate univariate time series (dotted lines) and as one multivariate time series (solid lines).}}
 \label{fig:multi_vs_univariate}
-    \vspace{-25pt}
 \end{wrapfigure}
 
 Another important classification considers the dimensionality of the data points. A distinction is typically made between univariate and multivariate data. A dataset $D = (d_1, d_2, \dots, d_n)$ is said to be \emph{univariate} if the $d_i$ are scalars, and \emph{multivariate} if the $d_i$ are vectors of length greater than one. An illustration of uni- and multivariate time series is shown in figure~\ref{fig:multi_vs_univariate}.
@@ -82,14 +76,10 @@ In applications there is usually additional structure present, such as orderings
 \label{sect:training_data}
 
 \begin{wrapfigure}{r}{0.5\textwidth}
-    \vspace{-25pt}
-    \begin{center}
-        \leavevmode
-        \includegraphics[width=0.5\textwidth]{resources/supervision}
-    \end{center}
+    \centering
+    \includegraphics[width=0.5\textwidth]{resources/supervision}
     \caption{{\small Euler diagram of the available training data for the four types of supervision.}}
 \label{fig:supervision}
-    \vspace{-40pt}
 \end{wrapfigure}
 
 As is customary in most areas of machine learning, anomaly detection problems are classified as either \emph{supervised}, \emph{semi-supervised} or \emph{unsupervised}~\footnote{Note that we here use the convention of~\cite{chandola}, and take supervised learning to mean that both classes of training data are available, and semi-supervised to mean that only one class of training data is available. Conventially, supervised learning is taken to mean any learning from training data, and semi-supervised learning is taken to mean that both labeled and unlabeled data is available~\cite{TODO}.} based on the availability of \emph{training} (or \emph{training}) data. In contrast to the input dataset, the training data acts as a baseline, defining what constitutes normal and anomalous.
@@ -159,7 +149,7 @@ with width $w$ and step $s$. This filter is the most reasonable choice for seque
 
 It is further useful to, in addition to the evaluation set $E$, also construct a training set with regards to which to compare the elements in $E$. If this training set is taken to be fixed, then it can be seen as the training dataset used in a semi-supervised problem. However, we can generalise this concept to other setups by using a context function to associate different training sets with different $e_i \in E$. In this case, with each element $e_i \in E$ should be associated one such set $R_{e_i}$, consisting of subsets of the context $C(e_i)$. Analogously with evaluation filters, \emph{training filters} can be introduced, which simplify the construction of such $R_{e_i}$. Since the context is a set of sets, these should have the form $\mathcal{F}(e_i): C(e_i) \mapsto R_{e_i} \subset 2^D$. As an example of a training filter, consider the sliding window training filter for sequences with length $w$ and step $s$:
 \[
-    \mathcal{F}_R(e_i) = \bigcup_{(c_1, c_2, \dots, c_n) \in C(e_i)}\{(c_1, c_2, \dots, c_w), (c_{s+1}, c_{s+2}, \dots, c_{s+w}), \dots, (c_{n-w}, c_{n-w+1}, \dots, c_{n})\}.
+    \mathcal{F}_R(e_i) = \quad\bigcup_{\mathclap{(c_1, c_2, \dots, c_n) \in C(e_i)}}\quad\{(c_1, c_2, \dots, c_w), (c_{s+1}, c_{s+2}, \dots, c_{s+w}), \dots, (c_{n-w}, c_{n-w+1}, \dots, c_{n})\}.
 \]
 
 A schematic illustration of the operation on a sequence of sliding window filters and a local context is shown in Figure~\ref{fig:filters}. Here, an evaluation set consisting of $19$ subsequences of a sequence of length $40$ is constructed. With each element $e_i \in E$ is associated a training set $R_{e_i}$ (as is seen in the figure, $R_{e_{10}} = 10$). An anomaly detection algorithm could compare each of the $e_i$ to the corresponding $R_{e_i}$ in turn in order to detect contextual collective anomalies (defined below).
@@ -226,7 +216,7 @@ In many applications, relative anomaly rankings are not essential, and a list of
 
 Producing a set of anomalous elements is typically appropriate when the goal of the analysis is to highlight potential anomalies to an analyst. It can also be problematic, however, since it requires some sort of threshold to be used to determine whether items are marked as anomalous or not.
 
-A solution format that has received a lot of attention in recent years (\cite{keogh1},~\cite{bu},~\cite{yankov},~\cite{fu},~\cite{lin}) is \emph{discords}, or the set of the $k$ most anomalous elements in $A$. Since discords are less computationally intensive to produce than other solution formats, they are appropriate for analysis of very large datasets. However, discords might not be appropriate for anomaly detection in large amounts of small datasets, or for monitoring applications.
+A solution format that has received a lot of attention in recent years (\cite{keogh1},~\cite{bu},\\\cite{yankov},~\cite{fu},~\cite{lin}) is \emph{discords}, or the set of the $k$ most anomalous elements in $A$. Since discords are less computationally intensive to produce than other solution formats, they are appropriate for analysis of very large datasets. However, discords might not be appropriate for anomaly detection in large amounts of small datasets, or for monitoring applications.
 
 The most general solution format is to associate \emph{anomaly scores} with the elements of $A$. Typically, anomaly scores are positive real-valued numbers, and higher anomaly scores signify more anomalous elements. Of course, the fact that anomaly scores outputs have size $|A|$ means that they are comparatively computationally intensive to produce, especially if the size of $A$ is larger than the size of the original dataset. If this is the case, anomaly scores can be produced for the elements of the input dataset by weighing the anomaly scores for $A$.
 
