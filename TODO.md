@@ -1,24 +1,28 @@
 TODO:
 =====
-- 1. Finish project plan.
 - 11. Framework: add more references.
 - 22. Background: Provide example of papers which appear to target the same problem but don't.
 - 25. Come up with a more interesting name than ad-eval. Anomaly detection researcher?
-- 26. Introduction: update chapter references.
 - 29. Background: clean up Problem Definition.
-- 32. All: Change uses of "-ize" to "-ise".
+- 32. All: Settle on British or American english.
 - 37. All: Replace tasks with factor choices.
 - 39. Framework: Clean up Dataset Format section.
 - 44. Framework: Clean up Solution Format section.
-- 54. Time series: Rewrite oracle section.
-- 55. Time series: Rewrite evaluation section.
 - 56. Time series: Rewrite implementation section.
 - 58. Framework: Merge Training Data and Anomaly Types into a single factor.
 - 59. Abstract: Rewrite it.
 - 61. Time series: Incorporate Important tasks section into other sections.
+- 62. All: Use vector notation for sequences everywhere.
+- 63. Framework: Make sure filters are defined the same way as in the time series chapter.
+- 64. All: Fix formatting issues caused by CSC:s LaTeX template.
+- 65. Results: Rewrite it.
+- 66. Discussion: Rename to conclusions.
+- 67. Discussion: Rename Post-Mortem to Summary.
+- 67. Discussion: Rewrite it.
 
 DONE:
 =====
+- 1. Finish project plan [ABANDONED].
 - 2. Change name to "A Framework for Anomaly Detection with Applications to Machine-Generated Data"
 - 3. Reshape chapters to Introduction, Background, Framework, Application, Results, Discussion
 - 4. Incorporate Foreword into Introduction
@@ -31,7 +35,7 @@ DONE:
 - 12. Framework: be more clear when introducing novel concepts.
 - 13. Reformulate the framework with the search problem in mind
 - 14. Framework: Clarify semi-supervised/supervised convention - add citation.
-- 15. Framework: Rename reference data -> (labeled) training data.
+- 15. Framework: Rename reference data -> (labelled) training data.
 - 16. Time series: Remove sequence extraction section.
 - 17. Time series: Add more formal section on sequence extraction [ABANDONED].
 - 18. Fix lint errors
@@ -39,6 +43,7 @@ DONE:
 - 21. Add survey references to the Anomaly Detection section
 - 23. Remove rough edges resulting from the incorporation of Foreword into Introduction
 - 24. Introduction: update to reflect new chapter structure.
+- 26. Introduction: update chapter references.
 - 27. Rename "The Component Framework" to "A Framework for Anomaly Detection".
 - 28. Change "tasks" chapter name to "framework".
 - 30. Talk about distinction between problems and methods in Background.
@@ -62,5 +67,7 @@ DONE:
 - 51. Time series: Write an introduction.
 - 52. Time series: Replace Presentation section with a shorter section introducing time series.
 - 53. Time series: Add section summarising existing research.
+- 54. Time series: Rewrite oracle section.
+- 55. Time series: Rewrite evaluation section.
 - 57. Framework/Time series: Move dimensionality discussion to Framework.
 - 60. All: Use the CSC LaTeX template.
