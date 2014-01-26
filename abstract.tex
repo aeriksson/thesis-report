@@ -1,9 +1,11 @@
 \begin{abstract}
 
-Anomaly detection is an important issue in data mining and analysis, with applications in almost every area in science, technology and business that involves data collection. The development of general anomaly detection techniques can therefore have a large impact on data analysis across many domains. In spite of this, little work has been done to consolidate the different approaches to the subject.
+Anomaly detection is an important issue in data mining and analysis, with applications in almost every area of science, technology and business that involves data collection. The development of generally applicable anomaly detection methods can therefore have a large impact on data analysis across many domains. However, due to the highly subjective nature of anomaly detection, there are no generally applicable methods, and for each new application a large number of possible methods must be evaluated. In spite of this, little work has been done to automate the process of anomaly detection research for new applications.
 
-In this report, this deficiency is addressed in the target domain of temporal machine-generated data. To this end, new theory for comparing and reasoning about anomaly detection tasks and methods is introduced, which facilitates a problem-oriented rather than a method-oriented approach to the subject. Using this theory as a basis, the possible approaches to anomaly detection in the target domain are discussed, and a set of interesting anomaly detection tasks is highlighted.
+In this report, a novel approach to anomaly detection research is presented, in which the task of finding appropriate anomaly detection methods for some specific application is formulated as an optimisation problem over a set of possible problem formulations. In order to facilitate the application of this optimisation problem to applications, a high-level framework for classifying and reasoning about anomaly detection problems is also introduced.
 
-One of these tasks is selected for further study: \emph{the detection of subsequences that are anomalous with regards to their context within long univariate real-valued sequences}. A framework for relating methods derived from this task is developed, and is used to derive new methods and an algorithm for solving a large class of derived problems. Finally, a software implementation of this framework along with a set of evaluation utilities is discussed and demonstrated.
+An application of this optimisation problem to anomaly detection in sequences is also presented; algorithms for solving general anomaly detection problems in sequences are given, along with tractable formulations of the optimisation problem for the main anomaly detection tasks in sequences.
+
+Finally, a software implementation of the optimisation problem for detecting anomalous subsequences in long real-valued sequences is presented, along with some preliminary performance results.
 
 \end{abstract}

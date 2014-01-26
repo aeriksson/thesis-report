@@ -10,7 +10,6 @@ TODO:
 - 44. Framework: Clean up Solution Format section.
 - 56. Time series: Rewrite implementation section.
 - 58. Framework: Merge Training Data and Anomaly Types into a single factor.
-- 59. Abstract: Rewrite it.
 - 61. Time series: Incorporate Important tasks section into other sections.
 - 62. All: Use vector notation for sequences everywhere.
 - 63. Framework: Make sure filters are defined the same way as in the time series chapter.
@@ -70,4 +69,5 @@ DONE:
 - 54. Time series: Rewrite oracle section.
 - 55. Time series: Rewrite evaluation section.
 - 57. Framework/Time series: Move dimensionality discussion to Framework.
+- 59. Abstract: Rewrite it.
 - 60. All: Use the CSC LaTeX template.
