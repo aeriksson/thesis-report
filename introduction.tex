@@ -11,27 +11,30 @@
 \label{fig:citations}
 \end{figure}
 
-This report is the result of a master's thesis project at the KTH Royal Institute of Technology, performed partly in conjunction with an internship at Splunk Inc.\@, based in San Francisco, California, USA\@. The goal of the project was to develop efficient and general methods of anomaly detection suitable for real-valued time series data. The main contributions of this thesis are:
+This report is the result of a master's thesis project at the KTH Royal Institute of Technology, performed partly in conjunction with an internship at Splunk Inc.\@, based in San Francisco, California, USA\@. The goal of the project was to develop efficient and general methods of anomaly detection suitable for sequences (and especially real-valued continuous time series).
+
+Splunk is essentially a database and tool for storing and analyzing very large sets of machine-generated data. The term \emph{machine-generated data} refers to any data consisting of discrete events that have been created automatically from a computer process, application, or other machine without the intervention of a human. Common types of machine-generated data include computer, network, or other equipment logs; environmental or other types of sensor readings; or other miscellaneous data, such as location information~\cite{machine_data}. Splunk is designed for this type of data, especially datasets where each event has an associated time stamp.
+
+Roughly defined as the automated detection within datasets of elements that are somehow abnormal, anomaly detection encompasses a broad set of techniques and problems. In recent years, anomaly detection has become increasingly important in a variety of domains in business, science and technology. In part due to the emergence of new application domains, and in part due to the evolving nature of many traditional domains, new applications of and approaches to anomaly detection and related subjects are being developed at an increasing rate, as indicated in Figure~\ref{fig:citations}.
+
+Since anomaly detection is an important and common problem in the domains in which Splunk is used, it can be expected that efficient and general anomaly detection tools could be of great benefit to Splunk. Furthermore, since real-valued time series are easy to form from machine-generated data with timestamps, and are relatively amenable to analysis, anomaly detection methods for real-valued time series can be expected to be especially useful.
+
+Typically, finding appropriate anomaly detection methods for a given application is a laborious process that requires expertise both in data analysis and in the specific application and involves extensive trial and error. One key of the key challenges in providing general anomaly detection tools is to streamline and simplify this process.
+
+With the above in mind, it was decided that the aim of this thesis should be to investigate automated methods of finding appropriate anomaly detection methods for arbitrary sets of real-valued sequences. To this end, the task of finding such methods was formalised as an optimisation problem, which was then studied in depth. The main contributions of the thesis are:
 \begin{enumerate}
-    \item A general framework for comparing and relating anomaly detection problems and methods.
-    \item An application of this framework to anomaly detection in real-valued time series.
-    \item Software for automatically discovering optimal anomaly detection methods for real-valued time series datasets.
+    \item A search problem formulation of the task of finding appropriate anomaly detection methods.
+    \item A framework for comparing and reasoning about anomaly detection problems.
+    \item An application of the optimisation problem and framework to anomaly detection in sequences.
+    \item A software implementation of the optimisation problem for real-valued sequences.
 \end{enumerate}
 
-Splunk is essentially a database and tool for storing and analyzing very large sets of sequential machine-generated data (i.e.\ machine-generated data consisting of discrete events with associated time stamps). The term \emph{machine-generated data} refers to any data consisting of discrete events that have been created automatically from a computer process, application, or other machine without the intervention of a human. Common types of machine-generated data include computer, network, or other equipment logs; environmental or other types of sensor readings; or other miscellaneous data, such as location information~\cite{machine_data}. Splunk is designed for this type of data, especially datasets where each event has an associated time stamp.
+In Chapter~\ref{ch:background}, various background information useful to the rest of the report is presented. Specifically, the subject of anomaly detection is presented in more depth, along with some background on some of the problems faced in anomaly detection research. Finally, the optimisation problem approach is introduced. The main barriers to practical applications of the optimisation problem---finding an appropriate tractable set of problems over which to optimise, and finding an oracle for solving arbitrary problems in that problem set---are discussed.
 
-In recent years, anomaly detection has become increasingly important in a variety of domains in business, science and technology. Roughly defined as the automated detection within datasets of elements that are somehow abnormal, anomaly detection encompasses a broad set of techniques and problems. In part due to the emergence of new application domains, and in part due to the evolving nature of many traditional domains, new applications of and approaches to anomaly detection and related subjects are being developed at an increasing rate, as indicated in Figure~\ref{fig:citations}.
+As a means of overcoming these hurdles, in Chapter~\ref{ch:framework}, a framework for reasoning about and comparing anomaly detection problems is introduced. As part of the framework, a few novel concepts and generalisations of existing concepts are introduced.
 
-Since anomaly detection is an important and common problem in the domains in which Splunk is used, it was determined that Splunk could benefit for efficient, general anomaly detection methods. Furthermore, since continuous time series are easy to form from sequential machine-generated data, and readily amenable to analysis, these were selected as a focus.
+Next, in Chapter~\ref{ch:time_series}, the framework is applied to find tractable problem sets and corresponding oracles for two anomaly detection tasks commonly encountered in applications involving sequences. In conjunction with this, a thorough survey of previous research on anomaly detection in sequences is presented. Finally, a software implementation, called \texttt{ad-eval}, of the optimisation problem applied to the task of finding anomalous subsequences in real-valued univariate sequences is presented.
 
-In Chapter~\ref{ch:background}, various background information pertinent to the rest of the report is presented. Specifically, the subject of anomaly detection is presented in more depth, along with some background on the issues which are relevant to the rest of the report.
+In Chapter~\ref{ch:results}, some preliminary performance results of optimisation using \texttt{ad-eval} are presented. TODO: finish this paragraph once the results chapter is done.
 
-Due to a lack of previous research on general (i.e.\ non-application specific) anomaly detection methods for continuous time series, new theory was required. As part of the project, a framework was developed for interrelating about anomaly detection problems. This framework can be used to consolidate different approaches to anomaly detection and to simplify reasoning about and comparing anomaly detection problems and methods systematically. Chapter~\ref{ch:?} introduces this framework.
-
-Next, the framework was applied to anomaly detection in real-valued time series. As part of this, a general algorithm for solving a large class of time series anomaly detection problems was introduced. This algorithm can then be used together with an optimization strategy to automate the process of finding methods suitable for new datasets.
-
-A software implementation of this algorithm was then developed. Called \texttt{ad-eval}, the implementation was designed as a minimalistic Python toolkit. It has been released under an open source license at \url{http://github.com/aeriksson/ad-eval}, in order to facilitate reproducibility in anomaly detection research. Both the application of the framework to time series, and \texttt{ad-eval} are treated in Chapter~\ref{ch:?}.
-
-Finally, a simple evaluation of a few implemented anomaly detection methods was performed using \texttt{ad-eval}, in order to demonstrate its use. The source code used in this evaluation was designed to be highly modular and was made available as part of the \texttt{ad-eval} source code repository, to guarantee the reproducibility of the results and to facilitate more thorough evaluations once adequate data becomes available. The results are presented in Chapter~\ref{ch:results}.
-
-The report is concluded in Chapter~\ref{ch:discussion} with a summary of the project and a few possible directions for future work.
+The report is concluded in Chapter~\ref{ch:conclusions} with a summary of the project and a few possible directions for future work.
