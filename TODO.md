@@ -15,9 +15,7 @@ TODO:
 - 63. Framework: Make sure filters are defined the same way as in the time series chapter.
 - 64. All: Fix formatting issues caused by CSC:s LaTeX template.
 - 65. Results: Rewrite it.
-- 66. Discussion: Rename to conclusions.
-- 67. Discussion: Rename Post-Mortem to Summary.
-- 67. Discussion: Rewrite it.
+- 68. Conclusions: Rewrite it.
 
 DONE:
 =====
@@ -71,3 +69,5 @@ DONE:
 - 57. Framework/Time series: Move dimensionality discussion to Framework.
 - 59. Abstract: Rewrite it.
 - 60. All: Use the CSC LaTeX template.
+- 66. Discussion: Rename to Conclusions.
+- 67. Conclusions: Rename Post-Mortem to Summary.
