@@ -71,3 +71,4 @@ DONE:
 - 60. All: Use the CSC LaTeX template.
 - 66. Discussion: Rename to Conclusions.
 - 67. Conclusions: Rename Post-Mortem to Summary.
+- 69. Background: Rewrite it.
