@@ -38,6 +38,59 @@ Despite this diversity, anomaly detection problems from different domains often 
 
 As a consequence of the above, a thorough survey of the subject could not fit within the scope of this report. The interested reader is instead referred to any of several published surveys~\cite{hodge}~\cite{bakar}~\cite{chandola}~\cite{agyemang} and books~\cite{barnett}~\cite{hawkins}~\cite{leroy} have been published which treat various anomaly detection applications in greater depth.
 
+We now present a few classifications which are useful in reasoning about anomaly detection problems.
+
+\subsection{Training data}
+\label{sect:training_data}
+
+As is customary in most areas of machine learning, anomaly detection problems are classified as either \emph{supervised}, \emph{semi-supervised} or \emph{unsupervised}~\footnote{Note that we here adopt the convention used in~\cite{chandola}, and take supervised learning to mean that both classes of training data are available, and semi-supervised to mean that only one class of training data is available. Conventionally, supervised learning is taken to mean any learning from training data, and semi-supervised learning is taken to mean that both labeled and unlabeled data is available~\cite{TODO}.} based on the availability of training data.
+
+In \emph{supervised} anomaly detection, training data containing both normal and anomalous items is available. In essence, this constitutes a traditional supervised classification problem. As such, it can be handled by any two-class classifier, such as regular support vector machines. Unfortunately, supervised approaches are usually not suitable for anomaly detection, for a few reasons. To begin with, anomalous training data is almost always relatively scarce, potentially leading to skewed classes (described in~\cite{phua} and~\cite{joshi}). Secondly, supervised anomaly detection methods are by definition unable to detect types on anomalies that are not represented in the training data, and so can not be used to find \emph{novel} anomalies. This is problematic as it is often not possible to obtain training data containing all possible anomalies.
+
+\begin{wrapfigure}{o}{0.5\textwidth}
+    \changecaptionwidth
+    \captionwidth{0.5\textwidth}
+    \centering
+    \includegraphics[width=0.5\textwidth]{resources/supervision}
+    \caption{Euler diagram of the available training data for the four types of supervision.}
+\label{fig:supervision}
+\end{wrapfigure}
+
+\emph{Semi-supervised} anomaly detection, on the other hand, assumes the availability of only one class of training data. While anomaly detection with only anomalous training data has been discussed (for instance in~\cite{dasgupta}), the vast majority of semi-supervised methods assume that normal training data is available. Considering the difficulties involved in obtaining anomalous training data mentioned above, this should not be surprising. Semi-supervised methods are used more frequently than supervised methods in part due to the relative ease of producing normal training data to anomalous training data.
+
+Finally, \emph{unsupervised} anomaly detection requires no training dataset. Since training data is not always available, unsupervised methods are typically considered to be of wider applicability than both supervised and semi-supervised methods~\cite{chandola}. However, unsupervised methods are unsuitable for certain tasks. Since training data can not be manually specified, it is more difficult to sift out uncommon but uninteresting items in unsupervised anomaly detection than in semi-supervised anomaly detection. Furthermore, unsupervised methods will not detect anomalies that are common but unexpected (although such items are arguably not anomalies by definition).
+
+\subsection{Anomaly types}
+\label{sect:anomaly_types}
+
+\begin{figure}[htb]
+    \begin{center}
+        \includegraphics[width=1\textwidth]{resources/types_of_anomalies}
+    \end{center}
+    \caption{{\small Different types of anomalies in a real-valued continuous sequence. In the middle of each series is an aberration---shaded black---corresponding to a specific type of anomaly. Appropriate contexts for these anomalies are shaded dark grey, while items not part of the contexts are shaded light grey. The top panel contains a point anomaly---a point anomalous with regard to all other points in the series. The second panel contains a contextual anomaly---a point anomalous with regard to its context (in this case, the few points preceding and succeeding it), but not necessarily to the entire series. The third panel contains a collective anomaly---a subsequence anomalous with regard to the rest of the time series. The fourth contains a contextual collective anomaly---a subsequence anomalous with regard to its context.}}
+\label{fig:anomaly_types}
+\end{figure}
+
+It is very useful to classify problems based on what types of anomalies they can detect. To this end, we now describe four \emph{anomaly types}~\footnote{While the concept of an anomaly type as defined here is novel, it is based on the concepts of contextual and collective anomalies discussed in~\cite{chandola}.}, which can be used to classify the types of anomalies handled by problems. In order of increasing generality, these are \emph{point anomalies}, \emph{contextual point anomalies}, \emph{collective anomalies}, and \emph{contextual collective anomalies}. An illustration of these anomaly types in the context of real-valued sequences is shown in Figure~\ref{fig:anomaly_types}.
+
+\emph{Point anomalies} is the simplest of the anomaly types. These correspond to single points in the dataset that are considered anomalous with regard to the entire training set. Point anomalies are often referred to as \emph{outliers} and arise in many domains~\cite{eskin}. Compared to the other anomaly types, detecting point anomalies is relatively straightforward. Statistical anomaly measures have been shown to be well suited for handling point anomalies, and are often used. For certain applications, distance-based anomaly measures, such as the local outlier factor~\cite{TODO} can be useful. Essentially, point anomalies are the only anomaly type it makes sense to look for when the individual elements of the input dataset are unrelated.
+
+When the individual elements of the input dataset \emph{are} related (for instance, through an ordering or a metric), however, not all interesting anomalies will be point anomalies. The concept of \emph{contextual point anomalies} generalises point anomalies to take context into account, which makes it more suitable to such cases. We here take the context to be the set of items with which an item is compared; when the input dataset admits a concept of proximity, the context of an item is usually those items which are closest to that item. Contextual anomalies are defined as individual items that are anomalous with regards to their context; i.e.\ while they might seem normal when compared with all elements in the training data, they are anomalous when compared to the other items in their context. Formally, contextual point anomalies can be defined as follows: Given a dataset $D$ and a context function $C(d)$ which associates a context with each $d \in D$, a contextual point anomaly $d$ is a point anomaly in $C(d)$. Thus, contextual point anomalies are a generalisation of point anomalies, in the sense that a point anomaly is a contextual point anomaly with regard to the trivial context $C(d) = D \setminus {d}$.
+
+Of course, detecting individual anomalous points $d \in D$ might not always suffice, and the concept of \emph{collective anomalies} might be required to capture relevant anomalies. Collective anomalies correspond to subsets of the input data that, when taken as a whole, are anomalous with regards to the entire training set. The task of detecting such anomalies can be formulated with the help of filter functions, which are map an input dataset $D$ to a set of candidate anomalies $F(D)$ (where $\forall f_i \in F(D): f_i \subset D$). Formally, given a set $D$ and a filter $F$, the collective anomalies of $D$ are the point anomalies of $F(D)$. Of course, point anomalies are a special case of collective anomalies, corresponding to the case where $F(D) = \{D\}$.
+
+Finally, the concept of \emph{contextual collective anomalies}, which generalises contextual point anomalies and collective anomalies, can be introduced. Contextual collective anomalies correspond to subsets of the input dataset that are anomalous with regard to their context. Formally, given a dataset $D$, a filter $F$, and a context function $C$, the contextual collective anomalies of $D$ are the elements of $X \in F(D)$ that are point anomalies in $C(X)$. As expected, all of the three previous anomaly types can be considered special cases of contextual collective anomalies.
+
+An illustration of the above concepts in real-valued sequences is shown in Figure~\ref{fig:anomaly_types}. Assuming that unsupervised anomaly detection is used, Detecting point anomalies amounts to disregarding the information provided by the ordering and detecting only `rare' items. While the task can capture the aberration in the first sequence in Figure~\ref{fig:anomaly_types}, none of the aberrations in the other sequences would be considered point anomalies.
+
+While the value at the anomalous point at the center of the second sequence occurs elsewhere in that sequence, it is anomalous with regards to its context, and as such, should be considered a contextual point anomaly and can be captured by problem formulations that use contextual point anomalies.
+
+Since the third time series is continuous, the aberration present at its center can not be a (contextual) point anomaly. It is, however, a collective anomaly, and can be accurately captured by problem formulations that use collective anomalies.
+
+Finally, neither of the first three types of anomalies can capture the aberration in the fourth sequence, as it is both continuous and occurs elsewhere in the sequence. However, with an appropriate choice of context, it can be deemed a contextual collective anomaly, and can be captured by problem formulations that use contextual collective anomalies.
+
+It should be noted that while contextual point anomalies, collective anomalies, and contextual collective anomalies are all generalisations of point anomalies, it is often possible to reduce each of these anomaly types to of point anomalies, as well. As outlined above, each of these anomaly types can be defined using point anomalies. Furthermore, data normalisation be utilized to solve some contextual anomaly detection problems using point anomaly detection (see~\cite{meckesheimer}, for instance).
+
 \section{On Anomaly Detection Research}
 
 Most anomaly detection research involves either applying existing methods to new applications (i.e.\ on new types of data) or investigating new methods in the context of previously studied applications. In order to handle the increasing need for effective anomaly detection in many areas of business and science it is vital that these activities can be performed in a highly automated manner. However, little work has been done on developing automated methods and tools for anomaly detection research.
@@ -64,32 +117,32 @@ To motivate our optimisation problem formulation, one can consider a stylized va
 
 A significant share of the work involved in finding appropriate methods could be avoided if this process could be automated, and one way to automate it is to formulate it as an optimisation problem that can be algorithmically solved. To do this, the concepts presented above must be formalised.
 
-To begin with, the sets of valid problem inputs (datasets) and outputs (solutions) must be defined. Here, we simply assume that some set $D$ has been defined containing all possible datasets for the application, along with some set $S$ consisting of all valid corresponding solutions.
+To begin with, the sets of valid problem inputs (datasets) and outputs (solutions) must be defined. Here, we simply assume that some set $\mathcal{D}$ has been defined containing all possible datasets for the application, along with some set $\mathcal{S}$ consisting of all valid corresponding solutions.
 
-Next, a formal description of all allowed problem formulations must be constructed. Here, we simply assume that this description consists of a set of formulae in some logic sufficiently expressive to capture all relevant problem formulation. Let us call this set $P$.
+Next, a formal description of all allowed problem formulations must be constructed. Here, we simply assume that this description consists of a set of formulae in some logic sufficiently expressive to capture all relevant problem formulation. Let us call this set $\mathcal{P}$.
 
-The role of the domain expert can be modeled by means of an error function $\epsilon(d, s): D \times S \rightarrow \mathbb{R}^+$, which associates a score to any solution $s$ based on how accurately it captures the anomalies in the data $d$.
+The role of the domain expert can be modeled by means of an error function $\epsilon(D, S): \mathcal{D} \times \mathcal{S} \rightarrow \mathbb{R}^+$, which associates a score to any solution $S$ based on how accurately it captures the anomalies in the data $D$.
 
-The researcher, on the other hand, really has two roles; finding a new $p$ based on the feedback from the domain expert, and computing a solution $s$ given some dataset $d$ and problem $p$. The former role corresponds to the heuristic driving the optimisation---searching the problem set $P$ for an appropriate problem---and does not need be formalised yet. The latter role can be formalised as an oracle $O(p, d): P \times D \rightarrow S$, which takes a problem $p \in P$ and an input dataset $d \in D$, and computes the associated solution $s \in S$.
+The researcher, on the other hand, really has two roles; finding a new $P$ based on the feedback from the domain expert, and computing a solution $S$ given some dataset $D$ and problem $P$. The former role corresponds to the heuristic driving the optimisation---searching the problem set $\mathcal{P}$ for an appropriate problem---and does not need be formalised yet. The latter role can be formalised as an oracle $O(P, D): \mathcal{P} \times \mathcal{D} \rightarrow \mathcal{S}$, which takes a problem $P \in \mathcal{P}$ and an input dataset $D \in \mathcal{D}$, and computes the associated solution $S \in \mathcal{S}$.
 
-The success of $p$ in capturing the anomalies in $d$ can then be stated as $\epsilon(d, O(p, d))$. Finally, since the goal is to minimise the \emph{expected} error for datasets sampled from the given application, a random variable $X$ over $D$ ought to be introduced, that models the probability of generating any given $d \in D$. A suitable objective function would then be $\mathbb{E}_I [\epsilon(d, O(p, d))]$.
+The success of $P$ in capturing the anomalies in $D$ can then be stated as $\epsilon(D, O(P, D))$. Finally, since the goal is to minimise the \emph{expected} error for datasets sampled from the given application, a random variable $X$ over $\mathcal{D}$ ought to be introduced, that models the probability of encountering any given $D \in \mathcal{D}$. A suitable objective function would then be $\mathbb{E}_X [\epsilon(D, O(P, D))]$.
 
 The optimisation problem then becomes:
 \[
-    p_{opt} = \argmin_{p \in P}\mathbb{E}_X [ \epsilon(d, O(p, d)) ].
+    P_{opt} = \argmin_{P \in \mathcal{P}}\mathbb{E}_X [ \epsilon(D, O(P, D)) ].
 \]
 
-Here, $p_{opt}$ corresponds to the best possible problem formulation, and $O(p_{opt}, d)$ to the solution of this problem formulation.
+Here, $P_{opt}$ corresponds to the best possible problem formulation, and $O(P_{opt}, D)$ to the solution of this problem formulation.
 
-Of course, this optimisation problem is not tractable unless heavy restrictions are placed on the problem set $P$, since any logic sufficiently complicated to encompass non-trivial problems is undecidable (TODO: provide source?). Thus, no oracle can not exist when $P$ is the set of all formulae in such a logic. A major challenge is thus to find a reduced problem set $P^*$ which has a tractable oracle $O^*$ and which contains a majority of interesting problem formulations.
+Of course, this optimisation problem is not tractable unless heavy restrictions are placed on the problem set $\mathcal{P}$, since any logic sufficiently complicated to encompass non-trivial problems is undecidable (TODO: provide source?). Thus, no oracle can not exist when $\mathcal{P}$ is the set of all formulae in such a logic. A major challenge is thus to find a reduced problem set $\mathcal{P}^*$ which has a tractable oracle $O^*$ and which contains a majority of interesting problem formulations.
 
 Another problem is that it is generally not possible to compute $\epsilon$ or $X$. Indeed, an algorithmic formulation of $\epsilon$ presupposes knowledge of the optimal problem formulation and would consequently render the optimisation process redundant. Likewise, the generation of a stream of data in accordance with $X$ would require an exact model of the underlying process, which could just as well be used directly to detect anomalies. Even if an external stream of datasets would be available, an actual domain expert would be required to represent $\epsilon$.
 
-To get around these issues, $X$ can be replaced with a set of labeled training data, i.e.\ a set $T \subset D$ in which each $t_i \in T$ has an associated $s(t_i) \in S$.
-Correspondingly, $\epsilon(d, s)$ can then be replaced with some $\epsilon^*(t_i, s) = \delta(s(t_i), s)$, where $\delta: S \times S \rightarrow \mathbb{R}^+$ is some distance measure.
-This approach enables the computation of the following estimate of $p_{opt}$:
+To get around these issues, the random vairable $X$ can be replaced with a set of labeled training data, i.e.\ a set $\mathcal{T} \subset \mathcal{D}$ in which each $T_i \in \mathcal{T}$ has an associated $s(T_i) \in \mathcal{S}$.
+Correspondingly, $\epsilon(D, S)$ can then be replaced with some $\epsilon^*(T_i, S) = \delta(s(T_i), S)$, where $\delta: \mathcal{S} \times \mathcal{S} \rightarrow \mathbb{R}^+$ is some distance measure.
+This approach leads to the following estimate of $P_{opt}$:
 \[
-    p^*_{opt} = \argmin_{p \in P^*} \sum_{t_i \in T} \delta(s(t_i), O^*(p, t_i)).
+    P^*_{opt} = \argmin_{P \in \mathcal{P}^*} \sum_{T_i \in \mathcal{T}} \delta(s(T_i), O^*(P, T_i)).
 \]
 
-A major focus of this report is on constructing restricted problem sets $P^*$ with corresponding tractable oracles $O^*$. In Chapter~\ref{ch:framework}, a framework for reasoning about anomaly detection problems is outlined, which can be used to construct appropriate problem sets for specific applications. This framework is then applied to sequences in Chapter~\ref{ch:time_series}, in order to construct a problem sets that generalise a majority of previously studied problem formulations while admitting a simple oracle.
+A major focus of this report is the construction of restricted problem sets $P^*$ and corresponding tractable oracles $O^*$. In Chapter~\ref{ch:framework}, a framework for reasoning about anomaly detection problems is outlined, which can be used to construct appropriate problem sets for specific applications. This framework is then applied to sequences in Chapter~\ref{ch:time_series}, in order to construct a problem sets that generalise a majority of previously studied problem formulations while admitting a simple oracle.

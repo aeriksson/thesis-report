@@ -1,40 +1,41 @@
-\chapter{An application to time series}
+\chapter{An application to sequences}
 \label{ch:time_series}
 
-In this chapter, the framework presented in the previous chapter is applied to univariate real-valued time series, in order to derive an instance of the omptimisation problem defined in Section~\ref{sect:problem_formulation} appropriate for univariate, real-valued time series. As mentioned, the optimisation problem can be stated as
+In this chapter, the framework presented in the previous chapter is applied to anomaly detection in sequences. As a reminder, the optimisation problem can be stated as
 \[
-    p^*_{opt} = \argmin_{p \in P^*} \sum_{(i_j, s_j) \in T} \epsilon^*(s_j, O(p, i_j)),
+    P^*_{opt} = \argmin_{P \in \mathcal{P}^*} \sum_{T_i \in \mathcal{T}} \delta(s(T_i), O^*(P, T_i)),
 \]
-where the objects that need to defined are the problem set $P^*$, the test data $T$, the error function $\epsilon^*$, and the oracle $O$.
+where the objects that need to defined are the problem set $\mathcal{P}^*$, the test data $T$, the error function $\epsilon^*$, and the oracle $O$. The framework presented in the previous chapter makes the assumption that all relevant problems $P$ can be decomposed into a set of functions $P = (T_{\mathcal{D}}, F_E, C, F_R, M, \Sigma, T_{\mathcal{S}})$.
 
-In Section~\ref{sect:background}, some terminology related to time series is presented, along with a brief summary of previous research on time series anomaly detection. The construction of regular time series from irregular data is also discussed.
+In Section~\ref{sect:background}, some terminology related to sequences and time series is presented.
 
-In Section~\ref{sect:component_framework}, a problem set $P^*$ is constructed, which generalises many of the approaches presented in the previous section. An oracle $O$ for problems in this set is then presented.
+Section~\ref{sect:prev_research} contains a survey of previous research on anomaly detection in sequences. The components $T_{\mathcal{D}}$, $F_E$, $C$, $F_R$, $M$, $\Sigma$, and $T_{\mathcal{S}}$ are studied individually.
+
+In Section~\ref{sect:component_framework}, appropriate problem sets and oracles are presented for the two major tasks encountered in anomaly detection in seqeuences.
 
 Next, in Section~\ref{sect:evaluation}, issues related to the test data $T$, as well as a few possible choices of $\epsilon^*$, are discussed.
 
 Finally, Section~\ref{sect:implementation} details an implementation of the optimisation problem using the objects from the previous sections.
 
-\section{Background}
-\label{sect:background}
-
-In this section, various previous research on time series is presented, using the framework from the previous chapter, along with some of the terminology and definitions which are used later in the report.
-
-\subsection{Terminology}
+\section{Terminology}
 \label{sect:terminology}
 
 Since various incompatible definitions of sequences and time series are used in the literature, we begin by defining what we mean when we use these concepts.
 
-From here on, a \emph{sequence} will be taken to mean a progression $S = (s_1, s_2, \dots)$, where $\forall i: s_i \in X$ for some set $X$. Furthermore, a \emph{time series} is taken to be any sequence $T = ((s_1, t_1), (s_2, t_2), \dots)$, where $\forall i: (s_i, t_i) \in X \times \mathbb{R}^+$ for some set $X$ and $\forall i, j: i > j \rightarrow t_i \geq t_j$. In other words, a time series is any sequence in which each item is associated with a point in time. We refer to sequences and time series as symbolic/categorical, discrete, real-valued, vector-valued et cetera based on the characteristics of $X$.
+From here on, a \emph{sequence} will be taken to mean a progression $\mathbf{s} = (s_1, s_2, \dots)$, where $\forall i: s_i \in X$ for some set $X$. Furthermore, a \emph{time series} is taken to be any sequence $\mathbf{t} = ((s_1, t_1), (s_2, t_2), \dots)$, where $\forall i: (s_i, t_i) \in X \times \mathbb{R}^+$ for some set $X$ and $\forall i, j: i > j \rightarrow t_i \geq t_j$. In other words, a time series is any sequence in which each item is associated with a point in time. We refer to sequences and time series as symbolic/categorical, discrete, real-valued, vector-valued et cetera based on the characteristics of $X$.
 
-When a time series is sampled at regular intervals in time (i.e.\ $\forall i, j: t_{i+1} - t_i = t_{j+1} - t_j$), it is said to be \emph{regular}. We will treat regular time series as sequences, suppressing the $t_i$ and writing $T = (s_1, s_2, \dots)$. Henceforth all time series will be taken to be regular unless explicitly stated\footnote{As mentioned above, there is some confusion surrounding these terms in the literature. Specifically, what we would refer to as `symbolic sequences' and `regular time series' are often simply referred to as `sequences' or `time series'. In such contexts, other types of sequences (and time series) are usually ignored}.
+When a time series is sampled at regular intervals in time (i.e.\ $\forall i, j: t_{i+1} - t_i = t_{j+1} - t_j$), it is said to be \emph{regular}. We will treat regular time series as sequences, suppressing the $t_i$ and writing $\mathbf{t} = (s_1, s_2, \dots)$. Henceforth all time series will be taken to be regular unless explicitly stated\footnote{As mentioned above, there is some confusion surrounding these terms in the literature. Specifically, what we would refer to as `symbolic sequences' and `regular time series' are often simply referred to as `sequences' or `time series'. In such contexts, other types of sequences (and time series) are usually ignored}.
 
-\subsection{Previous research}
+Two main tasks can be distinguished in anomaly detection in sequences; \emph{finding anomalous sequences in a set of sequences}, and \emph{finding anomalous subsequences in a long sequence}~\cite{chandola}. The former task can be formulated as the detection of point anomalies in an unstructured set of sequences. The latter corresponds to finding contextual anomalies in a set equipped with a total ordering.
+
+\section{Previous research}
 \label{sect:prev_research}
+
+TODO: follow the organization of the previous chapter here
 
 Anomaly detection in sequence is an important and active area of research, and plenty of problems related to anomaly detection in sequences have been studied over the years. In this section, a selection of previously researched problems are presented, arranged according to the framework presented in the previous chapter. More detailed surveys of anomaly detection in sequences are available in~\cite{chandola} and~\cite{TODO}.
 
-\subsubsection{Dataset format}
+\subsection{Dataset format}
 
 Naturally, categorical, discrete, and real-valued sequences have all been studied extensively. Categorical sequences arise naturally in bioinfomatics~\cite{TODO} and intrusion detection~\cite{TODO} applications. Discrete sequences are typically encountered when monitoring the frequency of events over time. Finally, real-valued sequences are encountered in any application that involves measuring physical phenomena (such as audio, video and other sensor-based applications).
 
@@ -53,7 +54,7 @@ Detecting anomalous subsequences in a long sequence has not been as extensively 
 \label{fig:types_of_data}
 \end{figure}
 
-Feature extraction is commonly performed to reduce the dimensionality of sequences, and especially of real-valued time series. In this context, the task of feature extraction can be rephrased as follows: Given a sequence $S = ( s_1, s_2, \dots, s_n )$ where $s_i \in \mathbb{R}$, find a set of basis functions $\{ \phi_1, \phi_2, \dots, \phi_m \}$ where $m < n$ that $T$ can be projected onto, such that $T$ can be recovered with little error. Many different methods for obtaining such bases have been proposed, including the discrete Fourier transform~\cite{faloutsos1}, discrete wavelet transforms~\cite{pong}~\cite{fu}, various piecewise linear and piecewise constant functions~\cite{keogh3}~\cite{geurts}, and singular value decomposition~\cite{keogh3}. An overview of different representations is provided in~\cite{fabian}.
+Feature extraction is commonly performed to reduce the dimensionality of sequences, and especially of real-valued time series. In this context, the task of feature extraction can be rephrased as follows: Given a sequence $\mathbf{s} = ( s_1, s_2, \dots, s_n )$ where $s_i \in \mathbb{R}$, find a set of basis functions $\{ \phi_1, \phi_2, \dots, \phi_m \}$ where $m < n$ that $\mathbf{s}$ can be projected onto, such that $\mathbf{s}$ can be recovered with little error. Many different methods for obtaining such bases have been proposed, including the discrete Fourier transform~\cite{faloutsos1}, discrete wavelet transforms~\cite{pong}~\cite{fu}, various piecewise linear and piecewise constant functions~\cite{keogh3}~\cite{geurts}, and singular value decomposition~\cite{keogh3}. An overview of different representations is provided in~\cite{fabian}.
 
 Arguably the simplest of these bases are piecewise constant functions $(\phi_1, \phi_2, \dots, \phi_n)$:
 \[
@@ -93,21 +94,21 @@ Another common class of transformations involves estimating the (weighted) frequ
 
 Several methods can be used to generate sequences appropriate for this task from time series, such as histograms, sliding averages, etc. These can be generalised as the following transformation:
 
-Given a time series $T = ((s_1, t_1), (s_2, t_2), \dots)$ where $\forall i: (s_i, t_i) \in X \times \mathbb{R}$, with associated weights $w_i$ and some envelope function $e(s, t): X \times \mathbb{R} \rightarrow X$, as well as a spacing and offset $\Delta, t_0 \in \mathbb{R}^+$, a sequence $S' = ((s_{1}^{'}, \tau_1), (s_{2}^{'}, \tau_2), \dots)$ is constructed where $\tau_i = t_0 + \Delta \cdot i$ and $s_{i}^{'} = \sum_{(s_j, t_j) \in S} s_i w_i e(t_j - \tau_i)$.
+Given a time series $\mathbf{t} = ((s_1, t_1), (s_2, t_2), \dots)$ where $\forall i: (s_i, t_i) \in X \times \mathbb{R}$, with associated weights $w_i$ and some envelope function $e(s, t): X \times \mathbb{R} \rightarrow X$, as well as a spacing and offset $\Delta, t_0 \in \mathbb{R}^+$, a sequence $\mathbf{s}' = ((s_{1}^{'}, \tau_1), (s_{2}^{'}, \tau_2), \dots)$ is constructed where $\tau_i = t_0 + \Delta \cdot i$ and $s_{i}^{'} = \sum_{(s_j, t_j) \in S} s_i w_i e(t_j - \tau_i)$.
 
-The $\tau_i$ can then be discarded and the regular time series treated as a sequence. Histograms are recovered if $e(s, t) = 1$ when $|t| < \Delta/2$ and $e(x, t) = 0$ otherwise. Note that this method requires multiplication and addition to be defined for $X$, and is thus not applicable to most symbolic/categorical data. Also note that $S'$ is really just a sequence of samples of the convolution $f_S \ast e$ where $f_S = \sum_i \delta(t_i) s_i w_i$.
+The $\tau_i$ can then be discarded and the regular time series treated as a sequence. Histograms are recovered if $e(s, t) = 1$ when $|t| < \Delta/2$ and $e(x, t) = 0$ otherwise. Note that this method requires multiplication and addition to be defined for $X$, and is thus not applicable to most symbolic/categorical data. Also note that $\mathbf{s}'$ is really just a sequence of samples of the convolution $f_S \ast e$ where $f_S = \sum_i \delta(t_i) s_i w_i$.
 
 How this aggregation is performed has a large and often poorly understood impact on the resulting sequence. As an example, when constructing histograms, the bin width and offset have implications for the speed and accuracy of the analysis. A small bin width leads to both small features and noise being more pronounced, while a large bin width might obscure smaller features. Similarly, the offset can greatly affect the appearance of the histograms, especially if the bin width is large. There is no `optimal' way to select these parameters, and various rules of thumb are typically used~\cite{density_estimation}.
 
-Finally, irregular or noisy data is often resampled to form regular time series. In this case, any of a number of resampling methods from the digital signal processing literature~/cite{TODO} may be employed.
+Finally, irregular or noisy data is often resampled to form regular time series. In this case, any of a number of resampling methods from the digital signal processing literature~\cite{TODO} may be employed.
 
-\subsubsection{Training data}
+\subsection{Training data}
 
 As in most other machine learning applications, problems involving various degrees of supervision have been researched.
 
 The detection of point anomalies in sequences is a well-researched problem, and has mainly been researched in conjunction with statistical anomaly measures~\cite{TODO}. Of course, detecting point anomalies in sequences is rather uninteresting since it amounts to disregarding the extra information provided by the sequence ordering.
 
-The ordering present in sequences naturally give rise to a few interesting contexts when dealing with anomalous subsequences. A few interesting such contexts are now presented using context functions (assuming a sequence $S = (s_1, s_2, \dots, s_n)$).
+The ordering present in sequences naturally give rise to a few interesting contexts when dealing with anomalous subsequences. A few interesting such contexts are now presented using context functions (assuming a sequence $\mathbf{s} = (s_1, s_2, \dots, s_n)$).
 
 As mentioned in the previous chapter, contexts can be used to generalise the concept of training data. Semi-supervised anomaly detection corresponds to the \emph{semi-supervised context}
 \[
@@ -135,15 +136,15 @@ may be defined, in order to handle anomalies such as the one in the last sequenc
 
 It should finally be noted that contextual collective anomalies in sequences do not appear to have been researched.
 
-For the problem of finding anomalous sequences in a set of sequences, there are fewer interesting contexts. Given a set of sequences $S = \{s_a, s_b, \dots, s_m\} = \{(s^a_1, s^a_2, \ldots, s^a_{n_a}), (s^b_1, s^b_2, \ldots, s^b_{n_b}), \ldots, (s^m_1, s^m_2, \ldots, s^m_{n_m}) \}$, the main contexts of interest are the \emph{semi-supervised context} $C(s_a) = \{t_a, t_b, \dots, t_o\}$ (corresponding to semi-supervised anomaly detection) and the \emph{trivial context} $C(s_a) = S \setminus s_a$ (corresponding to traditional unsupervised anomaly detection).
+For the problem of finding anomalous sequences in a set of sequences, there are fewer interesting contexts. Given a set of sequences $\mathbf{s} = \{s_a, s_b, \dots, s_m\} = \{(s^a_1, s^a_2, \ldots, s^a_{n_a}), (s^b_1, s^b_2, \ldots, s^b_{n_b}), \ldots, (s^m_1, s^m_2, \ldots, s^m_{n_m}) \}$, the main contexts of interest are the \emph{semi-supervised context} $C(s_a) = \{t_a, t_b, \dots, t_o\}$ (corresponding to semi-supervised anomaly detection) and the \emph{trivial context} $C(s_a) = S \setminus s_a$ (corresponding to traditional unsupervised anomaly detection).
 
-\subsubsection{Anomaly types}
+\subsection{Anomaly types}
 
 Just as the sequence ordering induces natural contexts, it also naturally induces filters which produce subsequences. Since most anomaly measures defined on sequences require all selected subsequences to have the same length, sliding window approaches are by far the most commonly used. Using the concept of filters, such approaches correspond to sliding window filters, as described in Section~\ref{sect:anomaly_types}.
 
 For anomaly measures that do not require all sequences to be of the same length, such as some information-theoretic measures, filters that select elements of non-uniform size can be useful. In~\cite{TODO}, a subdivision approach is taken in which a binary search is performed over the sequence in order to find anomalous substrings of some specific length. No training filter is required, since the anomaly measure used can compare substrings of different size.
 
-\subsubsection{Anomaly measures}
+\subsection{Anomaly measures}
 
 As is typically the case, the anomaly measure is the most important aspect of any anomaly detection problem for sequences. Formally, any anomaly measure that takes an evaluation vector and a set of reference vectors as inputs and returns a real value is a candidate for $\mathcal{M}$. We now discuss a few such anomaly measures, following the classification in Section~\ref{sect:anomaly_measures}.
 
@@ -167,7 +168,7 @@ Possible interesting measures include the \emph{Euclidean distance} or the more 
 
 Additionally, the choice of distance measure affects how well methods can be optimized. Naive approaches to distance-based problems typically scale prohibitively slowly, and are not suitable for large amounts of data. Optimizations typically involve exploiting properties of the distance measure in order to reduce the number of distance computations (for instance, the commonly used k-d tree nearest neighbor algorithm requires the distance to be a Minkowski metric).
 
-\subsubsection{Solution format}
+\subsection{Solution format}
 
 Since any solution format can be used with any problem, and since the solution format has little impact on the analysis (except performance-wise), it is not treated in depth here. As noted in the previous chapter, all common output formats can be produced from anomaly scores, so other output formats are interesting mainly as optimisations.
 
@@ -331,7 +332,7 @@ TODO: maybe mention a few other anomaly measures
 
 Once the extracted subsequences have been assigned anomaly scores, they must be aggregated into an anomaly vector. We here suggest a few aggregation functions, on the form
 \[
-    A(\{(\mathbf{a}_1, \mathbf{i}_1), (\mathbf{a}_2, \mathbf{i}_2), \dots, (\mathbf{a}_k, \mathbf{i}_k) \}) = (f(\{\mathbf{a}_i: 1 \in \mathbf{i}_i\}), f(\{\mathbf{a}_i: 2 \in \mathbf{i}_i\}), \dots, f(\{\mathbf{a}_i: n \in \mathbf{i}_i\})),
+    A(\{(\mathbf{a}_1, \mathbf{i}_1), (\mathbf{a}_2, \mathbf{i}_2), \dots, (\mathbf{a}_n, \mathbf{i}_n) \}) = (f(\{\mathbf{a}_i: 1 \in \mathbf{i}_i\}), f(\{\mathbf{a}_i: 2 \in \mathbf{i}_i\}), \dots, f(\{\mathbf{a}_i: n \in \mathbf{i}_i\})),
 \]
 where $I_i$ are intervals, $a_i$ are assigned anomaly scores, and $f$ is some aggregation method-specific function that produced a real-valued aggregate score from a set of real-valued element-wise scores. The \emph{maximum}, \emph{minimum}, \emph{median} and \emph{mean} of the values in $S$ all constitute reasonable choices of $f(S)$. Aggregation functions using any of these four functions will be referred to as maximum, minimum, median, and mean aggregators, respectively. Each of these is parameter-free.
 
