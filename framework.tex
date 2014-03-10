@@ -11,23 +11,21 @@ One interesting aspect of anomaly detection is that almost all problem formulati
 
 If this common structure could be captured by decomposing $P$ into a collection of functions between sets, then the task of finding an appropriate $\mathcal{P}^*$ could be simplified to the task of placing appropriate restrictions on these individual functions. Correspondingly, formulating an oracle which can solve arbitrary $P \in \mathcal{P}^*$ could be simplified to the task of computing each individual function.
 
-\newcommand{\exinput}{\includegraphics[width=35.0ex, trim=0 27.0ex 0 0]{resources/components/input}}
-\newcommand{\extransformedinput}{\includegraphics[width=35.0ex, trim=0 27.0ex 0 0]{resources/components/transformed_input}}
-\newcommand{\exevaluationset}{\includegraphics[width=35.0ex, trim=0 27.0ex 0 0]{resources/components/evaluation_set}}
+\newcommand{\exinput}{\includegraphics[width=33.0ex, trim=0 27.0ex 0 0]{resources/components/input}}
+\newcommand{\extransformedinput}{\includegraphics[width=33.0ex, trim=0 27.0ex 0 0]{resources/components/transformed_input}}
+\newcommand{\exevaluationset}{\includegraphics[width=33.0ex, trim=0 27.0ex 0 0]{resources/components/evaluation_set}}
 \newcommand{\exevaluationitem}{\includegraphics[width=5.5ex, trim=0 7.0ex 0 0]{resources/components/evaluation_item}}
 \newcommand{\excontext}{\includegraphics[width=17.0ex, trim=0 27.0ex 0 0]{resources/components/context}}
 \newcommand{\exreferenceset}{\includegraphics[width=17.0ex, trim=0 27.0ex 0 0]{resources/components/reference_set}}
 \newcommand{\exanomalyscore}{\includegraphics[width=5.5ex, trim=0 5.5ex 0 0]{resources/components/anomaly_score}}
-\newcommand{\exanomalyscores}{\includegraphics[width=35.0ex, trim=0 27.0ex 0 0]{resources/components/anomaly_scores}}
-\newcommand{\exsolution}{\includegraphics[width=35.0ex, trim=0 27.0ex 0 0]{resources/components/solution}}
-\newcommand{\extransformedsolution}{\includegraphics[width=35.0ex, trim=0 27.0ex 0 0]{resources/components/transformed_solution}}
+\newcommand{\exanomalyscores}{\includegraphics[width=33.0ex, trim=0 27.0ex 0 0]{resources/components/anomaly_scores}}
+\newcommand{\exsolution}{\includegraphics[width=33.0ex, trim=0 27.0ex 0 0]{resources/components/solution}}
+\newcommand{\extransformedsolution}{\includegraphics[width=33.0ex, trim=0 27.0ex 0 0]{resources/components/transformed_solution}}
 
 \section{The problem decomposition}
 \label{sect:data_format}
 
 Our framework involves a specific such decomposition of $P$, which covers almost all previously studied problem formulations by capturing the common structure mentioned above. This decomposition is now presented in detail, assuming that $\mathcal{D}$ and $\mathcal{S}$ are fixed by the application. In parallel, illustrations are presented of a decomposition of an actual anomaly detection problem.
-
-Roughly, this problem associates an anomaly score with each element in a grid of colour values. These anomaly scores are also colours; red and green signify high and low anomaly scores, respectively. Specifically, the problem finds contextual collective anomalies---i.e.\ contiguous subsets of the data which are anomalous with regards to their surroundings---in such grids.
 
 \begin{figure}[htb]
 \begin{center}
@@ -36,17 +34,17 @@ Roughly, this problem associates an anomaly score with each element in a grid of
 \includegraphics[width=40.0ex, trim=0 7.0ex 0 0]{resources/components/transformed_solution}
 \end{center}
 \caption{\small{The example input data $D \in \mathcal{D}$ and the corresponding solution $P(D) = S \in \mathcal{S}$.}}
-\label{fig:dimensionality_reduction}
+\label{fig:input_data}
 \end{figure}
 
-To illustrate this problem, we will use the input dataset $D$ shown in figure~\ref{fig:input_data}. This dataset contains an interesting anomaly to the left; a blue region that is larger than and has a different shape than nearby blue regions. The problem $P$ we will decompose can be used to identify this anomaly, and the corresponding solution is shown to the right in figure~\ref{fig:solution}.
+Roughly, our example problem associates an anomaly score with each element in a grid of colour values. These anomaly scores are also colours; red and green signify high and low anomaly scores, respectively. Specifically, the problem involves finding contextual collective anomalies---i.e.\ contiguous subsets of the data which are anomalous with regards to their surroundings---in such grids.  To illustrate this problem, we will use the dataset shown in figure~\ref{fig:input_data}. This dataset contains an interesting anomaly to the left; a blue region that is larger than and has a different shape than nearby blue regions. The problem $P$ we will decompose can be used to identify this anomaly, and the corresponding solution is shown to the right in the figure.
 
-We make the assumption that the input data is an ordered collection, i.e.\ a list, of homogenous items, which we denote by $\mathcal{D} = [D]$ for some arbitrary set $D$. Likewise, we take the solution format to be a list as well: $\mathcal{S} = [S]$ for some arbitrary set $S$. This means that we consider the set of problems to be equivalent to the set of all functions $P: [D] \rightarrow [S]$.
+We make the assumption that the input data is an ordered collection, i.e.\ a list~\footnote{We will denote a list containing the items $a, b$ and $c$ by $[a, b, c]$, and we will denote the set of all lists with items in some set $X$ by $X$. We will also assume that items in lists implicitly carry indices, and that any function $f: [X] \rightarrow [X]$ that maps a list to one of its sub-lists will preserve these indices, i.e.\ if $f([a, b, c]) = [b]$, then it is apparent that $f([a, b, c])$ is the second element of $[a, b, c]$, even if $b = a$ or $b = c$.}, of homogeneous items, which we denote by $\mathcal{D} = [D]$ for some arbitrary set $D$. Likewise, we take the solution format to be a list as well: $\mathcal{S} = [S]$ for some arbitrary set $S$. This means that we consider the set of problems to be equivalent to the set of all functions $P: [D] \rightarrow [S]$.
 
 The proposed decomposition splits each such $P$ into a composition of the following functions:
 
 \begin{enumerate}
-    \item{A transformation $T_D: [D] \rightarrow [D']$,}which transforms a list of input data with elements in some set $D$ to a list of elements in some other set $D'$. Typically, this is done in order to speed up or simplify the analysis. In our example, this transformation reduces the dimensionality of the dataset, by averaging the values of adjacent elements:
+    \item{A transformation $T_D: [D] \rightarrow [D']$,}which transforms a list of input data with elements in some set $D$ to a list of elements in some other set $D'$. Typically, this is done in order to speed up or simplify the analysis. In our example~\footnote{Note that we here implicitly assume that a well-defined ordering of the elements in the example is provided, such that the data can be treated as a list.}, this transformation reduces the dimensionality of the dataset, by averaging the values of adjacent elements:
     \[
         T_{D}\left( \exinput \right) = \extransformedinput
     \]
@@ -54,25 +52,26 @@ The proposed decomposition splits each such $P$ into a composition of the follow
     \[
         F_E\left( \extransformedinput \right) = \exevaluationset
     \]
-\item{A context function $C: ([D'], [[D']]) \rightarrow [([D'], [D'])]$,}which takes a dataset and a corresponding evaluation set, and associates a \emph{context} with each element of the evaluation set. The contexts we will deal with can all be expressed as a map operation, i.e.\ $C(X, [E_1, E_2, \dots, E_n]) = [c(X, E_1), c(X, E_2), \dots, c(X, E_n)]$. In our example, the context function is on this form, and $c$ selects the elements of $X$ that are adjacent to $E_i$:
+\item{A context function $C: ([D'], [D']) \rightarrow [D']$,}which takes a dataset and a corresponding candidate anomaly (i.e.\ a sublist of the dataset), and produces an associated \emph{context}. In our example, the context function $C(X, Y)$ produces a set of elements in $X$ adjacent to $Y$:
     \[
-        c\left(\extransformedinput, \exevaluationitem \right) = \excontext
+        C\left(\extransformedinput, \exevaluationitem \right) = \excontext
     \]
 \item{A reference filter $F_R: [D'] \mapsto [[D']] $,}which works analogously to the evaluation filter, but operates on contexts instead of input data. In our case, $F_R$ is identical to $F_E$; it partitions the context into subsets of four items:
     \[
         F_R\left( \excontext \right) = \exreferenceset
     \]
-    \item{An anomaly measure $M: ([D'], [D']) \rightarrow A$,} which takes an item $x \in [D']$ and a list $[x_1, x_2, \dots, x_n] \in [[D']]$ of reference items, and computes an anomaly score (in some arbitrary set $A$) based on how anomalous $x$ is with regards to $[x_1, x_2, \dots, x_n]$. In our example, $M$ works by computing an average distance between $x$ and the $x_i$, which is mapped to a colour:
+    \item{An anomaly measure $M: ([D'], [[D']]) \rightarrow A$,} which takes an item $x \in [D']$ and a list $[x_1, x_2, \dots, x_n] \in [[D']]$ of reference items, and computes an anomaly score (in some arbitrary set $A$) based on how anomalous $x$ is with regards to $[x_1, x_2, \dots, x_n]$. In our example, $M$ works by computing an average distance between $x$ and the $x_i$, which is mapped to a colour:
     \[
         M\left( \exevaluationitem , \exreferenceset \right) = \exanomalyscore
     \]
-    The result of applying $C$, $F_R$ and $M$ to the transformed input in our example is, for $f = (map M) \circ (map (id, F_R)) \circ C$:
+    Computing $M(e, F_R(C(e)))$
+    The result of applying $C$, $F_R$ and $M$ to each element of the evaluation set is:
     \[
-        f \left( \exevaluationset \right) = \exanomalyscores
+        \includegraphics[width=33.0ex, trim=0 5.0ex 0 0]{resources/components/anomaly_scores}
     \]
-    \item{An aggregation function $\Sigma: ([[X']], [A]) \rightarrow [S']$,} which aggregates the anomaly scores for the elements of the evaluation set to form a 'preliminary' solution for elements of $[D']$. In our example, the aggregation function associates with each element the anomaly score of the evaluation item to which that element belongs:
+    \item{An aggregation function $\Sigma: ([[X']], [A]) \rightarrow [S']$,} which aggregates the anomaly scores for the elements of the evaluation set to form a `preliminary' solution for elements of $[D']$. In our example, the aggregation function associates with each element the anomaly score of the candidate anomaly to which that element belongs:
     \[
-        \Sigma \left( \includegraphics[width=15.0ex, trim=0 0 0 0]{resources/components/evaluation_set}, \includegraphics[width=15.0ex, trim=0 0 0 0]{resources/components/anomaly_scores} \right) = \\ \exsolution
+        \Sigma \left( \includegraphics[width=23.0ex, trim=0 23ex 0 0]{resources/components/evaluation_set}, \includegraphics[width=23.0ex, trim=0 23ex 0 0]{resources/components/anomaly_scores} \right) = \\ \includegraphics[width=23.0ex, trim=0 23ex 0 0]{resources/components/solution}
     \]
 \item{A transformation $T_S: [S'] \rightarrow [S]$}, which transforms the preliminary solution into an actual solution. In our example, $T_S$ uses bilinear interpolation to produce anomaly scores for all elements of the input data:
     \[
@@ -81,6 +80,8 @@ The proposed decomposition splits each such $P$ into a composition of the follow
 \end{enumerate}
 
 The process of computing a solution to a problem $P$ with associated $T_D$, $F_E$, $C$, $F_R$, $M$, $\Sigma,$ and $T_S$ for an input dataset $d \in [D]$ can be seen as a series of transformations on $d$.
+
+Now, the sets $\mathcal{D}$ and $\mathcal{S}$, as well as the functions $T_D$, $F_E$, $C$, $F_R$, $M$, $\Sigma$, and $T_S$ are discussed in detail.
 
 % TODO: remove the following
 %
@@ -119,22 +120,12 @@ The process of computing a solution to a problem $P$ with associated $T_D$, $F_E
 %     (E_D, A[E_D, (F_R \circ C)(E_D)]) \in (2^{\mathcal{D}'} \times (\mathbb{R}^+)^{|E|}) \xmapsto{\quad \Sigma \quad} S(D) \in \mathcal{S}
 % \]
 
-In the rest of this chapter, the sets $\mathcal{D}$ and $\mathcal{S}$, as well as the functions $T_D$, $F_E$, $C$, $F_R$, $M$, $\Sigma$, and $T_S$ are investigated in detail.
-
-\section{The input data format}
+\section{The input data format $\mathcal{D}$}
 \label{sect:data_format}
 
-As mentioned above, we represent the set of possible input datasets by means of a set $\mathcal{D}$. A problem formulation associates with each $D \in \mathcal{D}$ a solution $S$ in the set of solutions $\mathcal{S}$.
+As mentioned above, we represent the set of possible input datasets by means of a set $\mathcal{D} \subset [D]$, i.e.\ a set of lists over some application-specific set $D$. A problem formulation associates with each element of $\mathcal{D}$ a solution in the set of solutions $\mathcal{S}$.
 
-Since processing the input data into a format that is more amenable to analysis is a crucial step in most anomaly detection methods, and since we want to allow different such formats for different problem formulations, we have included a transformation $T: \mathcal{D} \rightarrow \mathcal{D}'$ as part of the framework. This enables a problem-specific preprocessing step, which in turn makes the framework more flexible.
-
-Of course, an exhaustive discussion of previously studied input datasets would not be feasible nor very interesting in a non-application-specific context. Likewise, what kinds of transformations are relevant varies too drastically between problem formulations for them to be treated in detail here.
-
-There are however, a few commonly used general classifications of input datasets and transformations, which we will now discuss.
-
-Typically, each $D \in \mathcal{D}$ can be seen as a set\footnote{In some applications, especially those which involve contexts (defined in Section~\ref{sect:training_data}), it makes sense to allow the data set to contain duplicate items. In this case, we assume that the data set is ordered, and that identical items can be distinguished by means of this order.} of items from some set $X$, i.e.\ $D = \{d_1, d_2, \dots, d_n\}$, where $\forall d_i: d_i \in X$ (to put it another way, $\mathcal{D} \subset 2^X$).
-
-One commonly used classification is based on the structure of $X$; a distinction is often made between categorical, discrete, and real-valued datasets based on the cardinality of $X$. The input data is said to be \emph{categorical} (or \emph{symbolic}) if $X$ is finite, \emph{discrete} if $X$ is countable and \emph{real-valued} if $X \subseteq \mathbb{R}^n$ for some $n$ (other uncountable sets are typically not encountered). It is also frequently the case that $X$ consists of some combination of categorical, discrete and real-valued data, in which case the input data is referred to as \emph{mixed}\cite{TODO}.
+Methods are commonly classified based on characteristics of $D$. For instance, a distinction is typically made between categorical, discrete, and real-valued data based on the cardinality of $D$. The input data is said to be \emph{categorical} (or \emph{symbolic}) if $D$ is finite, \emph{discrete} if $D$ is countable and \emph{real-valued} if $D \subseteq \mathbb{R}^n$ for some $n$ (other uncountable sets are typically not encountered). It is also frequently the case that $D$ consists of some combination of categorical, discrete and real-valued data, in which case the input data is referred to as \emph{mixed}\cite{TODO}.
 
 \begin{wrapfigure}{r}{0.5\textwidth}
 \changecaptionwidth
@@ -144,13 +135,27 @@ One commonly used classification is based on the structure of $X$; a distinction
 \label{fig:multi_vs_univariate}
 \end{wrapfigure}
 
-Another classification, also based on characteristics of $X$, is that between uni- and multivariate data. If $X = Y^n$ for some other set $Y$, the input data is called \emph{univariate}; otherwise it is called \emph{multivariate}. An illustration of uni- and multivariate time series is shown in figure~\ref{fig:multi_vs_univariate}.
+Another classification, also based on characteristics of $D$, is that between uni- and multivariate data. If $D = X^n$ for some set $X$, the input data is called \emph{multivariate}; otherwise it is called \emph{univariate}. An illustration of uni- and multivariate time series is shown in figure~\ref{fig:multi_vs_univariate}.
 
-While the above distinctions are not relevant to the framework, they prove important in applications. For instance, categorical data is typically both computationally and conceptually easier to handle than either discrete or real-valued data. Likewise, univariate data is typically much easier to handle than multivariate data.
+Characteristics such as the dimensionality of the data typically prove important in applications. For instance, categorical data is typically both computationally and conceptually easier to handle than either discrete or real-valued data. Likewise, univariate data is typically much easier to handle than multivariate data.
 
-For this reason, dimensionality and numerosity reduction transformations are commonly utilised in order to reduce either the dimensionality or cardinality of the data.
+\section{The set of solutions $\mathcal{S}$}
 
-\emph{Dimensionality reduction}, as the name suggests, involves reducing the number of dimensions in the individual to $d_i \in D$. Within the framework, a dimensionality reduction transformation can be seen as a function $F_\mathcal{D}: \mathcal{D} \rightarrow \mathcal{D}'$ that maps $D = \{d_1, d_2, \dots, d_k\} \subset X = Y^n$ to $D' = \{d_1', d_2', \dots, d_k'\} \subset X' = {Y'}^m$, where $m < n$ (and, typically, $Y' = Y$).
+The collection of possible solutions is modelled as a set $\mathcal{S} \subset [S]$, i.e.\ some set of lists over some application-specific set $S$. In this section, typical choices of $\mathcal{S}$---which will henceforth be referred to as the \emph{solution format}---are discussed. In practice, only a few distinct solution formats are used.
+
+One common solution format involves associating \emph{anomaly scores} with each element of the input dataset. In other words, for some input data $[d_1, d_2, \dots, d_n]$, the corresponding solution will have the format $[s_1, s_2, \dots, s_n] \in [S]$, where each $s_i$ indicates how anomalous the corresponding $d_i$ is. Typically,  $S = \mathbb{R}^+$.
+
+Another common approach is to, for some input data $[d_1, d_2, \dots, d_n]$, let $S$ contain the indices of the most anomalous elements of $D$, i.e.\ $S = \mathbb{Z}_n$. Two approaches can be distinguished here. Either, the solution has a fixed size, in which case the solution format is typically referred to as \emph{discords}~\cite{keogh1} \cite{bu} \cite{yankov} \cite{fu} \cite{lin}., or the solution will contain the indices of all elements which are considered sufficiently anomalous.
+
+Finally, it might be interesting to let the solution consist of a list of anomalous subsets of the input data, i.e.\ $S = [D]$.
+
+Which of these solution formats is used depends on the performance requirements of the application. For instance, while any set of anomalous indices can be constructed from a real-valued anomaly score vector, producing a set of anomalous indices (and especially discords) directly can be far less computationally intensive.
+
+\section{The transformations $T_D$ and $T_S$}
+
+It is common for the input data to be preprocessed to make it more amenable to analysis. To account for this, two transformations $T_D: [D] \rightarrow [D']$ and $T_S: [S'] \rightarrow [S]$ are included in the framework. These transformations are complementary, in the sense that $T_D$ maps the input data to some set $[D']$, while $T_S$ takes a solution $[S']$ to some problem defined on elements in $[D']$ and maps it to a solution in $[S]$ for the data fed into $T_D$.
+
+Typically, $T_D$ involves either dimensionality or numerosity reduction. \emph{Dimensionality reduction} involves reducing the dimensionality in the individual elements of the input dataset; i.e.\ a transformation $T_D: [D] \rightarrow [D']$ is a dimensionality reduction transformation if $D'$ is of lower dimensionality than $D$.
 
 Such transformations invariably involve some degree of information loss. Ideally, the information which they retain should be that which is most relevant to the analysis. Many methods have been designed with this goal in mind. A distinction is typically made between feature selection and feature extraction methods. \emph{Feature selection} methods select a subset of the features present in the original data, while \emph{feature extraction} methods create new features from the original data. An example of feature extraction is shown in figure~\ref{fig:dimensionality_reduction}.
 
@@ -167,30 +172,19 @@ Common feature extraction methods for data in $\mathbb{R}^n$ include \emph{princ
 \label{fig:dimensionality_reduction}
 \end{figure}
 
-\section{The solution format}
-
-While the solution format is modeled in the framework by means of an arbitrary set $\mathcal{S}$, only a few distinct formats are used in practice.
-
-One common solution format involves associating a vector of \emph{anomaly scores} with each element of the input dataset. In other words, with each input $D = (d_1, d_2, \dots, d_n)$, an anomaly score vector $S = (s_1, s_2, \dots, s_n) \in X^n$ is associated, where $X$ is some arbitrary set (typically $\mathbb{R}^n$). If all $D$ have the same size, the corresponding $\mathcal{S}$ is simply set of vectors over $X$ of length $n$: $\mathcal{S} = 2^{X^n}$.
-
-Another common approach is to, for $D = (d_1, d_2, \dots, d_n)$, let $S$ be a set of anomalous indices in $D$, i.e.\ $S \subset \mathbb{Z}_n$. Two approaches can be distinguished, based on how $S$ is constructed. Typically, $S$ will consist of the indices of those elements in $D$ which are anomalous above some threshold. When $S$ consists of the indices of the $k$ most anomalous elements in $D$ (or some variant thereof), the solution format is typically referred to as \emph{discords} \cite{keogh1} \cite{bu} \cite{yankov} \cite{fu} \cite{lin}.
-
-Finally, it might be interesting to let $S$ be a set of anomalous subsets of $D$, i.e.\ $S \subset 2^{\mathbb{Z}_n}$.
-
-Which of these solution formats is used depends on the performance requirements of the application. For instance, while any set of anomalous indices can be constructed from a real-valued anomaly score vector, producing a set of anomalous indices (and especially discords) directly can be far less computationally intensive.
-
 \section{The evaluation filter $F_E$}
 
-An important aspect of any problem is which subsets of the dataset $D'$ are considered candidate anomalies; i.e.\ which subsets of $D'$ constitute the \emph{evaluation set} $E_{D'}$. Considering all subsets is not computationally feasible, and considering only the singleton sets is likely to be overly limiting for some applications. To allow for greater flexibility in the choice of evaluation set, the framework includes a function, the \emph{evaluation filter} $F_E: D' \in \mathcal{D}' \mapsto E_{D'} \subset 2^{D'}$, which turns the choice of evaluation set into a part of the problem formulation.
+An important aspect of any problem is which subsets of the transformed data are considered candidate anomalies; i.e.\ which sublists of the transformed data $[d_1', d_2', \dots, d_n'] \in [D']$ constitute the \emph{evaluation set} $E \in [[D']]$. Letting the evaluation set consist of all sublists is not computationally feasible, and considering only single element lists is likely to be overly limiting for many applications. To allow for greater flexibility in the choice of evaluation set, the framework includes a function, the \emph{evaluation filter} $F_E: [D'] \rightarrow [[D']]$, which includes the choice of evaluation set as part of the problem formulation.
 
-What $F_E$ is appropriate depends on the presence of additional structure in $D' = (d_1', d_2', \dots, d_n')$, that relates the elements $d_i' \in D'$. If no such structure is present, allowing non-singleton candidate anomalies is not meaningful, and $F_E$ should be given by $F_E(D') = \{\{d_1'\}, \{d_2'\}, \dots, \{d_n'\}\}$. On the other hand, if any such structure (like, for instance, an ordering or distance between elements) exists (and is pertinent to the analysis), then $F_E$ ought to take that structure into account.
+What $F_E$ is appropriate depends on whether or not there is any structure that relates the elements of the input data. If no such structure is present, allowing candidate anomalies with more than one element is not meaningful, and $F_E$ should be given by $F_E([d_1', d_2', \dots, d_n']) = [[d_1'], [d_2'], \dots, [d_n']]$. On the other hand, if any such structure (such as an ordering of or distance between the elements) exists (and is pertinent to the analysis), then $F_E$ ought to take that structure into account.
 
-As an example, consider a sequence $\mathbf{s} = (s_1, s_2, \dots, s_k)$. Here, a concept of locality is naturally induced by the sequence ordering, and it reasonable that $F_E(\mathbf{s})$ consist of contiguous subsequences of $\mathbf{s}$:
+As an example, consider the case where the input elements $X = [d_1', d_2', \dots, d_k']$ constitute a sequence. Here, a concept of locality is naturally induced by the sequence ordering, and it is reasonable that $F_E(X)$ consist of contiguous sublists of $X$:
 \[
-    F_E(\mathbf{s}) \subset \{ (s_m, s_{m+1}, \dots, s_n) \,:\, 0 \leq m \leq n \leq |\mathbf{s}|\}.
+    F_E([d_1', d_2', \dots, d_k']) = [[d_{a_1}', d_{a_1 + 1}', \dots, d_{b_1}'], [d_{a_2}', d_{a_2 + 1}', \dots, d_{b_2}'], \dots, [d_{a_n}', d_{a_n + 1}', \dots, d_{b_n}']]
 \]
+for some arbitrary $n$, $a_1, a_2, \dots, a_n$ and $b_1, b_2, \dots, b_n$, where $\forall i: b_i > a_i$.
 
-Such an evaluation filter, which extracts subsequences of a fixed length, is illustrated in Figure~\ref{fig:filters}.
+An evaluation filter which extracts contiguous sublists of a fixed length is illustrated in Figure~\ref{fig:filters}.
 
 \section{The context function $C$}
 
@@ -198,13 +192,17 @@ Such an evaluation filter, which extracts subsequences of a fixed length, is ill
     \begin{center}
         \includegraphics[width=1\textwidth]{resources/filters}
     \end{center}
-\caption{{\small Schematic illustration of filters and contexts acting on an evaluation sequence $\mathbf{s} = (s_1, s_2, \dots, s_{40})$. The top panel shows the evaluation set $E = F_E(\mathbf{s}) = (e_1, e_2, \dots, e_{19})$ extracted by a sliding window filter with width $4$ and step $2$. The bottom panel shows the local symmetric context of $e_{10}$ with width $w = 12$: $C(e_{10}) = (c_1, c_2, \dots, c_{24})$, as well as the training dataset $T_{e_{10}} = F_T(e_{10}) = (t_1, t_2, \dots, t_{10}\}$ extracted by an analogous sliding window training filter.}}
+    \caption{{\small Schematic illustration of filters and contexts acting on a sequence $\mathbf{s} = [s_1, s_2, \dots, s_{40}]$. The top panel shows the evaluation set $E = F_E(\mathbf{s}) = [e_1, e_2, \dots, e_{19}]$ extracted by an evaluation filter which selects contiguous subsequences of fixed length. The bottom panel shows the context of $e_{10}$ given by $C(\mathbf{s}, e_{10}) = [c_1, c_2, \dots, c_{24}]$, as well as the corresponding reference set $F_R(e_{10}) = [t_1, t_2, \dots, t_{10}]$ extracted by a reference filter identical to the evaluation filter.}}
 \label{fig:filters}
 \end{figure}
 
-Once the candidate anomalies have been defined, a \emph{context}, with which each candidate anomaly is to be compared, must be constructed. To this end, we introduce the concept of a \emph{context function} $C: \mathcal{TODO}$. This is a function that associates with each $E \subset D'$ a context $C(E) \subset X$, where either $X = D'$ or $X = T$ for some set of training data $T$.
+Once the candidate anomalies have been identified, a \emph{context} must be associated with each candidate anomaly. The context for a candidate anomaly represents the set of elements with which that candidate anomaly is to be compared. To this end, the decomposition associates with each problem a \emph{context function} $C: ([D'], [D']) \rightarrow [D']$, which takes the transformed input data and a list of candidate anomalies, and associates with each candidate anomaly a context (in $[D'])$.
 
-As with the evaluation filter, what constitutes an appropriate context function is entirely dependent on what additional structure is present in $D'$. If no such structure is present, the only reasonable choices of $C$ are $C(E) = D' \setminus E$, or $C(E) = T$ for some training set $T$. If, on the other hand, there is such structure present, a context function which takes it into account might be preferable.
+As with the evaluation filter, what constitutes an appropriate context function is entirely dependent on what structure is present in the input data. If no such structure is present, the only reasonable choices of $C$ are
+\[
+    C([d_1', d_2', \dots, d_k'], [d_{a_1}', d_{a_2}', \dots, d_{a_l}']) = [d_{b_1}', d_{b_2}', \dots, d_{b_m}']
+\]
+where $\{b_1, b_2, \dots, b_m\} = \mathbb{Z}_k \setminus \{a_1, a_2, \dots, a_l\}$, or $C(X, Y) = T$ for some fixed data $T \in [D']$. If, on the other hand, there is such structure present, a context function which takes it into account might be preferable. As a concrete example of such an application with such structure, consider a long sequence: often how an item compares to those items `closest' to it (in the ordering) is more relevant to the analysis than how it compares to the rest of the sequence.
 
 \begin{figure}[thb]
     \vspace{-4pt}
@@ -218,88 +216,92 @@ As with the evaluation filter, what constitutes an appropriate context function 
     \vspace{-5pt}
 \end{figure}
 
-Of course, it is sometimes infeasible or undesirable to compare items with the entirety of the training dataset. This is mainly the case when the dataset supports additional structure, such an ordering or metric, which gives rise to a natural concept of locality within the dataset. As a concrete example of such an application, consider unsupervised anomaly detection in a long sequence: often how an item compares to those items `closest' to it (in the ordering) is much more relevant to whether or not that item should be considered an anomaly than how it compares to the rest of the sequence.
-
-Context functions generalise several of the concepts discussed in the previous chapter; semi-supervised anomaly detection with normal training data and unsupervised anomaly detection correspond to $C(E) = T$ and $C(E) \subset D'$ respectively, while contextual and point anomalies are just special cases of $C(E) \subset D'$. Context functions also generalise anomaly detection problems to various tasks that have traditionally been considered separate from anomaly detection. For instance, \emph{novelty detection}~\cite{chandola}, which refers to the detection of novel---or previously unseen---items or subsequences in a sequence~\footnote{It should be noted that the term `novelty detection' is occasionally used in the literature to refer to what is referred to as semi-supervised anomaly detection in this report.}, is really just the use of a one-sided context $C(s_i) = (s_{i-w}, s_{i - w + 1}, \dots, s_{i - 1})$ in an anomaly detection problem.
+Context functions generalise several of the concepts discussed in the previous chapter; semi-supervised anomaly detection with normal training data and unsupervised anomaly detection correspond to $C(X, Y) = T$ and $C(X, Y) \subset X$ respectively, while contextual and point anomalies are just special cases of $C(X, Y) \subset X$. Context functions also generalise anomaly detection problems to various tasks that have traditionally been considered separate from anomaly detection. For instance, \emph{novelty detection}~\cite{chandola}, which refers to the detection of novel---or previously unseen---items or subsequences in a sequence~\footnote{It should be noted that the term `novelty detection' is occasionally used in the literature to refer to what is referred to as semi-supervised anomaly detection in this report.}, is really just the use of a one-sided context
+\[
+    C([s_1, s_2, \dots, s_n], [s_i, s_{i+1}, \dots s_j]) = [s_{i-w}, s_{i - w + 1}, \dots, s_{i - 1}],
+\]
+for some $w$, in an anomaly detection problem.
 
 A few possible context functions are shown in Figures~\ref{fig:filters} and~\ref{fig:contexts}.
 
 \section{The reference filter $F_R$}
 
-Once a set of candidate anomalies has been produced and a context has been associated with each candidate anomaly, all that remains is to assign anomaly scores to each candidate anomaly (and then combine the results of this computation into a solution). However, a candidate anomaly and its context are likely to be of different sizes, which can be inconvenient since most anomaly measures only work on elements of the same size. To get around this, the context must be split into chunks of the same size as the candidate anomaly.
+Once a set of candidate anomalies has been produced and a context has been associated with each candidate anomaly, all that remains is to assign anomaly scores to each candidate anomaly (and then combine the results of this computation into a solution). However, a candidate anomaly and its context are likely to be of different sizes, which can be inconvenient, since most anomaly measures only work on elements of the same size. To get around this, the context can be split into chunks of the same size as the candidate anomaly.
 
-To accommodate for this step, the framework contains a \emph{reference filter} $F_R$, which (analogously to the evaluation filter), maps a context $C(E)$ to a \emph{reference set} $R_E$ of items with which the candidate anomaly $E$ can be effectively compared. A possible reference filter for sequences is illustrated in Figure~\ref{fig:filters}.
+To accommodate for this step, the framework includes a \emph{reference filter} $F_R: [D'] \rightarrow [[D']] $, which (analogously to the evaluation filter) maps a context to a \emph{reference set} of items with which the candidate anomaly can be effectively compared. A possible reference filter for sequences is illustrated in Figure~\ref{fig:filters}. If the anomaly measure can operate on elements of different sizes, then $F_R(X) = [X]$ might be a good choice.
 
-\section{The anomaly measure $A$}
-TODO: move the survey part of this section to the next chapter, make it about sequences only
+\section{The anomaly measure $M$}
 
-Arguably the most significant aspect of an anomaly detection problem is the measure used to decide if items are anomalous or not. This factor defines (often in unpredictable ways) what types of features will be considered anomalous, so it is vital to choose it appropriately. Unfortunately it is also the factor that is hardest to restrict to form a tractable problem set. Essentially, any function that maps a data item $d \in D$ and its associated training set $F_T(C(d))$ to $\mathbb{R}^+$ constitutes a valid anomaly measure. This set is typically intractable, even if the output is restricted to a finite subset of $\mathbb{R}^+$, or the allowed functions are restricted to some specific class of functions.
+The anomaly measure $M: ([D'], [[D']]) \rightarrow A$ takes a candidate anomaly and a reference set and produces an anomaly score in some set $A$. Realistically, letting $A = \mathbb{R}+$ ought to be sufficient in most cases. The anomaly measure essentially defines (often in unpredictable ways) what types of features will be considered anomalous, so it is vital that it is chosen appropriately.
 
-A more useful way of restricting this factor is to simply consider which of the anomaly measures studied in the literature are applicable to the target application, and only allow problem formulations which involve these. For this reason, we here settle for a broad overview of commonly studied anomaly measures. We begin by discussing statistical measures, which are especially interesting since they can be theoretically justified.
+A large number of different anomaly measures are used in the literature, and listing them all is not possible within the scope of this report. Methods are often categorised based on what type of anomaly measure they employ; for instance, a method might be classified as statistical, classifier-based, distance-based, or information-theoretic based on the anomaly measure. A good presentation of these categories is given in~\cite{chandola}.
 
-Statistical measures usually operate under the assumption that $C(e_i)$ has been generated from some underlying distribution or stochastic process, and associates an anomaly score with $e_i$ based on how likely it is to have been generated by the same distribution or process. Typically, statistical measures work by using some standard inference method, coupled with a few assumptions about the dataset, to estimate some simple distribution underlying the $C(e_i)$. Statistical measures have been applied to a wide range of domains, often with good results. Several books and surveys have been published on the subject of anomaly detection using statistical methods~\cite{barnett}~\cite{bakar}~\cite{leroy}~\cite{hawkins}.
-
-Statistical measures are usually classified as either parametric or non-parametric. \emph{Parametric statistical measures} assume that distribution underlying $C(e_i)$ is known, but has unknown parameters (for instance, it might be assumed that the data is $N(\mu, \sigma^2)$, where $\mu$ and $\sigma$ are unknown). \emph{Non-parametric statistical measures}, on the other hand, do not assume that the distribution is known and instead try to estimate the distribution itself by assigning weights to a set of basis functions.
-
-While non-parametric approaches are more widely applicable (the distribution of data is usually not known), the extra information provided to parametric methods mean that they converge faster and are more accurate (as long as the given assumptions are correct). Of course, parametric methods are also less widely applicable, since the underlying distribution is often not known.
-
-For datasets that can be modeled by stochastic processes, \emph{predictive models}, such as Markov chains~\cite{TODO}, hidden Markov models~\cite{TODO}, and autoregressive models~\cite{TODO} are frequently used as anomaly measures. It should be noted that most predictive models presuppose an ordering and a one-sided context.
-
-Due to the relatively high computational cost of density estimation, statistical methods are mainly used to find point anomalies. Since contextual anomalies require different training sets for each $e_i \in E$, detecting contextual anomalies requires $|E|$ density estimations (unless some clever optimisation is employed), which is typically prohibitively expensive. Since most density estimation methods scale poorly with increasing dimensionality, collective anomalies can also be prohibitively expensive to detect using statistical methods.
-
-A relatively novel and interesting class of anomaly measures is \emph{information theoretic measures}. Mainly used for symbolic datasets, these measures judge similarity by estimating how much information is shared between items or subsets of items (i.e.\ by computing measures of shared information between elements). Like statistics, information theory can be given a convenient theoretical justification.
-
-Several different measures of shared information have been suggested, such as the compressive-based dissimilarity measure (CDM)~\cite{keogh2} and (relative) conditional entropy~\cite{xiang}. While information theoretic approaches are mainly useful for symbolic data, they have shown promise for describing anomalies in continuous data when combined with a discretization and numerosity reduction~\cite{keogh2}.
-
-Anomaly measures inspired by traditional machine learning methods are also common and have been extensively researched in various contexts. For instance, classifier-based methods such as support vector machines are commonly used (TODO: add citation here). While classifiers only produce as many distinct outputs as there are classes, ensembles or weighting schemes can be utilized to produce finer grained output. Like statistical anomaly measures, classifier-based anomaly measures are relatively expensive to train, so they are typically not suitable for non-trivial contexts.
-
-Distance-based anomaly measures are also commonly used. These assign anomaly scores to elements by means of some local point density estimate. Examples include k-nearest neighbors (TODO: cite) and local outlier factor (TODO: cite). Distance-based typically measures scale well with increasing dimensionality, and are appropriate for non-trivial contexts since they are often simple to compute.
+% TODO: move the survey part of this section to the next chapter and make it about sequences only (?)
+%
+% A more useful way of restricting this factor is to simply consider which of the anomaly measures studied in the literature are applicable to the target application, and only allow problem formulations which involve these. For this reason, we here settle for a broad overview of commonly studied anomaly measures. We begin by discussing statistical measures, which are especially interesting since they can be theoretically justified.
+%
+% Statistical measures usually operate under the assumption that $C(e_i)$ has been generated from some underlying distribution or stochastic process, and associates an anomaly score with $e_i$ based on how likely it is to have been generated by the same distribution or process. Typically, statistical measures work by using some standard inference method, coupled with a few assumptions about the dataset, to estimate some simple distribution underlying the $C(e_i)$. Statistical measures have been applied to a wide range of domains, often with good results. Several books and surveys have been published on the subject of anomaly detection using statistical methods~\cite{barnett}~\cite{bakar}~\cite{leroy}~\cite{hawkins}.
+%
+% Statistical measures are usually classified as either parametric or non-parametric. \emph{Parametric statistical measures} assume that distribution underlying $C(e_i)$ is known, but has unknown parameters (for instance, it might be assumed that the data is $N(\mu, \sigma^2)$, where $\mu$ and $\sigma$ are unknown). \emph{Non-parametric statistical measures}, on the other hand, do not assume that the distribution is known and instead try to estimate the distribution itself by assigning weights to a set of basis functions.
+%
+% While non-parametric approaches are more widely applicable (the distribution of data is usually not known), the extra information provided to parametric methods mean that they converge faster and are more accurate (as long as the given assumptions are correct). Of course, parametric methods are also less widely applicable, since the underlying distribution is often not known.
+%
+% For datasets that can be modeled by stochastic processes, \emph{predictive models}, such as Markov chains~\cite{TODO}, hidden Markov models~\cite{TODO}, and autoregressive models~\cite{TODO} are frequently used as anomaly measures. It should be noted that most predictive models presuppose an ordering and a one-sided context.
+%
+% Due to the relatively high computational cost of density estimation, statistical methods are mainly used to find point anomalies. Since contextual anomalies require different training sets for each $e_i \in E$, detecting contextual anomalies requires $|E|$ density estimations (unless some clever optimisation is employed), which is typically prohibitively expensive. Since most density estimation methods scale poorly with increasing dimensionality, collective anomalies can also be prohibitively expensive to detect using statistical methods.
+%
+% A relatively novel and interesting class of anomaly measures is \emph{information theoretic measures}. Mainly used for symbolic datasets, these measures judge similarity by estimating how much information is shared between items or subsets of items (i.e.\ by computing measures of shared information between elements). Like statistics, information theory can be given a convenient theoretical justification.
+%
+% Several different measures of shared information have been suggested, such as the compressive-based dissimilarity measure (CDM)~\cite{keogh2} and (relative) conditional entropy~\cite{xiang}. While information theoretic approaches are mainly useful for symbolic data, they have shown promise for describing anomalies in continuous data when combined with a discretization and numerosity reduction~\cite{keogh2}.
+%
+% Anomaly measures inspired by traditional machine learning methods are also common and have been extensively researched in various contexts. For instance, classifier-based methods such as support vector machines are commonly used (TODO: add citation here). While classifiers only produce as many distinct outputs as there are classes, ensembles or weighting schemes can be utilized to produce finer grained output. Like statistical anomaly measures, classifier-based anomaly measures are relatively expensive to train, so they are typically not suitable for non-trivial contexts.
+%
+% Distance-based anomaly measures are also commonly used. These assign anomaly scores to elements by means of some local point density estimate. Examples include k-nearest neighbors (TODO: cite) and local outlier factor (TODO: cite). Distance-based typically measures scale well with increasing dimensionality, and are appropriate for non-trivial contexts since they are often simple to compute.
 
 \section{The aggregration function $\Sigma$}
 
-The aggregation function has the role of taking the anomaly scores produced by the anomaly measure, and combining them to form a solution. Formally, given a set of index vectors and corresponding anomaly scores $A = \{ (\mathbf{i}_1, A_1), (\mathbf{i}_2, A_2), \dots, (\mathbf{i}_n, A_n) \}$ where $\mathbf{i}_j = (i_1^j, i_2^j, \dots, i_{n_j}^j)$, the role of $\Sigma$ is to combine this data into a solution $S \in \mathcal{S}$.
+The aggregation function $\Sigma: ([[D']], [A]) \rightarrow [S']$ takes a list of candidate anomalies and a list of corresponding anomaly scores, and produces a ``preliminary'' solution in $[S']$. As mentioned previously, this solution is preliminary in the sense that it corresponds to a solution to a problem $P': [D'] \rightarrow [S']$. If a problem does not involve any transformation, i.e.\ if  $D' = D$ and $T_D$ is the identity transformation, then $T_S$ must also be the identity transformation, and $\Sigma$ will produce the actual solution.
 
-How this is done depends on the nature of both $\mathcal{S}$ and the specific problem formulation. If the solution is expected to be a list of anomalous subsets, then $\Sigma$ ought to simply select a subset of the $\mathbf{i}_j$, possibly along with the corresponding $A_j$. The same goes if the evaluation set only contains singletons (i.e.\ if only point anomalies are sought).
+How this is done depends on the nature of both $\mathcal{S}$ and the specific problem formulation. If the solution is expected to be a list of anomalous subsets, then $\Sigma$ ought to simply select a subset of the candidate anomalies, possibly along with the corresponding $A_j$. The same goes if the evaluation set contains only single element lists (i.e.\ if only point anomalies are sought).
 
-If, on the other hand, the evaluation set contains non-singleton subsets of the input data, and the sought solution format is not a lost of anomalous subsets, then the subsets of $A$ must be weighted together to form an element $S \in \mathcal{S}$.
+If, on the other hand, the evaluation set contains non-singleton subsets of the input data, and the sought solution format is not a list of anomalous subsets, then the anomaly scores $A$ must be weighted together to form a list in $[S']$. Since all other solution formats can be retrieved from a list of anomaly scores, it seems reasonable to in these cases only consider aggregation functions which produce a list of anomaly scores.
 
-Reasonably, any given anomaly score $A_j$ ought to only affect those indices that are part of the associated $\mathbf{i}_j$, and it ought to affect these equally. Keeping this in mind, and noting that all output formats (except anomalous subsets) can be retrived from a set of anomaly scores, it is reasonable to restict $\Sigma$ to be on the form $\Sigma(A) = \Sigma_b(\Sigma_a(A))$, where:
+Reasonably, such an aggregation function ought to be on the form
 \[
-    \Sigma_a(\{ (\mathbf{i}_1, A_1), (\mathbf{i}_2, A_2), \dots, (\mathbf{i}_n, A_n) \}) = (\sigma(\{A_j: 1 \in \mathbf{i}_j\}), \sigma(\{A_j: 2 \in \mathbf{i}_j\}), \dots)),
+    \Sigma([e_1, e_2, \dots, e_n], [a_1, a_2, \dots, a_n]) = [\sigma(\{a_i : d_1' \in e_i\}), \sigma(\{a_i : d_2' \in e_i\}), \dots, \sigma(\{a_i : d_n' \in e_i\})],
 \]
-$\sigma$ is some function that maps the $A_i$ for a single index to produce an anomaly score in $\mathbb{R}$, and $\Sigma_b$ is some function that produces the desired solution from the anomaly vector produced by $\Sigma_a$.
+where $\sigma$ is some function that maps a set of elements in $A$ to an element of $S'$.
 
 \section{Constructing an oracle}
 
-Assuming that each of the functions in some problem formulation $P = (T, F_E, C, F_R, A, \Sigma)$ can be computed, the construction of an oracle $O$ that computes the solution to $P$ is an easy task. Specifically, the following algorithm solves $P$:
+Assuming that each of the functions in some problem formulation $P = (T_D, F_E, C, F_R, M, \Sigma, T_S)$ can be computed, the construction of an oracle $O$ that computes the solution to $P$ is an easy task. Specifically, the following algorithm solves $P$:
 
 \begin{algorithmic}
-    \Require{Some $D \in \mathcal{D}$.}
-    \State{$D' \gets T(D)$}
-    \State{$S \gets \emptyset$ \Comment{initialize container for anomaly scores}}
-    \For{$(E, I_E) \in F_E(D')$} \Comment{iterate over the evaluation set}
-        \State{$C_E \gets C(E)$ \Comment{compute context}}
-        \State{$R_E \gets F_T(C_E)$ \Comment{extract reference set from context}}
-        \State{$S \gets S \cup (M(E, \{\mathbf{t}_1, \mathbf{t}_2, \dots, \mathbf{t}_k\}), I_E)$ \Comment{save anomaly score with indices}}
+    \Require{Some $X \in [D]$.}
+    \State{$X' \gets T_D(X)$}
+    \State{$A \gets []$ \Comment{initialize anomaly scores to empty list}}
+    \For{$E \in F_E(X')$} \Comment{iterate over the evaluation set}
+        \State{$R_E \gets F_R(C(X', E))$ \Comment{compute a reference set}}
+        \State{$append(A, M(E, R_E))$ \Comment{compute and store anomaly scores}}
     \EndFor{}
-    \State{\Return{$\Sigma(S)$ \Comment{aggregate scores to form anomaly vector}}}
+    \State{\Return{$F_S(\Sigma(F_E(X'), A))$ \Comment{aggregate scores to form anomaly vector}}}
 \end{algorithmic}
 
 The filters $F_E$ and $F_R$, the context function $C$ and the aggregation function $\Sigma$ can all be expected to be simple to compute, since they really just involve selecting subsets of or aggregating their input data; given a description of any of these functions, producing an algorithm that computes it is trivial.
 
-On the other hand, the transformation $T$ and the anomaly measure $M$ can in principle be arbitrarily difficult to compute. Correspondingly, special attention must be paid to ensure that these are selected properly.
+On the other hand, the transformations $T_D$ and $T_S$, as well as the anomaly measure $M$ can in principle be arbitrarily difficult to compute. Consequently, special attention must be paid to ensure that these functions are dealt with properly.
 
 \section{Constructing a problem set}
 
 Using the framework presented in this chapter, the construction of an appropriate problem set for some specific application can be approached in a systematic manner.
 
-First, the input data and solution formats $\mathcal{D}$ and $\mathcal{S}$ must be formally defined. The set of all possible problems then corresponds to the set of functions $P: \mathcal{D} \rightarrow \mathcal{S}$. Assuming that all interesting problems can be decomposed as $P = (T, F_E, C, F_R, A, \Sigma)$, an appropriate restricted problem set can be constructed by individually restricting the components $T, F_E, C, F_R, A$, and $\Sigma$.
+First, the format of the input and solution elements $D$ and $S$ must be formally defined. The set of all possible problems then corresponds to the set of functions $P: [D] \rightarrow [S]$. Assuming that all interesting problems can be decomposed as a combination of the components $T_D$, $F_E$, $C$, $F_R$, $M$, $\Sigma$, and $T_S$, an appropriate restricted problem set can be constructed by individually restricting the components.
 
 As has been previously pointed out, what restrictions should reasonably be placed on the filters and context function $F_E$, $F_R$ and $C$ depends entirely on the presence of structure in the input data $D \in \mathcal{D}$ which relates the $d_i \in D$. If the $d_i$ are completely unrelated, then it is reasonable to bypass these components by restricting them to only consider point anomalies. If, on the other hand, there is a relation between the $d_i \in D$, then it is reasonable to restrict these components to take this structure into account.
 
 The aggregation function $\Sigma$ is similarly limited. For problems involving point anomalies, all of the solution formats presented above can be produced directly from the output of the anomaly measure, so $\Sigma$ is naturally constrained. For problems involving collective anomalies, anomaly scores for several candidate anomalies might have to be weighted together to produce a solution. Depending on the application, it might be appropriate to constrain the possible $\Sigma$ to a single weighting method or to a set of different weighting methods.
 
-Restricting $T$ is more difficult, since it is typically not known what types of transformations are appropriate for a given application. With this in mind, it might be appropriate to simply restrict $T$ to some set of transformations which have been used in the specific application or similar applications. That way, the problem set can be said to generalise previously studied methods while remaining tractable.
+Restricting $T_D$ and $T_S$ is more difficult, since it is typically not known what types of transformations are appropriate for a given application. With this in mind, it might be appropriate to simply restrict $T_D$ and $T_S$ to some set of transformations which have been used in the specific application or similar applications. That way, the problem set can be said to generalise previously studied methods while remaining tractable.
 
 Finally, the anomaly measure $M$ must be appropriately restricted. Since $M$ can not be appropriately restricted based on information about the application, it is reasonably to take a similar approach as with $R_{\mathcal{D}}$ and restrict $M$ to some set of anomaly measures which have been previously studied in conjunction with the specific application.
 
