@@ -82,43 +82,6 @@ The process of computing a solution to a problem $P$ with associated $T_D$, $F_E
 
 Now, the sets $\mathcal{D}$ and $\mathcal{S}$, as well as the functions $T_D$, $F_E$, $C$, $F_R$, $M$, $\Sigma$, and $T_S$ are discussed in detail.
 
-% TODO: remove the following
-%
-% First, we allow for an input transformation $T$, which takes an element $D \in \mathcal{D}$ to an element $D' \in \mathcal{D}'$ for some problem specific set $\mathcal{D}'$, as follows:
-% \[
-%     D \in \mathcal{D} \xmapsto{\quad T \quad} D' \in \mathcal{D}'
-% \]
-% Such transformations are commonly applied to reduce the dimensionality or numerosity of $D$ in order to facilitate the analysis (typically $\mathcal{D}'$ has a lower cardinality than $\mathcal{D}$).
-%
-% Next, we associate an \emph{evaluation set} $E_{D'}$ of candidate anomalies (subsets of $D'$) with $D'$, by means of a function $F_E$ (the \emph{evaluation filter}):
-% \[
-%     D' \in \mathcal{D}' \xmapsto{\quad F_E \quad} E_{D'} \subset 2^{\mathcal{D}'}
-% \]
-% The most general (and least tractable) $F_E$ simply selects every subset of $D'$ (i.e.\ $F_E(D') = 2^{D'}$). A more common approach is to let $F_E$ be the singleton sets of $D'$ (i.e.\ $F_E(D') = \{\{d\}\,:\,d \in D'\}$).
-%
-% For each candidate anomaly $E \in E_{D'}$, we define a \emph{context} set $C_E \in X$, where $X$ is some problem-specifc set, by means of a \emph{context function}:
-% \[
-%     E \in E_{D'} \xmapsto{\quad C \quad} C_E \in X
-% \]
-% The point of the context set is to provide a convenient means of selecting, or limiting, the set of elements with which $E$ is to be compared. For unsupervised anomaly detection, it will be the case that $X = D'$, while for semi-supervised anomaly detection, $X$ is some arbitrary set of training data. We will assume that $E \cap C(E) = \emptyset$.
-%
-% Most previously studied problem formulations involve the comparison of each $E \in E_{D'}$ with a set of elements of similar size to $E$. Since $C(E)$ will typically not fulfill this requirement, we allow for a \emph{reference filter}, which maps $C_E$ to a set $R_E$ of reference data:
-% \[
-%     C_E \in X \xmapsto{\quad F_R \quad} R_E \in 2^X
-% \]
-% While for some problem formulations $F_R(C_E) = C_E$, for the vast majority of applications $F_R(C_E)$ is some subset of $\{c \subset C_E\,:\, |c| = |E|\}$
-%
-% Next, we introduce what is arguably the most important part of the decomposition; the \emph{anomaly measure} $A$. This is a function that maps a candidate anomaly $E$, along with a reference set $R_E$, to numerical \emph{anomaly score} representing how anomalous $E$ is with regards to the elements of $R_E$:
-% \[
-%     (E, R_E) \in (E_D \times 2^X) \xmapsto{\quad A \quad} A_E \in \mathbb{R}^+
-% \]
-% A wide variety of anomaly measures have been studied; common examples include measures of distance (how far is $E$ from the rest of $R_E$ with regards to some distance $\delta$?) and statistical estimates (how likely is $E$ to have been generated from the same process as $R_E$?).
-%
-% At this point, we have provided the means for finding anomalous subsets of $D'$. However, it is typically not the case that $\{A_E\,:\,E \in E_{D'}\} \in \mathcal{S}$. To provide a means of giving an actual solution in $\mathcal{S}$, an aggregation method must be provided. We do this in the form of a function $\Sigma$ which maps the $E$ and $A_E$ to some $S \in \mathcal{S}$:
-% \[
-%     (E_D, A[E_D, (F_R \circ C)(E_D)]) \in (2^{\mathcal{D}'} \times (\mathbb{R}^+)^{|E|}) \xmapsto{\quad \Sigma \quad} S(D) \in \mathcal{S}
-% \]
-
 \section{The input data format $\mathcal{D}$}
 \label{sect:data_format}
 
