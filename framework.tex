@@ -9,7 +9,7 @@ As mentioned in Section~\ref{sect:problem_formulation}, a problem formulation is
 
 One interesting aspect of anomaly detection is that almost all problem formulations found in the literature share common structure, in that they involve selecting a set of subsets of the input data, comparing each element of this set to some set of reference elements to produce a set of anomaly scores, and aggregating these anomaly scores into a result.
 
-If this common structure could be captured by decomposing $P$ into a collection of functions between sets, then the task of finding an appropriate $\mathcal{P}^*$ could be simplified to the task of placing appropriate restrictions on these individual functions. Correspondingly, formulating an oracle which can solve arbitrary $P \in \mathcal{P}^*$ could be simplified to the task of computing each individual function.
+If this common structure could be captured by decomposing $P$ into a collection of functions between sets, then the task of finding an appropriate $\mathcal{P}^*$ could be simplified to the task of placing appropriate restrictions on these individual functions. Correspondingly, formulating an oracle which can solve arbitrary $P \in \mathcal{P}^*$ could be simplified to the task of computing each individual function. If an efficient such oracle could be found, then software could be constructed which could, given a problem set in the form of a set of restrictions on the functions, automatically solve the optimisation problem for arbitrary applications.
 
 \newcommand{\exinput}{\includegraphics[width=33.0ex, trim=0 27.0ex 0 0]{resources/components/input}}
 \newcommand{\extransformedinput}{\includegraphics[width=33.0ex, trim=0 27.0ex 0 0]{resources/components/transformed_input}}
@@ -25,7 +25,7 @@ If this common structure could be captured by decomposing $P$ into a collection 
 \section{The problem decomposition}
 \label{sect:data_format}
 
-Our framework involves a specific such decomposition of $P$, which covers almost all previously studied problem formulations by capturing the common structure mentioned above. This decomposition is now presented in detail, assuming that $\mathcal{D}$ and $\mathcal{S}$ are fixed by the application. In parallel, illustrations are presented of a decomposition of an actual anomaly detection problem.
+We now present such a decomposition of $P$, which covers almost all previously studied problem formulations by capturing the common structure mentioned above. This decomposition is now presented in detail, assuming that $\mathcal{D}$ and $\mathcal{S}$ are fixed by the application. In parallel, illustrations are presented of a decomposition of an actual anomaly detection problem.
 
 \begin{figure}[htb]
 \begin{center}
@@ -52,7 +52,7 @@ The proposed decomposition splits each such $P$ into a composition of the follow
     \[
         F_E\left( \extransformedinput \right) = \exevaluationset
     \]
-\item{A context function $C: ([D'], [D']) \rightarrow [D']$,}which takes a dataset and a corresponding candidate anomaly (i.e.\ a sublist of the dataset), and produces an associated \emph{context}. In our example, the context function $C(X, Y)$ produces a set of elements in $X$ adjacent to $Y$:
+\item{A context function\footnote{We will take $(X, Y)$ to mean the set of tuples with the first element in $X$ and the second element in $Y$. In other words, $(X, Y)$ is just the Cartesian product $X \times Y$. } $C: ([D'], [D']) \rightarrow [D']$,}which takes a dataset and a corresponding candidate anomaly (i.e.\ a sublist of the dataset), and produces an associated \emph{context}. In our example, the context function $C(X, Y)$ produces a set of elements in $X$ adjacent to $Y$:
     \[
         C\left(\extransformedinput, \exevaluationitem \right) = \excontext
     \]
@@ -64,10 +64,9 @@ The proposed decomposition splits each such $P$ into a composition of the follow
     \[
         M\left( \exevaluationitem , \exreferenceset \right) = \exanomalyscore
     \]
-    Computing $M(e, F_R(C(e)))$
-    The result of applying $C$, $F_R$ and $M$ to each element of the evaluation set is:
+    Computing $f(E) = [m(e_1), m(e_2), \dots, m(e_n)]$, where $E = [e_1, e_2, \dots, e_n]$ is the evaluation set, $X$ is the input dataset and $m(e) = M(e, F_R(C(X, e)))$ gives:
     \[
-        \includegraphics[width=33.0ex, trim=0 5.0ex 0 0]{resources/components/anomaly_scores}
+        f\left(\exevaluationset\right) = \exanomalyscores %\includegraphics[width=33.0ex, trim=0 5.0ex 0 0]{resources/components/anomaly_scores}
     \]
     \item{An aggregation function $\Sigma: ([[X']], [A]) \rightarrow [S']$,} which aggregates the anomaly scores for the elements of the evaluation set to form a `preliminary' solution for elements of $[D']$. In our example, the aggregation function associates with each element the anomaly score of the candidate anomaly to which that element belongs:
     \[
@@ -307,14 +306,35 @@ Finally, the anomaly measure $M$ must be appropriately restricted. Since $M$ can
 
 While restricting the components individually simplifies problem set construction, it might lead to a problem set that is overly permissive, in the sense that some combinations of components might not be useful. In this case, it is reasonable to place additional restrictions on the problem set based on combinations of components.
 
-\section{Evaluation}
+\section{Error measures}
 
-TODO: move Section~\ref{ch:evaluation} here.
+Before the optimisation problem
+\[
+    P^*_{opt} = \argmin_{P \in \mathcal{P}^*} \sum_{T_i \in \mathcal{T}} \delta(s(T_i), O^*(P, T_i)).
+\]
+can be solved, the training set $\mathcal{T}$ and the error function $\delta$ must be defined. As was mentioned in the previous chapter, we assume that the set $\mathcal{T}$ of training data consists of a finite set of pairs $T_i = (D_i, S_i)$ in $([D], [S])$. This means that the training set is entirely application-specific, and discussing it in a general context is not likely to be useful.
 
-\subsection{Training data}
+The choice of error measure, which is formally a distance function for $\mathcal{S} = [S]$, i.e.\ $\delta: ([S], [S]) \rightarrow \mathbb{R}^+$, however, has more to do with the solution format than with the application itself. A few simple error measures which are likely to work well across most applications are now discussed.
 
-TODO: move Section~\ref{sect:evaluation_data} here.
+If the solution format is a list of anomalous items, then $S$ can be seen as the binary set $\{0, 1\}$ and the solution $[s_1, s_2, \dots, s_n]$ as a binary list, where $s_i$ indicates whether or not the corresponding input element $d_i$ is considered anomalous. Reasonably the Hamming distance~\cite{TODO}, corresponding to
+\[
+    \delta([a_1, a_2, \dots, a_n], [b_1, b_2, \dots, b_n]) = \sum_i \delta'(a, b),
+\]
+where $\delta'(a, b) = 1$ if $a \neq b$ and $0$ otherwise, ought to be used for such cases.
 
-\subsection{Error measures}
+If the solution format is a list of anomaly scores the situation becomes more complex. Assuming that $S = \mathbb{R}$, one might imagine that any ordinary real-valued distance measure, such as the Euclidean distance could be used. However, an error measure must be invariant under scalings and transformations of its input data in order to be useful, and this is not the case for the Euclidean distance. To get around this, the input data can be normalised to some interval (i.e.\ $[a_1, a_2, \dots, a_n] \mapsto [\frac{a_1 - a_{min}}{a_{max} - a_{min}}, \frac{a_2 - a_{min}}{a_{max} - a_{min}}, \dots, \frac{a_n - a_{min}}{a_{max} - a_{min}}]$, where $a_{min}$ and $a_{max}$ are the minimum and maximum elements of $a$, respectively) before the error measure is applied.
 
-TODO: move Section~\ref{sect:evaluation_measures} here.
+However, since providing meaningful real-valued training data can be difficult, it might be more reasonable to restrict the training data to be a set of anomalous items, and convert the solution to a binary list before applying the error measure. Reasonably, this conversion ought to be done by mapping all values above some threshold $\tau$ to $1$, and the rest of the values to $0$.
+
+This approach gives gives rise to a number of possible error measures, corresponding to different methods of selecting $\tau$. The following measures are used later in this report:
+\begin{description}
+    \item[$\epsilon_{E}$,]which corresponds to setting $\tau$ such that the number of non-zero elements in both lists are equal.
+    \item[$\epsilon_{F}$,]which corresponds to using the largest $\tau$ for which all non-zero elements of the training data vector are non-zero in the solution vector.
+    \item[$\epsilon_{B}$,]which corresponds to using the $\tau$ that gives the smallest error value.
+\end{description}
+
+\section{Optimisation}
+
+Once the sets $D$ and $S$ of input and solution items, the training data $\mathcal{T}$, and the error measure $\delta$ have been defined, and appropriate restrictions have been placed on $T_D$, $F_E$, $C$, $F_R$, $M$, $\Sigma$, and $T_S$, all that remains is to perform the optimisation.
+
+TODO: continue here
