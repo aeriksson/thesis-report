@@ -160,11 +160,7 @@ An evaluation filter which extracts contiguous sublists of a fixed length is ill
 
 Once the candidate anomalies have been identified, a \emph{context} must be associated with each candidate anomaly. The context for a candidate anomaly represents the set of elements with which that candidate anomaly is to be compared. To this end, the decomposition associates with each problem a \emph{context function} $C: ([D'], [D']) \rightarrow [D']$, which takes the transformed input data and a list of candidate anomalies, and associates with each candidate anomaly a context (in $[D'])$.
 
-As with the evaluation filter, what constitutes an appropriate context function is entirely dependent on what structure is present in the input data. If no such structure is present, the only reasonable choices of $C$ are
-\[
-    C([d_1', d_2', \dots, d_k'], [d_{a_1}', d_{a_2}', \dots, d_{a_l}']) = [d_{b_1}', d_{b_2}', \dots, d_{b_m}']
-\]
-where $\{b_1, b_2, \dots, b_m\} = \mathbb{Z}_k \setminus \{a_1, a_2, \dots, a_l\}$, or $C(X, Y) = T$ for some fixed data $T \in [D']$. If, on the other hand, there is such structure present, a context function which takes it into account might be preferable. As a concrete example of such an application with such structure, consider a long sequence: often how an item compares to those items `closest' to it (in the ordering) is more relevant to the analysis than how it compares to the rest of the sequence.
+As with the evaluation filter, what constitutes an appropriate context function is entirely dependent on what structure is present in the input data. If no such structure is present, the only reasonable choices of $C$ are to let $C(X, Y)$ be those elements of $X$ not in $Y$, or to let $C(X, Y) = T$ for some fixed dataset $T \in [D']$ (this corresponds to semi-supervised anomaly detection). If, on the other hand, there is such structure present, a context function which takes it into account might be preferable. As a concrete example of such an application with such structure, consider a long sequence: often how an item compares to those items `closest' to it (in the ordering) is more relevant to the analysis than how it compares to the rest of the sequence.
 
 \begin{figure}[thb]
     \vspace{-4pt}
@@ -298,6 +294,10 @@ This approach gives gives rise to a number of possible error measures, correspon
 
 \section{Optimisation}
 
-Once the sets $D$ and $S$ of input and solution items, the training data $\mathcal{T}$, and the error measure $\delta$ have been defined, and appropriate restrictions have been placed on $T_D$, $F_E$, $C$, $F_R$, $M$, $\Sigma$, and $T_S$, all that remains is to perform the optimisation.
+Once the sets $D$ and $S$ of input and solution items, the training data $\mathcal{T}$, and the error measure $\delta$ have been defined, and appropriate restrictions have been placed on $T_D$, $F_E$, $C$, $F_R$, $M$, $\Sigma$, and $T_S$, all that remains is to perform the actual optimisation.
 
-TODO: continue here
+Of course, effectively performing the optimisation is a difficult task, and evaluating the entire problem set is not feasible. Thus, efficient heuristics for searching the problem set are required. To help develop such heuristics, it can be useful to consider each of the components $T_D$, $F_E$, $C$, $F_R$, $M$, $\Sigma$, and $T_S$ separately, and to divide the set of allowed component choices into a set of parametrised functions. Let us denote the set of such functions for component $X$ by $\{X^i\}_i$ and the corresponding sets of parameters by $\{\theta_{X^i}\}$. A hierarchal view of the problem set $\mathcal{P}$ can then be taken, in which it consists of a set of tuples $(T_D^a, F_E^b, C^c, F_R^d, M^e, \Sigma^f, T_S^g)$ indexed by $(a, b, c, d, e, f, g)$, in which each element has a corresponding parameter space $(\theta{T_D^a}, \theta{F_E^b}, \theta{C^c}, \theta{F_R^d}, \theta{M^e}, \theta{\Sigma^f}, \theta{T_S^g})$. A hierarchal optimisation can then be performed, in which a preliminary search identifies appropriate $(a, b, c, d, e, f, g)$, the parameter spaces of which are then more thoroughly searched.
+
+Essentially, each choice of $(a, b, c, d, e, f, g)$ corresponds to a traditional machine learning problem, and can be optimised using traditional techniques. The meta-problem of finding suitable $(a, b, c, d, e, f, g)$ must be equipped with some method of assessing the potential of candidate problems. Reasonably, such a method ought to employ some method of probabilistically sampling the parameter spaces of candidate problems. The meta-problem can then be regarded as an optimisation problem with uncertainty.
+
+It further seems likely that the optimisation could itself be learnt, such that a preliminary analysis of the data could be used to find initial guesses for the optimisation.
