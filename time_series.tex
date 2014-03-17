@@ -9,7 +9,7 @@ where the objects that need to defined are the input and solution formats $[D]$ 
 
 In this chapter, the objects mentioned above are defined for the two most common tasks in anomaly detection in sequences. Furthermore, suitable choices of and restrictions on $T_D$, $F_E$, $C$, $F_R$, $M$, $\Sigma$ and $T_S$ for anomaly detection are discussed in depth.
 
-From here on, a \emph{sequence} will be taken to mean any list ($[X]$ for some set $X$) for which the list order reflects the natural ordering of the elements. A \emph{time series} is defined to be any sequence in $[(\mathbb{R}^+, X)]$, where the elements are ordered such that their second component (the timestamp) is increasing.
+From here on, a \emph{sequence} will be taken to mean any list ($[X]$ for some set $X$) for which the list order reflects the natural ordering of the elements. A \emph{time series} is defined to be any sequence in $[(\mathbb{R}^+, X)]$, where the elements are ordered such that their first component (the timestamp) is increasing.
 
 In Section~\ref{sect:tasks}, the two anomaly detection tasks we will study are presented. Corresponding oracles are presented.
 
@@ -46,7 +46,7 @@ As per the discussion in the previous chapter, $C$ can only be one of two functi
 
 \subsection{Finding anomalous subsequences}
 
-The task of finding anomalous subsequences of long sequences corresponds to finding anomalous contiguous sublists of the input data $[D]$. In contrast to the task of finding anomalous sequences, the input data is structured, and the sequence ordering naturally gives rise to concepts of proximity and context.
+The task of finding anomalous subsequences of long sequences corresponds to finding anomalous contiguous sublists of the input data $[D]$. In contrast to the task of finding anomalous sequences, the input data is structured, and the sequence ordering naturally gives rise to concepts of proximity and context. This task is relatively poorly understood, but is highly relevant in many application domains. As a consequence, automated methods can be expected to be very useful for this task.
 
 As with the previous task, either $S = \mathbb{R}^+$ or $S = \{0, 1\}$ depending on the application. However, it here makes sense to allow $T_D$ to compress the data (i.e.\ return a shorter list than it is given). Correspondingly, a corresponding $T_S$ is required in order to transform the preliminary solution (in $[S']$) to a list of anomaly scores with the same length as the input data.
 
@@ -57,7 +57,7 @@ Since all components must be used for this task, the oracle is identical to the 
 
 Anomaly detection in sequence is an important and active area of research, and plenty of problems related to anomaly detection in sequences have been studied over the years. In this section, a selection of previously researched problems are presented, arranged according to the framework presented in the previous chapter.
 
-\subsection{The dataset format}
+\subsection{The input data format $\mathcal{D}$}
 
 Categorical, discrete, and real-valued sequences have all been extensively studied. Categorical sequences arise naturally in applications such as bioinfomatics~\cite{TODO} and intrusion detection~\cite{TODO}. Discrete sequences are typically encountered when monitoring the frequency of events over time. Finally, real-valued sequences are encountered in any application that involves measuring physical phenomena (such as audio, video and other sensor-based applications).
 
@@ -88,7 +88,7 @@ where $(\tau_1, \tau_2, \dots \tau_n)$ is a partition of $[t_1, t_n]$.
 
 Different piecewise constant representations have been proposed, corresponding to different partitions. The simplest of these, corresponding to a partition with constant $\tau_{i+1} - \tau_i$ is proposed in~\cite{keogh4} and~\cite{faloutsos2} and is usually referred to as \emph{piecewise aggregate approximation (PAA)}. As shown in~\cite{keogh5},~\cite{keogh3} and~\cite{faloutsos2}, PAA rivals the more sophisticated representations listed above.
 
-Numerosity reduction is also commonly utilised in analysis of real-valued sequences. One scheme that combines numerosity and dimensionality reduction in order to give real-valued sequences into a categorical representation is \emph{symbolic aggregate approximation} (SAX)~\cite{sax}. This representation has been used to apply categorical anomaly measures to real-valued data with good results. A simplified variant of SAX is shown in figure~\ref{fig:types_of_data}.
+Numerosity reduction is also commonly utilised in analysis of real-valued sequences. One scheme that combines numerosity and dimensionality reduction in order to give real-valued sequences into a categorical representation is \emph{symbolic aggregate approximation} (SAX)~\cite{sax}. This representation has been used to apply categorical anomaly measures to real-valued data with good results. A simplified variant of SAX is demonstraded in figure~\ref{fig:types_of_data}.
 
 \begin{figure}[htb]
     \begin{center}
@@ -116,7 +116,7 @@ Several methods can be used to generate sequences appropriate for this task from
 
 Given a time series $[(t_1, x_1), (t_2, x_2), \dots, (t_n, x_n)]$ in $[(\mathbb{R}^+, X)]$, with associated weights $w_i$ and some envelope function $e(s, t): X \times \mathbb{R} \rightarrow X$, as well as a spacing and offset $\Delta, t_0 \in \mathbb{R}^+$, a sequence $[(s_{1}^{'}, \tau_1), (s_{2}^{'}, \tau_2), \dots]$ is constructed where $\tau_i = t_0 + \Delta \cdot i$ and $s_{i}^{'} = \sum_{(s_j, t_j) \in S} s_i w_i e(t_j - \tau_i)$.
 
-The $\tau_i$ can then be discarded and the time series treated as a sequence\footnote{Note that this method requires multiplication and addition to be defined for $X$, and is thus not applicable to most symbolic/categorical data. Also note that $\mathbf{s}'$ is really just a sequence of samples of the convolution $f_S \ast e$ where $f_S = \sum_i \delta(t_i) s_i w_i$.}. Histograms are recovered if $e(s, t) = 1$ when $|t| < \Delta/2$ and $e(x, t) = 0$ otherwise. 
+The $\tau_i$ can then be discarded and the time series treated as a sequence\footnote{Note that this method requires multiplication and addition to be defined for $X$, and is thus not applicable to most symbolic/categorical data. Also note that $\mathbf{s}'$ is really just a sequence of samples of the convolution $f_S \ast e$ where $f_S = \sum_i \delta(t_i) s_i w_i$.}. Histograms are recovered if $e(s, t) = 1$ when $|t| < \Delta/2$ and $e(x, t) = 0$ otherwise.
 
 How this aggregation is performed has a large and often poorly understood impact on the resulting sequence. As an example, when constructing histograms, the bin width and offset have implications for the speed and accuracy of the analysis. A small bin width leads to both small features and noise being more pronounced, while a large bin width might obscure smaller features. Similarly, the offset can greatly affect the appearance of the histograms, especially if the bin width is large. There is no `optimal' way to select these parameters, and various rules of thumb are typically used~\cite{density_estimation}.
 
