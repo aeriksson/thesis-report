@@ -39,7 +39,7 @@ We now present such a decomposition of $P$, which covers almost all previously s
 
 Roughly, our example problem associates an anomaly score with each element in a grid of colour values. These anomaly scores are also colours; red and green signify high and low anomaly scores, respectively. Specifically, the problem involves finding contextual collective anomalies---i.e.\ contiguous subsets of the data which are anomalous with regards to their surroundings---in such grids.  To illustrate this problem, we will use the dataset shown in figure~\ref{fig:input_data}. This dataset contains an interesting anomaly to the left; a blue region that is larger than and has a different shape than nearby blue regions. The problem $P$ we will decompose can be used to identify this anomaly, and the corresponding solution is shown to the right in the figure.
 
-We make the assumption that the input data is an ordered collection, i.e.\ a list~\footnote{We will denote a list containing the items $a, b$ and $c$ by $[a, b, c]$, and we will denote the set of all lists with items in some set $X$ by $X$. We will also assume that items in lists implicitly carry indices, and that any function $f: [X] \rightarrow [X]$ that maps a list to one of its sub-lists will preserve these indices, i.e.\ if $f([a, b, c]) = [b]$, then it is apparent that $f([a, b, c])$ is the second element of $[a, b, c]$, even if $b = a$ or $b = c$.}, of homogeneous items, which we denote by $\mathcal{D} = [D]$ for some arbitrary set $D$. Likewise, we take the solution format to be a list as well: $\mathcal{S} = [S]$ for some arbitrary set $S$. This means that we consider the set of problems to be equivalent to the set of all functions $P: [D] \rightarrow [S]$.
+We make the assumption that the input data is an ordered collection, i.e.\ a list~\footnote{We will denote a list containing the items $a, b$ and $c$ by $[a, b, c]$, and we will denote the set of all lists with items in some set $X$ by $X$. We will also assume that items in lists implicitly carry indices, and that any function $f: [X] \rightarrow [X]$ that maps a list to one of its sub-lists will preserve these indices, i.e.\ if $f([a, b, c]) = [b]$, then it is apparent that $f([a, b, c])$ is the second element of $[a, b, c]$, even if $b = a$ or $b = c$.}, of homogeneous items, which we denote by $\mathcal{D} = [D]$ for some arbitrary set $D$. Likewise, we take the solution format to be a list anomaly scores: $\mathcal{S} = [\mathbb{R}^+]$. This means that we consider the set of problems to be equivalent to the set of all functions $P: [D] \rightarrow [\mathbb{R}^+]$.
 
 The proposed decomposition splits each such $P$ into a composition of the following functions:
 
@@ -60,7 +60,7 @@ The proposed decomposition splits each such $P$ into a composition of the follow
     \[
         F_R\left( \excontext \right) = \exreferenceset
     \]
-    \item{An anomaly measure $M: ([D'], [[D']]) \rightarrow A$,} which takes an item $x \in [D']$ and a list $[x_1, x_2, \dots, x_n] \in [[D']]$ of reference items, and computes an anomaly score (in some arbitrary set $A$) based on how anomalous $x$ is with regards to $[x_1, x_2, \dots, x_n]$. In our example, $M$ works by computing an average distance between $x$ and the $x_i$, which is mapped to a colour:
+    \item{An anomaly measure $M: ([D'], [[D']]) \rightarrow \mathbb{R}^+$,} which takes an item $x \in [D']$ and a list $[x_1, x_2, \dots, x_n] \in [[D']]$ of reference items, and computes an anomaly score based on how anomalous $x$ is with regards to $[x_1, x_2, \dots, x_n]$. In our example, $M$ works by computing an average distance between $x$ and the $x_i$, which is here shown as a colour (red for high average distance, green for low agverage distance):
     \[
         M\left( \exevaluationitem , \exreferenceset \right) = \exanomalyscore
     \]
@@ -68,11 +68,11 @@ The proposed decomposition splits each such $P$ into a composition of the follow
     \[
         f\left(\exevaluationset\right) = \exanomalyscores %\includegraphics[width=33.0ex, trim=0 5.0ex 0 0]{resources/components/anomaly_scores}
     \]
-    \item{An aggregation function $\Sigma: ([[X']], [A]) \rightarrow [S']$,} which aggregates the anomaly scores for the elements of the evaluation set to form a `preliminary' solution for elements of $[D']$. In our example, the aggregation function associates with each element the anomaly score of the candidate anomaly to which that element belongs:
+    \item{An aggregation function $\Sigma: ([[X']], [\mathbb{R}^+]) \rightarrow [\mathbb{R}^+]$,} which aggregates the anomaly scores for the elements of the evaluation set to form a `preliminary' solution, i.e.\ a list of anomaly scores for the transformed data $[D']$. In our example, the aggregation function associates with each element the anomaly score of the candidate anomaly to which that element belongs:
     \[
         \Sigma \left( \includegraphics[width=23.0ex, trim=0 23ex 0 0]{resources/components/evaluation_set}, \includegraphics[width=23.0ex, trim=0 23ex 0 0]{resources/components/anomaly_scores} \right) = \\ \includegraphics[width=23.0ex, trim=0 23ex 0 0]{resources/components/solution}
     \]
-\item{A transformation $T_S: [S'] \rightarrow [S]$}, which transforms the preliminary solution into an actual solution. In our example, $T_S$ uses bilinear interpolation to produce anomaly scores for all elements of the input data:
+\item{A transformation $T_S: [\mathbb{R}^+] \rightarrow [\mathbb{R}^+]$}, which transforms the preliminary solution (a list of anomaly scores for the transformed input data) into an actual solution (a list of anomaly scores for the input data). In our example, $T_S$ uses bilinear interpolation to produce anomaly scores for all elements of the input data:
     \[
         T_S \left( \exsolution \right) = \extransformedsolution
     \]
@@ -103,19 +103,15 @@ Characteristics such as the dimensionality of the data typically prove important
 
 \section{The set of solutions $\mathcal{S}$}
 
-The collection of possible solutions is modelled as a set $\mathcal{S} \subset [S]$, i.e.\ some set of lists over some application-specific set $S$. In this section, typical choices of $\mathcal{S}$---which will henceforth be referred to as the \emph{solution format}---are discussed. In practice, only a few distinct solution formats are used.
+In this section, typical choices of collection of possible solutions $\mathcal{S}$ are discussed. To simplify the exposition, $\mathcal{S}$ is taken to be $[\mathbb{R}^+]$ in the framework. The discussion in this section assumes a list of input data $d = [d_1, d_2, \dots, d_n]$.
 
-One common solution format involves associating \emph{anomaly scores} with each element of the input dataset. In other words, for some input data $[d_1, d_2, \dots, d_n]$, the corresponding solution will have the format $[s_1, s_2, \dots, s_n] \in [S]$, where each $s_i$ indicates how anomalous the corresponding $d_i$ is. Typically,  $S = \mathbb{R}^+$.
+Typically, the solution consists of a list $[s_1, s_2, \dots, s_n]$ of \emph{anomaly scores}, indicating how anomalous each element of $d$ is. Another common approach is to let the solution consist of a sublist of $d$, containing those elements which are anomalous. Two approaches can be distinguished here. Either, the solution has a fixed size (this is typically referred to as finding \emph{discords}~\cite{keogh1}), or the solution contain the indices of all elements which are considered sufficiently anomalous. In either case, the solution can be seen as a list $[s_1, s_2, \dots, s_n]$ where $s_i$ is $1$ if $d_i$ is considered anomalous, and $0$ otherwise. With this in mind, it is easily seen that a list of anomalous items is really just a special case of anomaly scores.
 
-Another common approach is to, for some input data $[d_1, d_2, \dots, d_n]$, let $S$ contain the indices of the most anomalous elements of $D$, i.e.\ $S = \mathbb{Z}_n$. Two approaches can be distinguished here. Either, the solution has a fixed size, in which case the solution format is typically referred to as \emph{discords}~\cite{keogh1} \cite{bu} \cite{yankov} \cite{fu} \cite{lin}., or the solution will contain the indices of all elements which are considered sufficiently anomalous.
-
-Finally, it might be interesting to let the solution consist of a list of anomalous subsets of the input data, i.e.\ $S = [D]$.
-
-Which of these solution formats is used depends on the performance requirements of the application. For instance, while any set of anomalous indices can be constructed from a real-valued anomaly score vector, producing a set of anomalous indices (and especially discords) directly can be far less computationally intensive.
+Finally, it might be desirable to let the solution consist of a list of anomalous sublists of the input data. While potentially interesting, this seems to be uncommon, and for the sake of brevity is not incorporated into the framework. To accomodate for this, the solution format could be taken to be $\mathcal{S} = [\mathbb{R}^+]$ for either $S = \mathbb{R}^+$ or $S = [D]$.
 
 \section{The transformations $T_D$ and $T_S$}
 
-It is common for the input data to be preprocessed to make it more amenable to analysis. To account for this, two transformations $T_D: [D] \rightarrow [D']$ and $T_S: [S'] \rightarrow [S]$ are included in the framework. These transformations are complementary, in the sense that $T_D$ maps the input data to some set $[D']$, while $T_S$ takes a solution $[S']$ to some problem defined on elements in $[D']$ and maps it to a solution in $[S]$ for the data fed into $T_D$.
+It is common for the input data to be preprocessed to make it more amenable to analysis. To account for this, two transformations $T_D: [D] \rightarrow [D']$ and $T_S: [\mathbb{R}^+] \rightarrow [\mathbb{R}^+]$ are included in the framework. These transformations are complementary, in the sense that $T_D$ maps the input data to some set $[D']$, while $T_S$ takes a a list of anomaly scores for the transformed data and maps it to a list of anomaly scores for the data fed into $T_D$.
 
 Typically, $T_D$ involves either dimensionality or numerosity reduction. \emph{Dimensionality reduction} involves reducing the dimensionality in the individual elements of the input dataset; i.e.\ a transformation $T_D: [D] \rightarrow [D']$ is a dimensionality reduction transformation if $D'$ is of lower dimensionality than $D$.
 
@@ -190,24 +186,22 @@ To accommodate for this step, the framework includes a \emph{reference filter} $
 
 \section{The anomaly measure $M$}
 
-The anomaly measure $M: ([D'], [[D']]) \rightarrow A$ takes a candidate anomaly and a reference set and produces an anomaly score in some set $A$. Realistically, letting $A = \mathbb{R}^+$ ought to be sufficient in most cases. The anomaly measure essentially defines (often in unpredictable ways) what types of features will be considered anomalous, so it is vital that it is chosen appropriately.
+The anomaly measure $M: ([D'], [[D']]) \rightarrow \mathbb{R}^+$ takes a candidate anomaly and a reference set and produces an anomaly score. The anomaly measure essentially defines (often in unpredictable ways) what types of features will be considered anomalous, so it is vital that it is chosen appropriately.
 
 A large number of different anomaly measures are used in the literature, and listing them all is not possible within the scope of this report. Methods are often categorised based on what type of anomaly measure they employ; for instance, a method might be classified as statistical, classifier-based, distance-based, or information-theoretic based on the anomaly measure. A good presentation of these categories is given in~\cite{chandola}.
 
 \section{The aggregration function $\Sigma$}
 \label{sect:aggregation_function}
 
-The aggregation function $\Sigma: ([[D']], [A]) \rightarrow [S']$ takes a list of candidate anomalies and a list of corresponding anomaly scores, and produces a ``preliminary'' solution in $[S']$. As mentioned previously, this solution is preliminary in the sense that it corresponds to a solution to a problem $P': [D'] \rightarrow [S']$. If a problem does not involve any transformation, i.e.\ if  $D' = D$ and $T_D$ is the identity transformation, then $T_S$ must also be the identity transformation, and $\Sigma$ will produce the actual solution.
+The aggregation function $\Sigma: ([[D']], [\mathbb{R}^+]) \rightarrow [\mathbb{R}^+]$ takes a list of candidate anomalies and a list of corresponding anomaly scores, and produces a list of anomaly scores for the transformed data. If a problem does not involve any transformation, i.e.\ if  $D' = D$ and $T_D$ is the identity transformation, then $T_S$ must also be the identity transformation, and $\Sigma$ will produce the actual solution.
 
-How this is done depends on the nature of both $\mathcal{S}$ and the specific problem formulation. If the solution is expected to be a list of anomalous subsets, then $\Sigma$ ought to simply select a subset of the candidate anomalies, possibly along with the corresponding $A_j$. The same goes if the evaluation set contains only single element lists (i.e.\ if only point anomalies are sought).
+How this is done depends on which types of anomalies are sought. If only point anomalies are sought (i.e.\ if all candidate anomalies are single-element lists), then no aggregation needs to be performed and one can let\footnote{Assuming that the inputs have the same order as the expected anomaly score order.} $\Sigma(X, Y) = Y$. The situation is similar when the evaluation set consists of non-overlapping multiple-element lists.
 
-If, on the other hand, the evaluation set contains non-singleton subsets of the input data, and the sought solution format is not a list of anomalous subsets, then the anomaly scores $A$ must be weighted together to form a list in $[S']$. Since all other solution formats can be retrieved from a list of anomaly scores, it seems reasonable to in these cases only consider aggregation functions which produce a list of anomaly scores.
-
-Reasonably, such an aggregation function ought to be on the form (for $e = [e_1, e_2, \dots, e_n]$ and $a = [a_1, a_2, \dots, a_n]$):
+If on the other hand the evaluation set contains overlapping elements, then the anomaly scores must somehow be weighted together for all overlapping elements. Reasonably, such an aggregation function ought to be on the form (for $e = [e_1, e_2, \dots, e_n]$ and $a = [a_1, a_2, \dots, a_n]$):
 \[
     \Sigma(e, a) = [\sigma(\{a_i : d_1' \in e_i\}), \sigma(\{a_i : d_2' \in e_i\}), \dots, \sigma(\{a_i : d_n' \in e_i\})],
 \]
-where $\sigma$ is some function that maps a set of elements in $A$ to an element of $S'$.
+where $\sigma: [\mathbb{R}^+] \rightarrow \mathbb{R}^+$.
 
 \section{Constructing an oracle}
 \label{sect:oracle}
@@ -233,15 +227,15 @@ On the other hand, the transformations $T_D$ and $T_S$, as well as the anomaly m
 
 Using the framework presented in this chapter, the construction of an appropriate problem set for some specific application can be approached in a systematic manner.
 
-First, the format of the input and solution elements $D$ and $S$ must be formally defined. The set of all possible problems then corresponds to the set of functions $P: [D] \rightarrow [S]$. Assuming that all interesting problems can be decomposed as a combination of the components $T_D$, $F_E$, $C$, $F_R$, $M$, $\Sigma$, and $T_S$, an appropriate restricted problem set can be constructed by individually restricting the components.
+First, the format of the input and solution elements $D$ and $S$ must be formally defined. The set of all possible problems then corresponds to the set of functions $P: [D] \rightarrow [\mathbb{R}^+]$. Assuming that all interesting problems can be decomposed as a combination of the components $T_D$, $F_E$, $C$, $F_R$, $M$, $\Sigma$, and $T_S$, an appropriate restricted problem set can be constructed by individually restricting the components.
 
 As has been previously pointed out, what restrictions should reasonably be placed on the filters and context function $F_E$, $F_R$ and $C$ depends entirely on the presence of structure in the input data $D \in \mathcal{D}$ which relates the $d_i \in D$. If the $d_i$ are completely unrelated, then it is reasonable to bypass these components by restricting them to only consider point anomalies. If, on the other hand, there is a relation between the $d_i \in D$, then it is reasonable to restrict these components to take this structure into account.
 
-The aggregation function $\Sigma$ is similarly limited. For problems involving point anomalies, all of the solution formats presented above can be produced directly from the output of the anomaly measure, so $\Sigma$ is naturally constrained. For problems involving collective anomalies, anomaly scores for several candidate anomalies might have to be weighted together to produce a solution. Depending on the application, it might be appropriate to constrain the possible $\Sigma$ to a single weighting method or to a set of different weighting methods.
+The aggregation function $\Sigma$ is similarly limited. When candidate anomalies do not overlap, $\Sigma$ is naturally constrained to a single value. Otherwise, $\Sigma$ is uniquely determined by the weighting function $\sigma$ described in Section~\ref{sect:aggregation_function}. Typically, constraining the allowed $\sigma$ to a few different values should suffice.
 
 Restricting $T_D$ and $T_S$ is more difficult, since it is typically not known what types of transformations are appropriate for a given application. With this in mind, it might be appropriate to simply restrict $T_D$ and $T_S$ to some set of transformations which have been used in the specific application or similar applications. That way, the problem set can be said to generalise previously studied methods while remaining tractable.
 
-Finally, the anomaly measure $M$ must be appropriately restricted. Since $M$ can not be appropriately restricted based on information about the application, it is reasonably to take a similar approach as with $R_{\mathcal{D}}$ and restrict $M$ to some set of anomaly measures which have been previously studied in conjunction with the specific application.
+Finally, the anomaly measure $M$ must be appropriately restricted. Since $M$ can not be appropriately restricted based on information about the application, it is reasonably to take a similar approach as with the transformations and restrict $M$ to some set of anomaly measures which have been previously studied in conjunction with the specific application.
 
 While restricting the components individually simplifies problem set construction, it might lead to a problem set that is overly permissive, in the sense that some combinations of components might not be useful. In this case, it is reasonable to place additional restrictions on the problem set based on combinations of components.
 
@@ -251,9 +245,9 @@ Before the optimisation problem
 \[
     P^*_{opt} = \argmin_{P \in \mathcal{P}^*} \sum_{T_i \in \mathcal{T}} \delta(s(T_i), O^*(P, T_i)).
 \]
-can be solved, the training set $\mathcal{T}$ and the error function $\delta$ must be defined. As was mentioned in the previous chapter, we assume that the set $\mathcal{T}$ of training data consists of a finite set of pairs $T_i = (D_i, S_i)$ in $([D], [S])$. This means that the training set is entirely application-specific, and discussing it in a general context is not likely to be useful.
+can be solved, the training set $\mathcal{T}$ and the error function $\delta$ must be defined. As was mentioned in the previous chapter, we assume that the set $\mathcal{T}$ of training data consists of a finite set of pairs $T_i = (D_i, S_i)$ in $([D], [\mathbb{R}^+])$. This means that the training set is entirely application-specific, and discussing it in a general context is not likely to be useful.
 
-The choice of error measure, which is formally a distance function for $\mathcal{S} = [S]$, i.e.\ $\delta: ([S], [S]) \rightarrow \mathbb{R}^+$, however, has more to do with the solution format than with the application itself. A few simple error measures which are likely to work well across most applications are now discussed.
+The choice of error measure, which is formally a distance function for $\mathcal{S} = [\mathbb{R}^+]$, i.e.\ $\delta: ([\mathbb{R}^+], [\mathbb{R}^+]) \rightarrow \mathbb{R}^+$, however, has more to do with the solution format than with the application itself. A few simple error measures which are likely to work well across most applications are now discussed.
 
 If the solution format is a list of anomalous items, then $S$ can be seen as the binary set $\{0, 1\}$ and the solution $[s_1, s_2, \dots, s_n]$ as a binary list, where $s_i$ indicates whether or not the corresponding input element $d_i$ is considered anomalous. Reasonably the Hamming distance~\cite{TODO}, corresponding to
 \[
