@@ -26,7 +26,9 @@ Two main tasks can be distinguished in anomaly detection in sequences: \emph{fin
 
 The task of finding anomalous sequences in a set of sequences involves taking a list of similar sequences and producing a list of corresponding anomaly scores. The input elements are not related, i.e.\ the input data is unstructured. Thus, the task can be seen as one of detection of point anomalies in a collection of sequences. This task has been the subject of intense research. Thorough reviews are found in~\cite{chandola2} and~\cite{chandola3}.
 
-The input data has the format $[D]$, where $D$ is itself a set of sequences, i.e.\ $D = [X]$ for some set $X$. The solution format is $[S]$, where either $S = \mathbb{R}^+$ or $S = \{0, 1\}$ depending on the application requirements.
+For an example of this task, see figure \ref{fig:example1}. Here, dataset consists of a set of sequences of user commands extracted from a system log, and task corresponds to detecting individual anomalous sequences in this dataset. While sequences $\mathbf{S_1}$ through $\mathbf{S_4}$ are originate from ordinary user sessions, sequence $\mathbf{S_5}$ could indicate an attack. Accurately detecting such anomalous sequences is an important problem in computer security.
+
+The input data has the format $[D]$, where $D$ is itself a set of sequences, i.e.\ $D = [X]$ for some set $X$. In the example above $X$ is a set of commands, but it could just as well be $\mahtbb{R}$ or any other set. The solution format is $[S]$, where either $S = \mathbb{R}^+$ or $S = \{0, 1\}$ depending on the application requirements.
 
 Since the input data is unstructured, any transformation $T_D$ must produce lists with the same length as it is given. Correspondingly, we can let $S' = S$. This renders $T_S$ redundant, so it can be ignored.
 
@@ -46,7 +48,9 @@ As per the discussion in the previous chapter, $C$ can only be one of two functi
 
 \subsection{Finding anomalous subsequences}
 
-The task of finding anomalous subsequences of long sequences corresponds to finding anomalous contiguous sublists of the input data $[D]$. In contrast to the task of finding anomalous sequences, the input data is structured, and the sequence ordering naturally gives rise to concepts of proximity and context. This task is relatively poorly understood, but is highly relevant in many application domains. As a consequence, automated methods can be expected to be very useful for this task.
+The task of finding anomalous subsequences of long sequences corresponds to finding anomalous contiguous sublists of the input data $[D]$. In contrast to the task of finding anomalous sequences, the input data is structured, and the sequence ordering naturally gives rise to concepts of proximity and context. This task is relatively poorly understood, but is highly relevant in many application domains. As a consequence, automated methods can be expected to be very useful for this task. Essentially any monitoring or diagnosis application could benefit from a better understanding of the task.
+
+For examples of sequences to which this task might be applied, see Figures~\ref{fig:example_2} and~\ref{fig:anomaly types}. These are all real-valued sequences which contain anomalous items or subsequences.
 
 As with the previous task, either $S = \mathbb{R}^+$ or $S = \{0, 1\}$ depending on the application. However, it here makes sense to allow $T_D$ to compress the data (i.e.\ return a shorter list than it is given). Correspondingly, a corresponding $T_S$ is required in order to transform the preliminary solution (in $[S']$) to a list of anomaly scores with the same length as the input data.
 
@@ -90,25 +94,9 @@ Different piecewise constant representations have been proposed, corresponding t
 
 Numerosity reduction is also commonly utilised in analysis of real-valued sequences. One scheme that combines numerosity and dimensionality reduction in order to give real-valued sequences into a categorical representation is \emph{symbolic aggregate approximation} (SAX)~\cite{sax}. This representation has been used to apply categorical anomaly measures to real-valued data with good results. A simplified variant of SAX is demonstraded in figure~\ref{fig:types_of_data}.
 
-\begin{figure}[htb]
-    \begin{center}
-        %\leavevmode
-        \begin{tabular}{| l | l l l l l l l l |}
-            \hline
-            $\mathbf{S_1}$ & login & passwd & mail & ssh & \dots & mail & web & logout \\ \hline
-            $\mathbf{S_2}$ & login & passwd & mail & web & \dots & web & web & logout \\ \hline
-            $\mathbf{S_3}$ & login & passwd & mail & ssh & \dots & web & web & logout \\ \hline
-            $\mathbf{S_4}$ & login & passwd & web & mail & \dots & web & mail & logout \\ \hline
-            $\mathbf{S_5}$ & login & passwd & login & passwd & login & passwd & \dots & logout \\\hline
-        \end{tabular}
-    \end{center}
-    \caption{{\small Multiple symbolic sequences consisting of user commands. Finding anomalous sequences in such datasets is an important task in computer security. Arguably, problems based on such tasks should capture $\mathbf{S_5}$ as an anomaly due to its divergence from the other sequences. Based on a figure in~\cite{chandola2}.}}
-\label{fig:calls}
-\end{figure}
-
 In general, real-valued sequences are much easier to deal with than time series. For this reason, irregular time series are commonly transformed to form regular time series, which can be treated as sequences. Formally, such transformations map a sequence in $[(\mathbb{R}^+, X)]$ to a sequence in $[X]$.
 
-The simplest such transformation involves simply dropping the timestamp component of each item. This is useful when the order of items is important, but how far apart they are in time is not. This is often the case when dealing with categorical sequences. An example of such an application is shown in figure~\ref{fig:calls}.
+The simplest such transformation involves simply dropping the timestamp component of each item. This is useful when the order of items is important, but how far apart they are in time is not. This is often the case when dealing with categorical sequences. An example of such an application is shown in figure~\ref{fig:example1}.
 
 Another common class of transformations involves estimating the (weighted) frequency of events. This is useful in many scenarios, especially in applications involving machine-generated data.
 
