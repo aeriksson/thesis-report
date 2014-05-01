@@ -39,7 +39,7 @@ We now present such a decomposition of $P$, which covers almost all previously s
 
 Roughly, our example problem associates an anomaly score with each element in a grid of colour values. These anomaly scores are also colours; red and green signify high and low anomaly scores, respectively. Specifically, the problem involves finding contextual collective anomalies---i.e.\ contiguous subsets of the data which are anomalous with regards to their surroundings---in such grids.  To illustrate this problem, we will use the dataset shown in figure~\ref{fig:input_data}. This dataset contains an interesting anomaly to the left; a blue region that is larger than and has a different shape than nearby blue regions. The problem $P$ we will decompose can be used to identify this anomaly, and the corresponding solution is shown to the right in the figure.
 
-We make the assumption that the input data is an ordered collection, i.e.\ a list~\footnote{We will denote a list containing the items $a, b$ and $c$ by $[a, b, c]$, and we will denote the set of all lists with items in some set $X$ by $X$. We will also assume that items in lists implicitly carry indices, and that any function $f: [X] \rightarrow [X]$ that maps a list to one of its sub-lists will preserve these indices, i.e.\ if $f([a, b, c]) = [b]$, then it is apparent that $f([a, b, c])$ is the second element of $[a, b, c]$, even if $b = a$ or $b = c$.}, of homogeneous items, which we denote by $\mathcal{D} = [D]$ for some arbitrary set $D$. Likewise, we take the solution format to be a list anomaly scores: $\mathcal{S} = [\mathbb{R}^+]$. This means that we consider the set of problems to be equivalent to the set of all functions $P: [D] \rightarrow [\mathbb{R}^+]$.
+We make the assumption that the input data is an ordered set, i.e.\ a list~\footnote{We will denote the ordered set consisting of $a$, followed by $b$ and $c$ by $[a, b, c]$, and we will denote the set of all ordered set with items in some set $X$ by $[X]$. We will also assume that items in lists implicitly carry indices, and that any function $f: [X] \rightarrow [X]$ that maps a list to one of its sub-lists will preserve these indices, i.e.\ if $f([a, b, c]) = [b]$, then it is apparent that $f([a, b, c])$ is the second element of $[a, b, c]$, even if $b = a$ or $b = c$.}, of homogeneous items, which we denote by $\mathcal{D} = [D]$ for some arbitrary set $D$. Likewise, we take the solution format to be a list anomaly scores: $\mathcal{S} = [\mathbb{R}^+]$. This means that we consider the set of problems to be equivalent to the set of all functions $P: [D] \rightarrow [\mathbb{R}^+]$.
 
 The proposed decomposition splits each such $P$ into a composition of the following functions:
 
@@ -48,7 +48,7 @@ The proposed decomposition splits each such $P$ into a composition of the follow
     \[
         T_{D}\left( \exinput \right) = \extransformedinput
     \]
-    \item{A evaluation filter $F_E: [D'] \rightarrow [[D']]$,}which maps the transformed data to an \emph{evaluation set}---a list of subsets of the transformed data, corresponding to potential anomalies. In our example, $F_E$ simply partitions its input into collections of four elements:
+    \item{An evaluation filter $F_E: [D'] \rightarrow [[D']]$,}which maps the transformed data to an \emph{evaluation set}---a list of subsets of the transformed data, corresponding to potential anomalies. In our example, $F_E$ simply partitions its input into collections of four elements:
     \[
         F_E\left( \extransformedinput \right) = \exevaluationset
     \]
