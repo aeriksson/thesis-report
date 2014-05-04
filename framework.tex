@@ -68,7 +68,7 @@ The proposed decomposition splits each such $P$ into a composition of the follow
     \[
         f\left(\exevaluationset\right) = \exanomalyscores %\includegraphics[width=33.0ex, trim=0 5.0ex 0 0]{resources/components/anomaly_scores}
     \]
-    \item{An aggregation function $\Sigma: ([[X']], [\mathbb{R}^+]) \rightarrow [\mathbb{R}^+]$,} which aggregates the anomaly scores for the elements of the evaluation set to form a `preliminary' solution, i.e.\ a list of anomaly scores for the transformed data $[D']$. In our example, the aggregation function associates with each element the anomaly score of the candidate anomaly to which that element belongs:
+    \item{An aggregation function $\Sigma: ([[D']], [\mathbb{R}^+]) \rightarrow [\mathbb{R}^+]$,} which aggregates the anomaly scores for the elements of the evaluation set to form a `preliminary' solution, i.e.\ a list of anomaly scores for the transformed data $[D']$. In our example, the aggregation function associates with each element the anomaly score of the candidate anomaly to which that element belongs:
     \[
         \Sigma \left( \includegraphics[width=23.0ex, trim=0 23ex 0 0]{resources/components/evaluation_set}, \includegraphics[width=23.0ex, trim=0 23ex 0 0]{resources/components/anomaly_scores} \right) = \\ \includegraphics[width=23.0ex, trim=0 23ex 0 0]{resources/components/solution}
     \]
@@ -185,6 +185,7 @@ Once a set of candidate anomalies has been produced and a context has been assoc
 To accommodate for this step, the framework includes a \emph{reference filter} $F_R: [D'] \rightarrow [[D']] $, which (analogously to the evaluation filter) maps a context to a \emph{reference set} of items with which the candidate anomaly can be effectively compared. A possible reference filter for sequences is illustrated in Figure~\ref{fig:filters}. If the anomaly measure can operate on elements of different sizes, then $F_R(X) = [X]$ might be a good choice.
 
 \section{The anomaly measure $M$}
+\label{sect:anomaly_measure}
 
 The anomaly measure $M: ([D'], [[D']]) \rightarrow \mathbb{R}^+$ takes a candidate anomaly and a reference set and produces an anomaly score. The anomaly measure essentially defines (often in unpredictable ways) what types of features will be considered anomalous, so it is vital that it is chosen appropriately.
 
@@ -240,6 +241,7 @@ Finally, the anomaly measure $M$ must be appropriately restricted. Since $M$ can
 While restricting the components individually simplifies problem set construction, it might lead to a problem set that is overly permissive, in the sense that some combinations of components might not be useful. In this case, it is reasonable to place additional restrictions on the problem set based on combinations of components.
 
 \section{Error measures}
+\label{sect:error_measures}
 
 Before the optimisation problem
 \[
