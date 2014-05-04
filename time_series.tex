@@ -54,16 +54,13 @@ As with the previous task, either $S = \mathbb{R}^+$ or $S = \{0, 1\}$ depending
 
 Since all components must be used for this task, the oracle is identical to the one presented in Section~\ref{sect:oracle}.
 
-\section{Components}
-\label{sect:prev_research}
-
-Anomaly detection in sequence is an important and active area of research, and plenty of problems related to anomaly detection in sequences have been studied over the years. In this section, a selection of previously researched problems are presented, arranged according to the framework presented in the previous chapter.
-
-\subsection{The input data format $\mathcal{D}$}
+\section{The input data format $\mathcal{D}$}
 
 Categorical, discrete, and real-valued sequences have all been extensively studied. Categorical sequences arise naturally in applications such as bioinfomatics~\cite{TODO} and intrusion detection~\cite{TODO}. Discrete sequences are typically encountered when monitoring the frequency of events over time. Finally, real-valued sequences are encountered in any application that involves measuring physical phenomena (such as audio, video and other sensor-based applications).
 
-\subsection{The transformations $T_D$ and $T_S$}
+Which the origins and nature of the data obviously differs heavily between these different categories of sequences, the choice of components (with the exception of the transformations and anomaly measures) can be made independently of the type of data. For this reason, we can disregard the data format in most of the following discussion.
+
+\section{The transformations $T_D$ and $T_S$}
 
 \begin{figure}[htb]
   \begin{center}
@@ -74,7 +71,7 @@ Categorical, discrete, and real-valued sequences have all been extensively studi
 \label{fig:types_of_data}
 \end{figure}
 
-Transformations are commonly used to facilitate the analysis of sequences, and a large number of different such transformations are found in the literature.
+Transformations are commonly used to facilitate the analysis of sequences, and a large number of different such transformations are found in the literature. 
 
 Feature extraction is commonly performed to reduce the dimensionality of sequences, and especially of real-valued ones. Essentially, the task of feature extraction in real-valued sequences corresponds to, given a sequence $s = [s_1, s_2, \dots, s_n]$, finding a collection of basis functions $[\phi_1, \phi_2, \dots, \phi_m]$ where $m < n$ that $s$ can be projected onto, such that $s$ can be recovered with little error. Many different methods for obtaining such bases have been proposed, including the discrete Fourier transform~\cite{faloutsos1}, discrete wavelet transforms~\cite{pong}~\cite{fu}, various piecewise linear and piecewise constant functions~\cite{keogh3}~\cite{geurts}, and singular value decomposition~\cite{keogh3}. An overview of different representations is provided in~\cite{fabian}.
 
@@ -112,7 +109,7 @@ One commonly used transformation for real-valued data is the Z-normalization tra
 
 Transformations that transform the data into some alternative domain can also be useful. For example, transformations based on the \emph{discrete Fourier transform} (DFT) and \emph{discrete wavelet transform} (DWT)~\cite{fu} have shown promise. The DFT is parameter-free, while the DWT can be said to be parametrised due to the variety of possible wavelet transforms.
 
-\subsection{The filters $F_E$ and $F_R$}
+\section{The filters $F_E$ and $F_R$}
 \label{sect:filters}
 
 As was previously mentioned, filters are really only interesting for the task of finding anomalous subsequences. Here, the role of the filter is to map a sequence in $[D']$ to a list candidate anomalies (subsequences of the input sequence).
@@ -123,7 +120,7 @@ By far the most frequently used filters are \emph{sliding window} filters. These
 \]
 where $w$ and $k$ are arbitrary integers (typically $k \leq w$)\footnote{We here assume that $k | n - w$. Otherwise, the last element above might look a bit different.}.
 
-\subsection{The context function $C$}
+\section{The context function $C$}
 \label{sect:context}
 
 The ordering present in sequences naturally give rise to a few interesting contexts, which are now demonstrated for a sequence $s = [s_1, s_2, \dots, s_n]$ and a candidate anomaly $s' [s_i, s_{i + 1}, \dots, s_j]$, where $1 \leq i \leq j \leq n$. It is here assumed that all candidate anomalies are contiguous. As mentioned in the previous chapter, contexts can be used to generalise the concept of training data. Semi-supervised anomaly detection corresponds to the \emph{semi-supervised context} $C(s, s') = T$, where $T$ is some fixed set of training data.
@@ -138,15 +135,17 @@ Finally, a family of \emph{local contexts}
 \]
 may be defined for $a, b \in \mathbb{N}$, in order to handle anomalies such as the one in the last sequence of figure~\ref{fig:anomaly_types}.
 
-\subsection{The anomaly measure $M$}
+\section{The anomaly measure $M$}
 
 As was mentioned previously, an anomaly measure is a function $M: ([D'], [[D']]) \rightarrow \mathbb{R}^+$ that takes a candidate anomaly $c \in [D']$ and a reference set $R \in [[D']]$, and produces an anomaly score based on how anomalous $C$ is with regards to $R$. A large number of such measures have been used in the literature, and a thorough discussion of these is not possible within the scope of this report. Instead, we will limit our consideration to distance-based anomaly measures, since these are flexible and have been shown to perform well in general for sequences~\cite{chandola3}.
 
 Distance-based anomaly measures operate by, given some distance measure $\delta: [D'] \times [D'] \rightarrow \mathbb{R}^+$, somehow aggregating the set $\{\delta(c, r) | r \in R\}$ into an anomaly score in $\mathbb{R}^+$. A class of especially interesting distance-based anomaly measure is k-nearest-neighbour-based anomaly measures. These assign as anomaly score the mean of the $k$ largest values of $\{\delta(c, r) | r \in R\}$.
 
-Possible interesting choices of $\delta$ include the \emph{Euclidean distance} or the more general \emph{Minkowski distance}; measures focused on time series, such as \emph{dynamic time warping}~\cite{dtw}, \emph{autocorrelation measures}~\cite{autocorrelation}, or the \emph{Linear Predictive Coding cepstrum}~\cite{cepstrum}; or measures developed for series of categorical data, such as the \emph{compression-based dissimilarity measure}~\cite{keogh2}. While distance measures are always defined for specific types of data, they can often be coupled with a transform to work on other types of data.
+Possible interesting choices of $\delta$ for real-valued data include the \emph{Euclidean distance} or the more general \emph{Minkowski distance}; measures focused on time series, such as \emph{dynamic time warping}~\cite{dtw}, \emph{autocorrelation measures}~\cite{autocorrelation}, or the \emph{Linear Predictive Coding cepstrum}~\cite{cepstrum}.
 
-\subsection{The aggregation function $\Sigma$}
+There are also several or measures developed for series of categorical data, such as the \emph{compression-based dissimilarity measure}~\cite{keogh2}. Often, coupling a distance measure with a data transformation step (in order to, for instance, to apply a distance measure defined on categorial data to a real-valued seqeuence) can yield good results.
+
+\section{The aggregation function $\Sigma$}
 \label{sect:aggregation_function_2}
 
 Examples of anomaly detection problems which involve aggregation are hard to find in the literature. For this reason, suggesting appropriate choices of $\Sigma$ is difficult. A few choices which are likely to produce good results are $\Sigma$ on the form suggested in Section~\ref{sect:aggregation_function}, with $\sigma$ that produce either the \emph{maximum}, \emph{minimum}, \emph{median}, or \emph{mean} of its input values.
