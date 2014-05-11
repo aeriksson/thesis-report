@@ -1,17 +1,17 @@
 \chapter{Implementation}
 \label{ch:implementation}
 
-As part of this thesis project, a software implementation of the framework was constructed. Called, \texttt{ad-eval}, it can be found at \url{http://github.com/aeriksson/ad-eval}. While it currently serves mainly as a proof of concept, it has been designed with extensibility in mind, and should be easily extendible to handle real-world applications.
+As part of this thesis project, a software implementation of the framework was constructed. Called, \emph{Anomaly Detection Research Tool}, or ADRT, it can be found at \url{http://github.com/aeriksson/ad-eval}. While it currently serves mainly as a proof of concept, it has been designed with extensibility in mind, and should be easily extendible to handle real-world applications.
 
 The implementation is split into two parts. The first is an implementation of the oracle discussed in Section~\ref{sect:oracle}; i.e.\ a program that takes an input element $x \in [D]$ and a set of components $(T_D$, $F_E$, $C$, $F_R$, $M$, $\Sigma$, $T_S)$, and which produces a solution to the problem defined by these inputs. The second part is a set of utilities which can be used to solve the optimisation problem. The idea behind this separation is for the oracle to be deployable as a separate components once the optimisation problem has been solved for a given type of data.
 
-In order to limit the scope of the project, \texttt{ad-eval} currently only contains the components required for the task of finding anomalous subsequences in real-valued sequences. However, extending it to handle any given anomaly detection task should be as simple as implementing a set of components suited for the given task.
+In order to limit the scope of the project, ADRT currently only contains the components required for the task of finding anomalous subsequences in real-valued sequences. However, extending it to handle any given anomaly detection task should be as simple as implementing a set of components suited for the given task.
 
 In this chapter, the oracle and utility implementations are discussed.
 
 \section{The oracle}
 
-The oracle part of \texttt{ad-eval} is a straightforward implementation of the oracle described in Section~\ref{sect:oracle}:
+The oracle part of ADRT is a straightforward implementation of the oracle described in Section~\ref{sect:oracle}:
 
 \begin{algorithmic}
     \Require{Some $X \in [D]$.}
@@ -33,15 +33,15 @@ Currently, the following components have been implemented:
     \item{The aggregation function $\Sigma$:} $\Sigma_{min}$, $\Sigma_{max}$, $\Sigma_{mean}$, and $\Sigma_{median}$ as described in Section~\ref{sect:aggregation_function_2}.
 \end{description}
 
-Since the initial focus of \texttt{ad-eval} is on real-valued sequences, it is currently assumed that $D = D' = \mathbb{R}$. However, all the components listed above with the exception of the anomaly measures, are defined independently of $D$, so other types of data could be handled by implementing more anomaly measures.
+Since the initial focus of ADRT is on real-valued sequences, it is currently assumed that $D = D' = \mathbb{R}$. However, all the components listed above with the exception of the anomaly measures, are defined independently of $D$, so other types of data could be handled by implementing more anomaly measures.
 
-Note that while the focus is currently on the task of finding anomalous subsequences, the task of finding anomalous sequences can be handled using the same oracle by fixing $F_E$, $F_R$, and $\Sigma$ to identity transformations, and so could be handled by $\texttt{ad-eval}$ essentially without any modifications.
+Note that while the focus is currently on the task of finding anomalous subsequences, the task of finding anomalous sequences can be handled using the same oracle by fixing $F_E$, $F_R$, and $\Sigma$ to identity transformations, and so could be handled by $ADRT$ essentially without any modifications.
 
 \section{Utilities}
 
 Given an implementation of the oracle and a suitable set of components, all that's needed to solve the optimisation problem is an implementation of some error measure and optimisation method.
 
-These are provided as part of the utilities package in \texttt{ad-eval}. Specifically, the error measures $\epsilon_N$, $\epsilon_E$, and $\epsilon_F$ mentioned in Section~\ref{sect:error_measures} are provided, as well as a few rudimentary optimisation tools (for constraining the problem set and naively optimising over the resulting reduced set). Better optimisation heuristics such as simulated annealing could greatly improve running times, as well as enable more relaxed problem set constraints. However, since the implementation and evaluation of such methods would not fit within the scope of this project, these have yet to be added to \texttt{ad-eval}.
+These are provided as part of the utilities package in ADRT. Specifically, the error measures $\epsilon_N$, $\epsilon_E$, and $\epsilon_F$ mentioned in Section~\ref{sect:error_measures} are provided, as well as a few rudimentary optimisation tools (for constraining the problem set and naively optimising over the resulting reduced set). Better optimisation heuristics such as simulated annealing could greatly improve running times, as well as enable more relaxed problem set constraints. However, since the implementation and evaluation of such methods would not fit within the scope of this project, these have yet to be added to ADRT.
 
 For purposes of assessing the accuracy of the results and suitability of the error measure and optimisation method, tools for generating and visualising performance metrics are also provided.
 
@@ -51,4 +51,4 @@ One of the main benefits of the framework presented in this report is that since
 
 In order to capitalise on this, the utilities package was written with scripting in mind. Essentially, this means that the typical anomaly detection research process (evaluating new methods and sharing the results) could become as a simple matter of implementing a few additional components, writing a few scripts to produce the results, and sharing these (along with the data used) publicly. Verifying or building upon others' results would then be as simple as downloading and running their scripts.
 
-To highlight how this could work, the results in the next chapter (including the graphs) have all been produced using scripts, which have been made available in the \texttt{ad-eval} repository.
+To highlight how this could work, the results in the next chapter (including the graphs) have all been produced using scripts, which have been made available in the ADRT repository.
