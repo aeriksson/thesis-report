@@ -239,19 +239,20 @@ Finally, it should be noted that while the size of the reference set, and conseq
 
 To get an idea of how the choice of aggregation function $\Sigma$ affects the analysis, the anomaly vectors $A_{k, \Sigma}$ were computed and analyzed for the minimum, maximum, median and mean aggregation functions, with $k = 1,2,\dots,100$. Heat map plots of the results are shown in Figure~\ref{fig:aggregator_heat_map}, and plots of the corresponding error measures are shown in Figure~\ref{fig:aggregator_error}. Single anomaly vectors for $k=1$ are shown in Figure~\ref{fig:aggregator_vectors}.
 
-As seen in Figures~\ref{fig:aggregator_error} and~\ref{fig:aggregator_vectors}, $\Sigma_{min}$ and $\Sigma_{max}$ produce blocky, piecewise constant anomaly vectors, while $\Sigma_{mean}$ (and, to a lesser extent, the $\Sigma_{median}$) produces smooth anomaly vectors.
+As seen in Figures~\ref{fig:aggregator_error} and~\ref{fig:aggregator_vectors}, $\Sigma_{min}$ and $\Sigma_{max}$ produce blocky, piecewise constant anomaly vectors, while $\Sigma_{mean}$ (and, to a lesser extent, $\Sigma_{median}$) produces smooth anomaly vectors.
 
-\begin{figure}
-    \centering
-    \subbottom[Heat map of the $A_m$. Note the false anomaly present at the left end of the anomaly vectors until $m \approx 330$.]{%
-        \includegraphics[width=\linewidth]{resources/aggregator_heat_map}}
-    \subbottom[Errors.]{%
-        \includegraphics[width=0.45\linewidth]{resources/aggregator_error}}
-    \subbottom[Evaluation times.]{%
-        \includegraphics[width=0.45\linewidth]{resources/aggregator_vectors}}
-    \caption{Results for $P^*_m$, where $m = 20,21,\dots,400$}
-\label{fig:m_plot}
-\end{figure}
+% \begin{figure}
+%     \centering
+%     \subbottom[Heat map of the $A_m$. Note the false anomaly present at the left end of the anomaly vectors until $m \approx 330$.]{%
+%         \includegraphics[width=\linewidth]{resources/aggregator_heat_map}}
+%     \subbottom[Errors.]{%
+%         \includegraphics[width=0.45\linewidth]{resources/aggregator_error}}
+%     \subbottom[Evaluation times.]{%
+%         \includegraphics[width=0.45\linewidth]{resources/aggregator_vectors}}
+%     \caption{Results for $P^*_m$, where $m = 20,21,\dots,400$}
+% \label{fig:m_plot}
+% \end{figure}
+
 \begin{figure}[!ht]
     % \vspace{-20pt}
     \begin{center}
@@ -274,7 +275,7 @@ Finally, $\epsilon_N$ was consistently lower for $\Sigma_{min}$ than for $\Sigma
 \begin{figure}[!ht]
     % \vspace{-5pt}
     \begin{center}
-        \includegraphics[width=\textwidth]{resources/aggregator_error}
+        \includegraphics[width=\textwidth]{resources/aggregator_error_2}
     \end{center}
     % \vspace{-18pt}
     \caption{\small{Errors of the anomaly vectors $A_{k, \Sigma}$.}}

@@ -3,7 +3,7 @@
 
 Recall that the optimisation problem is stated as
 \[
-    P^*_{opt} = \argmin_{P \in \mathcal{P}^*} \sum_{T_i \in \mathcal{T}} \delta(s(T_i), O^*(P, T_i)),
+    P^*_{opt} = \argmin_{P \in \mathcal{P}^*} \sum_{T_i \in \mathcal{T}} \epsilon^*(s(T_i), O^*(P, T_i)),
 \]
 where the objects that need to defined are the input and solution formats $[D]$ and $[S]$, the problem set $\mathcal{P}^*$, the test data $\mathcal{T}$, the error function $\epsilon^*$, and the oracle $O$. The framework presented in the previous chapter makes the assumption that all relevant problems $P$ can be decomposed into a set of functions $P = (T_D, F_E, C, F_R, M, \Sigma, T_S)$.
 
@@ -26,7 +26,7 @@ The task of finding anomalous sequences in a set of sequences involves taking a 
 
 For an example of this task, see figure \ref{fig:example1}. Here, dataset consists of a set of sequences of user commands extracted from a system log, and task corresponds to detecting individual anomalous sequences in this dataset. While sequences $\mathbf{S_1}$ through $\mathbf{S_4}$ are originate from ordinary user sessions, sequence $\mathbf{S_5}$ could indicate an attack. Accurately detecting such anomalous sequences is an important problem in computer security.
 
-The input data has the format $[D]$, where $D$ is itself a set of sequences, i.e.\ $D = [X]$ for some set $X$. In the example above $X$ is a set of commands, but it could just as well be $\mahtbb{R}$ or any other set. The solution format is $[S]$, where either $S = \mathbb{R}^+$ or $S = \{0, 1\}$ depending on the application requirements.
+The input data has the format $[D]$, where $D$ is itself a set of sequences, i.e.\ $D = [X]$ for some set $X$. In the example above $X$ is a set of commands, but it could just as well be $\mathbb{R}$ or any other set. The solution format is $[S]$, where either $S = \mathbb{R}^+$ or $S = \{0, 1\}$ depending on the application requirements.
 
 Since the input data is unstructured, any transformation $T_D$ must produce lists with the same length as it is given. Correspondingly, we can let $S' = S$. This renders $T_S$ redundant, so it can be ignored.
 
@@ -48,19 +48,19 @@ As per the discussion in the previous chapter, $C$ can only be one of two functi
 
 The task of finding anomalous subsequences of long sequences corresponds to finding anomalous contiguous sublists of the input data $[D]$. In contrast to the task of finding anomalous sequences, the input data is structured, and the sequence ordering naturally gives rise to concepts of proximity and context. This task is relatively poorly understood, but is highly relevant in many application domains. As a consequence, automated methods can be expected to be very useful for this task. Essentially any monitoring or diagnosis application could benefit from a better understanding of the task.
 
-For examples of sequences to which this task might be applied, see Figures~\ref{fig:example_2} and~\ref{fig:anomaly types}. These are all real-valued sequences which contain anomalous items or subsequences.
+For examples of sequences to which this task might be applied, see Figures~\ref{fig:example2} and~\ref{fig:anomaly_types}. These are all real-valued sequences which contain anomalous items or subsequences.
 
 As with the previous task, either $S = \mathbb{R}^+$ or $S = \{0, 1\}$ depending on the application. However, it here makes sense to allow $T_D$ to compress the data (i.e.\ return a shorter list than it is given). Correspondingly, a corresponding $T_S$ is required in order to transform the preliminary solution (in $[S']$) to a list of anomaly scores with the same length as the input data.
 
 Since all components must be used for this task, the oracle is identical to the one presented in Section~\ref{sect:oracle}.
 
-\section{The input data format $\mathcal{D}$}
+\section{The input data format \texorpdfstring{$\mathcal{D}$}{D}}
 
-Categorical, discrete, and real-valued sequences have all been extensively studied. Categorical sequences arise naturally in applications such as bioinfomatics~\cite{TODO} and intrusion detection~\cite{TODO}. Discrete sequences are typically encountered when monitoring the frequency of events over time. Finally, real-valued sequences are encountered in any application that involves measuring physical phenomena (such as audio, video and other sensor-based applications).
+Categorical, discrete, and real-valued sequences have all been extensively studied. Categorical sequences arise naturally in applications such as bioinfomatics and intrusion detection. Discrete sequences are typically encountered when monitoring the frequency of events over time. Finally, real-valued sequences are encountered in any application that involves measuring physical phenomena (such as audio, video and other sensor-based applications).
 
 Which the origins and nature of the data obviously differs heavily between these different categories of sequences, the choice of components (with the exception of the transformations and anomaly measures) can be made independently of the type of data. For this reason, we can disregard the data format in most of the following discussion.
 
-\section{The transformations $T_D$ and $T_S$}
+\section{The transformations \texorpdfstring{$T_D$}{TD} and \texorpdfstring{$T_S$}{TS}}
 
 \begin{figure}[htb]
   \begin{center}
@@ -93,41 +93,39 @@ In general, real-valued sequences are much easier to deal with than time series.
 
 The simplest such transformation involves simply dropping the timestamp component of each item. This is useful when the order of items is important, but how far apart they are in time is not. This is often the case when dealing with categorical sequences. An example of such an application is shown in figure~\ref{fig:example1}.
 
-Another common class of transformations involves estimating the (weighted) frequency of events. This is useful in many scenarios, especially in applications involving machine-generated data.
+Another common class of transformations involves estimating the (weighted) frequency of events. This is useful in many scenarios, especially in applications involving machine-generated data. Several methods can be used to generate sequences appropriate for this task from time series, such as histograms, sliding averages, etc.
 
-Several methods can be used to generate sequences appropriate for this task from time series, such as histograms, sliding averages, etc. These can be generalised as the following transformation:
+% Given a time series $[(t_1, x_1), (t_2, x_2), \dots, (t_n, x_n)]$ in $[(\mathbb{R}^+, X)]$, with associated weights $w_i$ and some envelope function $e(s, t): X \times \mathbb{R} \rightarrow X$, as well as a spacing and offset $\Delta, t_0 \in \mathbb{R}^+$, a sequence $[(s_{1}^{'}, \tau_1), (s_{2}^{'}, \tau_2), \dots]$ is constructed where $\tau_i = t_0 + \Delta \cdot i$ and $s_{i}^{'} = \sum_{(s_j, t_j) \in S} s_i w_i e(t_j - \tau_i)$.
 
-Given a time series $[(t_1, x_1), (t_2, x_2), \dots, (t_n, x_n)]$ in $[(\mathbb{R}^+, X)]$, with associated weights $w_i$ and some envelope function $e(s, t): X \times \mathbb{R} \rightarrow X$, as well as a spacing and offset $\Delta, t_0 \in \mathbb{R}^+$, a sequence $[(s_{1}^{'}, \tau_1), (s_{2}^{'}, \tau_2), \dots]$ is constructed where $\tau_i = t_0 + \Delta \cdot i$ and $s_{i}^{'} = \sum_{(s_j, t_j) \in S} s_i w_i e(t_j - \tau_i)$.
+% The $\tau_i$ can then be discarded and the time series treated as a sequence\footnote{Note that this method requires multiplication and addition to be defined for $X$, and is thus not applicable to most symbolic/categorical data. Also note that $\mathbf{s}'$ is really just a sequence of samples of the convolution $f_S \ast e$ where $f_S = \sum_i \delta(t_i) s_i w_i$.}. Histograms are recovered if $e(s, t) = 1$ when $|t| < \Delta/2$ and $e(x, t) = 0$ otherwise.
 
-The $\tau_i$ can then be discarded and the time series treated as a sequence\footnote{Note that this method requires multiplication and addition to be defined for $X$, and is thus not applicable to most symbolic/categorical data. Also note that $\mathbf{s}'$ is really just a sequence of samples of the convolution $f_S \ast e$ where $f_S = \sum_i \delta(t_i) s_i w_i$.}. Histograms are recovered if $e(s, t) = 1$ when $|t| < \Delta/2$ and $e(x, t) = 0$ otherwise.
+% How this aggregation is performed has a large and often poorly understood impact on the resulting sequence. As an example, when constructing histograms, the bin width and offset have implications for the speed and accuracy of the analysis. A small bin width leads to both small features and noise being more pronounced, while a large bin width might obscure smaller features. Similarly, the offset can greatly affect the appearance of the histograms, especially if the bin width is large. There is no `optimal' way to select these parameters, and various rules of thumb are typically used~\cite{density_estimation}.
 
-How this aggregation is performed has a large and often poorly understood impact on the resulting sequence. As an example, when constructing histograms, the bin width and offset have implications for the speed and accuracy of the analysis. A small bin width leads to both small features and noise being more pronounced, while a large bin width might obscure smaller features. Similarly, the offset can greatly affect the appearance of the histograms, especially if the bin width is large. There is no `optimal' way to select these parameters, and various rules of thumb are typically used~\cite{density_estimation}.
+% Furthermore, noisy data is often resampled to form regular time series. In this case, any of a number of resampling methods from the digital signal processing literature~\cite{TODO} may be employed.
 
-Furthermore, noisy data is often resampled to form regular time series. In this case, any of a number of resampling methods from the digital signal processing literature~\cite{TODO} may be employed.
-
-One commonly used transformation for real-valued data is the Z-normalization transform, which modifies a sequence to exhibit zero empirical mean and unit variance.\footnote{It has been argued that comparing time series is meaningless unless the Z-normalization transform is used~\cite{keogh5}. However, this is doubtful, as the transform masks sequences that are anomalous because they are displaced or scaled relative to other sequences.}
+% One commonly used transformation for real-valued data is the Z-normalization transform, which modifies a sequence to exhibit zero empirical mean and unit variance.\footnote{It has been argued that comparing time series is meaningless unless the Z-normalization transform is used~\cite{keogh5}. However, this is doubtful, as the transform masks sequences that are anomalous because they are displaced or scaled relative to other sequences.}
 
 Transformations that transform the data into some alternative domain can also be useful. For example, transformations based on the \emph{discrete Fourier transform} (DFT) and \emph{discrete wavelet transform} (DWT)~\cite{fu} have shown promise. The DFT is parameter-free, while the DWT can be said to be parametrised due to the variety of possible wavelet transforms.
 
-\section{The filters $F_E$ and $F_R$}
+\section{The filters \texorpdfstring{$F_E$}{FE} and \texorpdfstring{$F_R$}{FR}}
 \label{sect:filters}
 
 As was previously mentioned, filters are really only interesting for the task of finding anomalous subsequences. Here, the role of the filter is to map a sequence in $[D']$ to a list candidate anomalies (subsequences of the input sequence).
 
 By far the most frequently used filters are \emph{sliding window} filters. These map a sequence $X = [x_1, x_2, \dots, x_n]$ to
 \[
-    F_E(X) = [[x_1, x_2, \dots, x_w], [x_{k + 1}, x_{k + 2}, \dots, x_{k + w}], \dots, [x_{n - w}, x_{n - w + 1}, \dots, x_n]],
+    F_E(X) = [[x_1, x_2, \dots, x_w], [x_{s + 1}, x_{s + 2}, \dots, x_{s + w}], \dots, [x_{n - w}, x_{n - w + 1}, \dots, x_n]],
 \]
-where $w$ and $k$ are arbitrary integers (typically $k \leq w$)\footnote{We here assume that $k | n - w$. Otherwise, the last element above might look a bit different.}.
+where $w$ and $s$ are arbitrary integers (typically $s \leq w$)\footnote{We here assume that $s | n - w$. Otherwise, the last element above might look a bit different.}.
 
-\section{The context function $C$}
+\section{The context function \texorpdfstring{$C$}{C}}
 \label{sect:context}
 
 The ordering present in sequences naturally give rise to a few interesting contexts, which are now demonstrated for a sequence $s = [s_1, s_2, \dots, s_n]$ and a candidate anomaly $s' [s_i, s_{i + 1}, \dots, s_j]$, where $1 \leq i \leq j \leq n$. It is here assumed that all candidate anomalies are contiguous. As mentioned in the previous chapter, contexts can be used to generalise the concept of training data. Semi-supervised anomaly detection corresponds to the \emph{semi-supervised context} $C(s, s') = T$, where $T$ is some fixed set of training data.
 
 Likewise, traditional unsupervised anomaly detection for subsequences can be formulated using the \emph{trivial context} $C(s, s') = [[s_1, s_2, \dots, s_{i - 1}], [s_{j + 1}, s_{j + 2}, \dots, s_n]]$. This corresponds to finding either point anomalies or collective anomalies in a sequence.
 
-Another interesting context is the \emph{novelty context} $C(s, s') = [[s_1, s_2, \dots, s_{i - 1}]]$. This context captures the task of novelty detection in sequences, which has been researched in~\cite{TODO}.
+Another interesting context is the \emph{novelty context} $C(s, s') = [[s_1, s_2, \dots, s_{i - 1}]]$. This context captures the task of novelty detection in sequences, which is especially interesting in monitoring applications.
 
 Finally, a family of \emph{local contexts}
 \[
@@ -135,7 +133,8 @@ Finally, a family of \emph{local contexts}
 \]
 may be defined for $a, b \in \mathbb{N}$, in order to handle anomalies such as the one in the last sequence of figure~\ref{fig:anomaly_types}.
 
-\section{The anomaly measure $M$}
+\section{The anomaly measure \texorpdfstring{$M$}{M}}
+\label{sect:anomeasure}
 
 As was mentioned previously, an anomaly measure is a function $M: ([D'], [[D']]) \rightarrow \mathbb{R}^+$ that takes a candidate anomaly $c \in [D']$ and a reference set $R \in [[D']]$, and produces an anomaly score based on how anomalous $C$ is with regards to $R$. A large number of such measures have been used in the literature, and a thorough discussion of these is not possible within the scope of this report. Instead, we will limit our consideration to distance-based anomaly measures, since these are flexible and have been shown to perform well in general for sequences~\cite{chandola3}.
 
@@ -145,7 +144,7 @@ Possible interesting choices of $\delta$ for real-valued data include the \emph{
 
 There are also several or measures developed for series of categorical data, such as the \emph{compression-based dissimilarity measure}~\cite{keogh2}. Often, coupling a distance measure with a data transformation step (in order to, for instance, to apply a distance measure defined on categorial data to a real-valued seqeuence) can yield good results.
 
-\section{The aggregation function $\Sigma$}
+\section{The aggregation function \texorpdfstring{$\Sigma$}{Sigma}}
 \label{sect:aggregation_function_2}
 
-Examples of anomaly detection problems which involve aggregation are hard to find in the literature. For this reason, suggesting appropriate choices of $\Sigma$ is difficult. A few choices which are likely to produce good results are $\Sigma$ on the form suggested in Section~\ref{sect:aggregation_function}, with $\sigma$ that produce either the \emph{maximum}, \emph{minimum}, \emph{median}, or \emph{mean} of its input values.
+Examples of anomaly detection problems which involve aggregation are hard to find in the literature. For this reason, suggesting appropriate choices of $\Sigma$ is difficult. A few choices which are likely to produce good results are $\Sigma$ on the form suggested in Section~\ref{sect:aggregation_function}, with $\sigma$ that produce either the \emph{maximum}, \emph{minimum}, \emph{median}, or \emph{mean} of its input values. The resulting $\Sigma$ will henceforth be referred to as $\Sigma_{max}$, $\Sigma_{min}$, $\Sigma_{median}$ and $\Sigma_{mean}$, respectively.

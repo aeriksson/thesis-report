@@ -82,12 +82,11 @@ The process of computing a solution to a problem $P$ with associated $T_D$, $F_E
 
 Now, the sets $\mathcal{D}$ and $\mathcal{S}$, as well as the functions $T_D$, $F_E$, $C$, $F_R$, $M$, $\Sigma$, and $T_S$ are discussed in detail.
 
-\section{The input data format $\mathcal{D}$}
-\label{sect:data_format}
+\section{The input data format \texorpdfstring{$\mathcal{D}$}{D}}
 
 As mentioned above, we represent the set of possible input datasets by means of a set $\mathcal{D} \subset [D]$, i.e.\ a set of lists over some application-specific set $D$. A problem formulation associates with each element of $\mathcal{D}$ a solution in the set of solutions $\mathcal{S}$.
 
-Methods are commonly classified based on characteristics of $D$. For instance, a distinction is typically made between categorical, discrete, and real-valued data based on the cardinality of $D$. The input data is said to be \emph{categorical} (or \emph{symbolic}) if $D$ is finite, \emph{discrete} if $D$ is countable and \emph{real-valued} if $D \subseteq \mathbb{R}^n$ for some $n$ (other uncountable sets are typically not encountered). It is also frequently the case that $D$ consists of some combination of categorical, discrete and real-valued data, in which case the input data is referred to as \emph{mixed}\cite{TODO}.
+Methods are commonly classified based on characteristics of $D$. For instance, a distinction is typically made between categorical, discrete, and real-valued data based on the cardinality of $D$. The input data is said to be \emph{categorical} (or \emph{symbolic}) if $D$ is finite, \emph{discrete} if $D$ is countable and \emph{real-valued} if $D \subseteq \mathbb{R}^n$ for some $n$ (other uncountable sets are typically not encountered). It is also frequently the case that $D$ consists of some combination of categorical, discrete and real-valued data, in which case the input data is referred to as \emph{mixed}.
 
 \begin{wrapfigure}{r}{0.5\textwidth}
 \changecaptionwidth
@@ -101,7 +100,7 @@ Another classification, also based on characteristics of $D$, is that between un
 
 Characteristics such as the dimensionality of the data typically prove important in applications. For instance, categorical data is typically both computationally and conceptually easier to handle than either discrete or real-valued data. Likewise, univariate data is typically much easier to handle than multivariate data.
 
-\section{The set of solutions $\mathcal{S}$}
+\section{The set of solutions \texorpdfstring{$\mathcal{S}$}{S}}
 
 In this section, typical choices of collection of possible solutions $\mathcal{S}$ are discussed. To simplify the exposition, $\mathcal{S}$ is taken to be $[\mathbb{R}^+]$ in the framework. The discussion in this section assumes a list of input data $d = [d_1, d_2, \dots, d_n]$.
 
@@ -109,15 +108,13 @@ Typically, the solution consists of a list $[s_1, s_2, \dots, s_n]$ of \emph{ano
 
 Finally, it might be desirable to let the solution consist of a list of anomalous sublists of the input data. While potentially interesting, this seems to be uncommon, and for the sake of brevity is not incorporated into the framework. To accomodate for this, the solution format could be taken to be $\mathcal{S} = [\mathbb{R}^+]$ for either $S = \mathbb{R}^+$ or $S = [D]$.
 
-\section{The transformations $T_D$ and $T_S$}
+\section{The transformations \texorpdfstring{$T_D$}{TD} and \texorpdfstring{$T_S$}{TS}}
 
 It is common for the input data to be preprocessed to make it more amenable to analysis. To account for this, two transformations $T_D: [D] \rightarrow [D']$ and $T_S: [\mathbb{R}^+] \rightarrow [\mathbb{R}^+]$ are included in the framework. These transformations are complementary, in the sense that $T_D$ maps the input data to some set $[D']$, while $T_S$ takes a a list of anomaly scores for the transformed data and maps it to a list of anomaly scores for the data fed into $T_D$.
 
 Typically, $T_D$ involves either dimensionality or numerosity reduction. \emph{Dimensionality reduction} involves reducing the dimensionality in the individual elements of the input dataset; i.e.\ a transformation $T_D: [D] \rightarrow [D']$ is a dimensionality reduction transformation if $D'$ is of lower dimensionality than $D$.
 
 Such transformations invariably involve some degree of information loss. Ideally, the information which they retain should be that which is most relevant to the analysis. Many methods have been designed with this goal in mind. A distinction is typically made between feature selection and feature extraction methods. \emph{Feature selection} methods select a subset of the features present in the original data, while \emph{feature extraction} methods create new features from the original data. An example of feature extraction is shown in figure~\ref{fig:dimensionality_reduction}.
-
-Common feature extraction methods for data in $\mathbb{R}^n$ include \emph{principle component analysis}~\cite{TODO} (PCA), \emph{semidefinite embedding}~\cite{TODO}, \emph{partial least-squares regression}~\cite{TODO}, and \emph{independent component analysis}~\cite{TODO}. Which methods are appropriate to use depends heavily on the application.
 
 \emph{Numerosity reduction}, on the other hand, serves to reduce the cardinality of the data, either by converting real-valued data to discrete or categorical data, by converting discrete data to categorical data, or by compressing categorical data. An example of numerosity reduction in time series is shown in figure~\ref{fig:types_of_data}.
 
@@ -130,7 +127,7 @@ Common feature extraction methods for data in $\mathbb{R}^n$ include \emph{princ
 \label{fig:dimensionality_reduction}
 \end{figure}
 
-\section{The evaluation filter $F_E$}
+\section{The evaluation filter \texorpdfstring{$F_E$}{FE}}
 
 An important aspect of any problem is which subsets of the transformed data are considered candidate anomalies; i.e.\ which sublists of the transformed data $[d_1', d_2', \dots, d_n'] \in [D']$ constitute the \emph{evaluation set} $E \in [[D']]$. Letting the evaluation set consist of all sublists is not computationally feasible, and considering only single element lists is likely to be overly limiting for many applications. To allow for greater flexibility in the choice of evaluation set, the framework includes a function, the \emph{evaluation filter} $F_E: [D'] \rightarrow [[D']]$, which includes the choice of evaluation set as part of the problem formulation.
 
@@ -144,13 +141,13 @@ for some arbitrary $n$, $a_1, a_2, \dots, a_n$ and $b_1, b_2, \dots, b_n$, where
 
 An evaluation filter which extracts contiguous sublists of a fixed length is illustrated in Figure~\ref{fig:filters}.
 
-\section{The context function $C$}
+\section{The context function \texorpdfstring{$C$}{C}}
 
 \begin{figure}[htb]
     \begin{center}
         \includegraphics[width=1\textwidth]{resources/filters}
     \end{center}
-    \caption{{\small Schematic illustration of filters and contexts acting on a sequence $\mathbf{s} = [s_1, s_2, \dots, s_{40}]$. The top panel shows the evaluation set $E = F_E(\mathbf{s}) = [e_1, e_2, \dots, e_{19}]$ extracted by an evaluation filter which selects contiguous subsequences of fixed length. The bottom panel shows the context of $e_{10}$ given by $C(\mathbf{s}, e_{10}) = [c_1, c_2, \dots, c_{24}]$, as well as the corresponding reference set $F_R(e_{10}) = [t_1, t_2, \dots, t_{10}]$ extracted by a reference filter identical to the evaluation filter.}}
+    \caption{{\small Schematic illustration of filters and contexts acting on a sequence $\mathbf{s} = [s_1, s_2, \dots, s_{40}]$. The top panel shows the evaluation set $E = F_E(\mathbf{s}) = [e_1, e_2, \dots, e_{19}]$ extracted by an evaluation filter which selects contiguous subsequences of fixed length. The bottom panel shows the context (in red) of $e_{10}$ given by $C(\mathbf{s}, e_{10}) = [c_1, c_2, \dots, c_{24}]$, as well as the corresponding reference set $F_R(e_{10}) = [t_1, t_2, \dots, t_{10}]$ extracted by a reference filter identical to the evaluation filter.}}
 \label{fig:filters}
 \end{figure}
 
@@ -165,7 +162,7 @@ As with the evaluation filter, what constitutes an appropriate context function 
         \includegraphics[width=1\textwidth]{resources/contextz}
     \end{center}
     \vspace{-15pt}
-    \caption{{\small Schematic view of a dataset illustrating a few contexts. In each panel, the black dots represent selected items, the dark grey dots represent items in the context of the selected items, and the light grey dots indicate items not in the context of the selected items. The left panel shows the trivial context---all items are part of the context. The middle panel shows a local context of a single item. The right panel shows a local context of a subset of the dataset.}}
+    \caption{{\small Schematic view of a dataset illustrating a few contexts. In each panel, the black dots represent selected items, the red dots represent items in the context of the selected items, and the grey dots indicate items not in the context of the selected items. The left panel shows the trivial context---all items are part of the context. The middle panel shows a local context of a single item. The right panel shows a local context of a subset of the dataset.}}
 \label{fig:contexts}
     \vspace{-5pt}
 \end{figure}
@@ -178,20 +175,20 @@ for some $w$, in an anomaly detection problem.
 
 A few possible context functions are shown in Figures~\ref{fig:filters} and~\ref{fig:contexts}.
 
-\section{The reference filter $F_R$}
+\section{The reference filter \texorpdfstring{$F_R$}{FR}}
 
 Once a set of candidate anomalies has been produced and a context has been associated with each candidate anomaly, all that remains is to assign anomaly scores to each candidate anomaly (and then combine the results of this computation into a solution). However, a candidate anomaly and its context are likely to be of different sizes, which can be inconvenient, since most anomaly measures only work on elements of the same size. To get around this, the context can be split into chunks of the same size as the candidate anomaly.
 
 To accommodate for this step, the framework includes a \emph{reference filter} $F_R: [D'] \rightarrow [[D']] $, which (analogously to the evaluation filter) maps a context to a \emph{reference set} of items with which the candidate anomaly can be effectively compared. A possible reference filter for sequences is illustrated in Figure~\ref{fig:filters}. If the anomaly measure can operate on elements of different sizes, then $F_R(X) = [X]$ might be a good choice.
 
-\section{The anomaly measure $M$}
+\section{The anomaly measure \texorpdfstring{$M$}{M}}
 \label{sect:anomaly_measure}
 
 The anomaly measure $M: ([D'], [[D']]) \rightarrow \mathbb{R}^+$ takes a candidate anomaly and a reference set and produces an anomaly score. The anomaly measure essentially defines (often in unpredictable ways) what types of features will be considered anomalous, so it is vital that it is chosen appropriately.
 
 A large number of different anomaly measures are used in the literature, and listing them all is not possible within the scope of this report. Methods are often categorised based on what type of anomaly measure they employ; for instance, a method might be classified as statistical, classifier-based, distance-based, or information-theoretic based on the anomaly measure. A good presentation of these categories is given in~\cite{chandola}.
 
-\section{The aggregration function $\Sigma$}
+\section{The aggregration function \texorpdfstring{$\Sigma$}{Sigma}}
 \label{sect:aggregation_function}
 
 The aggregation function $\Sigma: ([[D']], [\mathbb{R}^+]) \rightarrow [\mathbb{R}^+]$ takes a list of candidate anomalies and a list of corresponding anomaly scores, and produces a list of anomaly scores for the transformed data. If a problem does not involve any transformation, i.e.\ if  $D' = D$ and $T_D$ is the identity transformation, then $T_S$ must also be the identity transformation, and $\Sigma$ will produce the actual solution.
@@ -251,13 +248,13 @@ can be solved, the training set $\mathcal{T}$ and the error function $\delta$ mu
 
 The choice of error measure, which is formally a distance function for $\mathcal{S} = [\mathbb{R}^+]$, i.e.\ $\delta: ([\mathbb{R}^+], [\mathbb{R}^+]) \rightarrow \mathbb{R}^+$, however, has more to do with the solution format than with the application itself. A few simple error measures which are likely to work well across most applications are now discussed.
 
-If the solution format is a list of anomalous items, then $S$ can be seen as the binary set $\{0, 1\}$ and the solution $[s_1, s_2, \dots, s_n]$ as a binary list, where $s_i$ indicates whether or not the corresponding input element $d_i$ is considered anomalous. Reasonably the Hamming distance~\cite{TODO}, corresponding to
+If the solution format is a list of anomalous items, then $S$ can be seen as the binary set $\{0, 1\}$ and the solution $[s_1, s_2, \dots, s_n]$ as a binary list, where $s_i$ indicates whether or not the corresponding input element $d_i$ is considered anomalous. Reasonably the Hamming distance, corresponding to
 \[
     \delta([a_1, a_2, \dots, a_n], [b_1, b_2, \dots, b_n]) = \sum_i \delta'(a, b),
 \]
 where $\delta'(a, b) = 1$ if $a \neq b$ and $0$ otherwise, ought to be used for such cases.
 
-If the solution format is a list of anomaly scores the situation becomes more complex. Assuming that $S = \mathbb{R}$, one might imagine that any ordinary real-valued distance measure, such as the Euclidean distance could be used. However, an error measure must be invariant under scalings and transformations of its input data in order to be useful, and this is not the case for the Euclidean distance. To get around this, the input data can be normalised to some interval (i.e.\ $[a_1, a_2, \dots, a_n] \mapsto [\frac{a_1 - a_{min}}{a_{max} - a_{min}}, \frac{a_2 - a_{min}}{a_{max} - a_{min}}, \dots, \frac{a_n - a_{min}}{a_{max} - a_{min}}]$, where $a_{min}$ and $a_{max}$ are the minimum and maximum elements of $a$, respectively) before the error measure is applied.
+If the solution format is a list of anomaly scores the situation becomes more complex. Assuming that $S = \mathbb{R}$, one might imagine that any ordinary real-valued distance measure, such as the Euclidean distance could be used. However, an error measure must be invariant under scalings and transformations of its input data in order to be useful, and this is not the case for the Euclidean distance. To get around this, the input data can be normalised to some interval (i.e.\ $[a_1, a_2, \dots, a_n] \mapsto [\frac{a_1 - a_{min}}{a_{max} - a_{min}}, \frac{a_2 - a_{min}}{a_{max} - a_{min}}, \dots, \frac{a_n - a_{min}}{a_{max} - a_{min}}]$, where $a_{min}$ and $a_{max}$ are the minimum and maximum elements of $a$, respectively) before the error measure is applied. We will denote this normalised Euclidean error measure by $\epsilon_N$
 
 However, since providing meaningful real-valued training data can be difficult, it might be more reasonable to restrict the training data to be a set of anomalous items, and convert the solution to a binary list before applying the error measure. Reasonably, this conversion ought to be done by mapping all values above some threshold $\tau$ to $1$, and the rest of the values to $0$.
 
@@ -276,4 +273,4 @@ Of course, effectively performing the optimisation is a difficult task, and eval
 
 Essentially, each choice of $(a, b, c, d, e, f, g)$ corresponds to a traditional machine learning problem, and can be optimised using traditional techniques. The meta-problem of finding suitable $(a, b, c, d, e, f, g)$ must be equipped with some method of assessing the potential of candidate problems. Reasonably, such a method ought to employ some method of probabilistically sampling the parameter spaces of candidate problems. The meta-problem can then be regarded as an optimisation problem with uncertainty.
 
-It further seems likely that the optimisation could itself be learnt, such that a preliminary analysis of the data could be used to find initial guesses for the optimisation.
+It further seems likely that the optimisation could itself be learnt, so that a preliminary analysis of the data could be used to guide the process.

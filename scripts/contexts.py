@@ -1,10 +1,6 @@
 from matplotlib import pyplot
 import math
-from matplotlib.patches import Ellipse
 import random
-import numpy as np
-
-import ipdb
 
 random.seed(5)
 
@@ -18,13 +14,13 @@ for i in range(DIM):
 figure = pyplot.figure(figsize=(9, 3))
 plots = [figure.add_subplot(1, 3, i + 1) for i in range(3)]
 
-MID = int(DIM/2)
+MID = int(DIM / 2)
 selection = [[(MID, MID)], [(MID, MID)], [(MID, MID)]]
 contexts = [[], [], []]
 others = [[], [], []]
 
 for pt in points:
-    dx = pt[0] - MID 
+    dx = pt[0] - MID
     dy = pt[1] - MID
     d = math.sqrt(dx * dx + dy * dy)
 
@@ -40,20 +36,20 @@ for pt in points:
     else:
         others[1].append(pt)
 
-    dx = pt[0] - MID + 1 
+    dx = pt[0] - MID + 1
     dy = pt[1] - MID
     d = min(d, math.sqrt(dx * dx + dy * dy))
-    dx = pt[0] - MID - 1 
+    dx = pt[0] - MID - 1
     dy = pt[1] - MID - 1
     d = min(d, math.sqrt(dx * dx + dy * dy))
-    dx = pt[0] - MID - 2 
+    dx = pt[0] - MID - 2
     dy = pt[1] - MID + 5
     d = min(d, math.sqrt(dx * dx + dy * dy))
-    dx = pt[0] - MID + 2 
+    dx = pt[0] - MID + 2
     dy = pt[1] - MID - 2
     d = min(d, math.sqrt(dx * dx + dy * dy))
-    
-    if d < 1: 
+
+    if d < 1:
         selection[2].append(pt)
     elif d < 5:
         contexts[2].append(pt)
@@ -64,10 +60,10 @@ for i in range(3):
     plot = plots[i]
 
     (selectionx, selectiony) = zip(*selection[i])
-    plot.scatter(selectionx, selectiony, marker='o', color='k')
+    plot.scatter(selectionx, selectiony, marker='o', color='k')  # (1.0, 50 / 255.0, 50 / 255.0))
 
     (contextx, contexty) = zip(*contexts[i])
-    plot.scatter(contextx, contexty, marker='o', color='0.6')
+    plot.scatter(contextx, contexty, marker='o', color=(255 / 255.0, 150 / 255.0, 150 / 255.0))
 
     if len(others[i]) > 0:
         (otherx, othery) = zip(*others[i])

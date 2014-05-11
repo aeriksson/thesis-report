@@ -11,30 +11,31 @@
 \label{fig:citations}
 \end{figure}
 
-This report is the result of a master's thesis project at the KTH Royal Institute of Technology, performed partly in conjunction with an internship at Splunk Inc.\@, based in San Francisco, California, USA\@. The goal of the project was to develop efficient and general methods of anomaly detection suitable for sequences (and especially real-valued continuous time series).
+This report is the result of a master's thesis project at the KTH Royal Institute of Technology, performed partly in conjunction with an internship at Splunk Inc.\@, based in San Francisco, California, USA\@. % The goal of the project was to develop efficient and general methods of anomaly detection suitable for sequences (and especially real-valued continuous time series).
 
-Splunk is essentially a database and tool for storing and analyzing very large sets of machine-generated data. The term \emph{machine-generated data} refers to any data consisting of discrete events that have been created automatically from a computer process, application, or other machine without the intervention of a human. Common types of machine-generated data include computer, network, or other equipment logs; environmental or other types of sensor readings; or other miscellaneous data, such as location information~\cite{machine_data}. Splunk is designed for this type of data, especially datasets where each event has an associated time stamp.
+% Splunk is essentially a database and tool for storing and analyzing very large sets of machine-generated data. The term \emph{machine-generated data} refers to any data consisting of discrete events that have been created automatically from a computer process, application, or other machine without the intervention of a human. Common types of machine-generated data include computer, network, or other equipment logs; environmental or other types of sensor readings; or other miscellaneous data, such as location information~\cite{machine_data}. Splunk is designed for this type of data, especially datasets where each event has an associated time stamp.
 
 Roughly defined as the automated detection within datasets of elements that are somehow abnormal, anomaly detection encompasses a broad set of techniques and problems. In recent years, anomaly detection has become increasingly important in a variety of domains in business, science and technology. In part due to the emergence of new application domains, and in part due to the evolving nature of many traditional domains, new applications of and approaches to anomaly detection and related subjects are being developed at an increasing rate, as indicated in Figure~\ref{fig:citations}.
 
-Since anomaly detection is an important and common problem in the domains in which Splunk is used, it can be expected that efficient and general anomaly detection tools could be of great benefit to Splunk. Furthermore, since real-valued time series are easy to form from machine-generated data with timestamps, and are relatively amenable to analysis, anomaly detection methods for real-valued time series can be expected to be especially useful.
+% Since anomaly detection is an important and common problem in the domains in which Splunk is used, it can be expected that efficient and general anomaly detection tools could be of great benefit to Splunk. Furthermore, since real-valued time series are easy to form from machine-generated data with timestamps, and are relatively amenable to analysis, anomaly detection methods for real-valued time series can be expected to be especially useful.
 
-Typically, finding appropriate anomaly detection methods for a given application is a laborious process that requires expertise both in data analysis and in the specific application and involves extensive trial and error. One key of the key challenges in providing general anomaly detection tools is to streamline and simplify this process.
+Anomaly detection tasks are encountered in almost every domain of science, business and technology, and providing efficient methods for solving these tasks ahs potentially enormous benefits. Typically, however, finding appropriate anomaly detection methods for a given application is a laborious process, which requires expertise both both in the specific application and in anomaly detection methods. This affects the uptake of anomaly detection methods negatively. A key challenge in anomaly detection research is providing automated tools that can be used to streamline and simplify the research process.
 
-With the above in mind, it was decided that the aim of this thesis should be to investigate automated methods of finding appropriate anomaly detection methods for arbitrary sets of real-valued sequences. To this end, the task of finding such methods was formalised as an optimisation problem, which was then studied in depth. The main contributions of the thesis are:
+With the above in mind, it was decided that the aim of this thesis project would be to investigate efficient automated methods for anomaly detection research. The main contributions of this thesis are:
 \begin{enumerate}
-    \item A search problem formulation of the task of finding appropriate anomaly detection methods.
-    \item A framework for comparing and reasoning about anomaly detection problems.
-    \item An application of the optimisation problem and framework to anomaly detection in sequences.
-    \item A software implementation of the optimisation problem for real-valued sequences.
+    \item A optimisation problem formulation of the task of finding appropriate anomaly detection methods.
+    \item A framework for reasoning about anomaly detection problems and guiding the optimisation.
+    \item A software implementation of the optimisation problem and framework.
 \end{enumerate}
 
-In Chapter~\ref{ch:background}, various background information useful to the rest of the report is presented. Specifically, the subject of anomaly detection is presented in more depth, along with some background on some of the problems faced in anomaly detection research. Finally, the optimisation problem approach is introduced. The main barriers to practical applications of the optimisation problem---finding an appropriate tractable set of problems over which to optimise, and finding an oracle for solving arbitrary problems in that problem set---are discussed.
+In Chapter~\ref{ch:background}, some background information useful to the rest of the report is presented. Specifically, the subject of anomaly detection is discussed in more depth, along with a few basic concepts. Some of the major problems faced in anomaly detection research are also discussed. Finally, the optimisation problem approach is introduced.
 
-As a means of overcoming these hurdles, in Chapter~\ref{ch:framework}, a framework for reasoning about and comparing anomaly detection problems is introduced. As part of the framework, a few novel concepts and generalisations of existing concepts are introduced.
+As a means of overcoming these hurdles, in Chapter~\ref{ch:framework}, a framework for reasoning about anomaly detection problems is introduced. As part of the framework, a few novel concepts and generalisations of existing concepts are introduced.
 
-Next, in Chapter~\ref{ch:time_series}, the framework is applied to find tractable problem sets and corresponding oracles for two anomaly detection tasks commonly encountered in applications involving sequences. In conjunction with this, a thorough survey of previous research on anomaly detection in sequences is presented. Finally, a software implementation, called \texttt{ad-eval}, of the optimisation problem applied to the task of finding anomalous subsequences in real-valued univariate sequences is presented.
+Next, in Chapter~\ref{ch:time_series}, an application of the framework to anomaly detection in sequences is presented. How existing methods fit in with the framework is also dicussed.
 
-In Chapter~\ref{ch:conclusion}, some preliminary performance results of optimisation using \texttt{ad-eval} are presented. TODO: finish this paragraph once the results chapter is done.
+In Chapter~\ref{ch:implementation} a software implementation, called \texttt{ad-eval} of the optimisation problem and framework is presented.
+
+Chapter~\ref{ch:results} consists of a preliminary investigation into how \texttt{ad-eval} can be used to perform the optimisation and gain insights into how well different types of problems perform for a given application.
 
 The report is concluded in Chapter~\ref{ch:conclusions} with a summary of the project and a few possible directions for future work.
